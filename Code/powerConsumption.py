@@ -1,11 +1,12 @@
 from itertools import product
+from collections import defaultdict
 
 
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
 
 
 def main():
-    with open("Power Consumption Test.csv", newline='') as f:
+    with open("Power Consumption Test - Power Consumption.csv", newline='') as f:
         lines = [line.strip().strip(',') for line in f.readlines()]
 
     groupings = []
@@ -51,26 +52,25 @@ def main():
         if len(groupings[i]) == 0:
             groupings.pop(i)
 
-    power = {}
-    cost = {}
+    power = defaultdict(lambda: 0)
+    cost = defaultdict(lambda: 0)
+    batterySize = {}
 
     for items in product(*groupings):
-        p, c = 0, 0
         for i in items:
-            c += components[i]["Cost"]
+            cost[items] += components[i]["Cost"]
 
             if "Typical Power Consumption (On)" in components[i]:
-                p += components[i]["Typical Power Consumption (On)"] * dutyCycles[components[i]["Type"]]
+                power[items] += components[i]["Typical Power Consumption (On)"] * dutyCycles[components[i]["Type"]]
             else:
-                p += components[i]["Voltage (On)"] * components[i]["Typical Current (On)"] * dutyCycles[components[i]["Type"]]
+                power[items] += components[i]["Voltage (On)"] * components[i]["Typical Current (On)"] * dutyCycles[components[i]["Type"]]
 
             if "Typical Power Consumption (Off)" in components[i]:
-                p += components[i]["Typical Power Consumption (Off)"] * (1 - dutyCycles[components[i]["Type"]])
+                power[items] += components[i]["Typical Power Consumption (Off)"] * (1 - dutyCycles[components[i]["Type"]])
             else:
-                p += components[i]["Voltage (Off)"] * components[i]["Typical Current (Off)"] * (1 - dutyCycles[components[i]["Type"]])
-            
-        power[items] = p
-        cost[items] = c
+                power[items] += components[i]["Voltage (Off)"] * components[i]["Typical Current (Off)"] * (1 - dutyCycles[components[i]["Type"]])
+
+        batterySize[items] = power[items] * 24
 
     powerSorted = sorted(power.keys(), key=lambda e: power[e])
     costSorted = sorted(cost.keys(), key=lambda e: cost[e])
@@ -83,6 +83,13 @@ def main():
 
         print(f"    Power Consumption: {power[config]} watts")
         print(f"    Cost: ${cost[config]}")
+        print(f"    Battery Size for 1 Day battery life: {batterySize[config]} watt-hours")
+        print(f"    Battery Size for 1 Week battery life: {batterySize[config] * 7} watt-hours")
+        print(f"    Battery Size for 1 Month battery life: {batterySize[config] * 30} watt-hours")
+        print(f"    Battery Size for 2 Months battery life: {batterySize[config] * 60} watt-hours")
+        print(f"    Battery Size for 3 Months battery life: {batterySize[config] * 91} watt-hours")
+        print(f"    Battery Size for 6 Months battery life: {batterySize[config] * 182} watt-hours")
+        print(f"    Battery Size for 1 Year battery life: {batterySize[config] * 365} watt-hours")
 
     print("\nConfigurations sorted by lowest cost:")
     for i, config in enumerate(costSorted):
@@ -92,6 +99,13 @@ def main():
 
         print(f"    Power Consumption: {power[config]} watts")
         print(f"    Cost: ${cost[config]}")
+        print(f"    Battery Size for 1 Day battery life: {batterySize[config]} watt-hours")
+        print(f"    Battery Size for 1 Week battery life: {batterySize[config] * 7} watt-hours")
+        print(f"    Battery Size for 1 Month battery life: {batterySize[config] * 30} watt-hours")
+        print(f"    Battery Size for 2 Months battery life: {batterySize[config] * 60} watt-hours")
+        print(f"    Battery Size for 3 Months battery life: {batterySize[config] * 91} watt-hours")
+        print(f"    Battery Size for 6 Months battery life: {batterySize[config] * 182} watt-hours")
+        print(f"    Battery Size for 1 Year battery life: {batterySize[config] * 365} watt-hours")
 
 
 if __name__ == "__main__":
