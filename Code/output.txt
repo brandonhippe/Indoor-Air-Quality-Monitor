@@ -1,0 +1,471 @@
+Configurations sorted by lowest power consumption:
+1.
+    PM2.5 Sensors: SPS30 (63.075839342949635 %)
+    CO2 Sensors: SGP30 (14.520019929605679 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (14.54466171184475 %)
+    Micro Controllers: MSP430 (7.859479015599942 %)
+    Power Consumption: 0.009983044148888889 watts
+    Cost: $89.22
+    Battery Size for 1 Day battery life: 0.23959305957333332 watt-hours
+    Battery Size for 1 Week battery life: 1.6771514170133333 watt-hours
+    Battery Size for 1 Month battery life: 7.287622228688889 watt-hours
+    Battery Size for 1 Year battery life: 87.45146674426667 watt-hours
+    18650 Cells required for 1 year battery life: 8 cells
+    Battery Life with minimum 18650 cells: 420.7133553012945 days
+2.
+    PM2.5 Sensors: SPS30 (58.94997117203695 %)
+    CO2 Sensors: SGP30 (13.570247581070547 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (13.593277514048893 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (13.886503732843611 %)
+    Power Consumption: 0.010681750582222222 watts
+    Cost: $106.18
+    Battery Size for 1 Day battery life: 0.25636201397333336 watt-hours
+    Battery Size for 1 Week battery life: 1.7945340978133335 watt-hours
+    Battery Size for 1 Month battery life: 7.7976779250222235 watt-hours
+    Battery Size for 1 Year battery life: 93.57213510026668 watt-hours
+    18650 Cells required for 1 year battery life: 8 cells
+    Battery Life with minimum 18650 cells: 393.19397767910016 days
+3.
+    PM2.5 Sensors: SPS30 (44.249280105938425 %)
+    CO2 Sensors: SGP30 (10.186157420999047 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (10.20344424803083 %)
+    Micro Controllers: ESP32 (35.361118225031696 %)
+    Power Consumption: 0.014230488888888889 watts
+    Cost: $96.18
+    Battery Size for 1 Day battery life: 0.3415317333333333 watt-hours
+    Battery Size for 1 Week battery life: 2.390722133333333 watt-hours
+    Battery Size for 1 Month battery life: 10.388256888888888 watt-hours
+    Battery Size for 1 Year battery life: 124.65908266666666 watt-hours
+    18650 Cells required for 1 year battery life: 10 cells
+    Battery Life with minimum 18650 cells: 368.9261866540074 days
+4.
+    PM2.5 Sensors: PAS-OUT-01 (82.25761379165021 %)
+    CO2 Sensors: SGP30 (6.462639647455211 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (6.473607329294097 %)
+    Micro Controllers: MSP430 (4.806139231600505 %)
+    Power Consumption: 0.022429534664999997 watts
+    Cost: $46.29
+    Battery Size for 1 Day battery life: 0.5383088319599999 watt-hours
+    Battery Size for 1 Week battery life: 3.7681618237199994 watt-hours
+    Battery Size for 1 Month battery life: 16.373560305449995 watt-hours
+    Battery Size for 1 Year battery life: 196.48272366539996 watt-hours
+    18650 Cells required for 1 year battery life: 16 cells
+    Battery Life with minimum 18650 cells: 374.5062091327164 days
+5.
+    PM2.5 Sensors: PAS-OUT-01 (78.87308465643244 %)
+    CO2 Sensors: SGP30 (6.196731226714639 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (6.207247638002162 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (8.722936478850773 %)
+    Power Consumption: 0.02339201019 watts
+    Cost: $63.25
+    Battery Size for 1 Day battery life: 0.5614082445599999 watt-hours
+    Battery Size for 1 Week battery life: 3.9298577119199996 watt-hours
+    Battery Size for 1 Month battery life: 17.076167438699997 watt-hours
+    Battery Size for 1 Year battery life: 204.91400926439997 watt-hours
+    18650 Cells required for 1 year battery life: 18 cells
+    Battery Life with minimum 18650 cells: 403.9840921427027 days
+6.
+    PM2.5 Sensors: PAS-OUT-01 (65.24413240421445 %)
+    CO2 Sensors: SGP30 (5.125960958547698 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (5.134660176201593 %)
+    Micro Controllers: ESP32 (24.495246461036256 %)
+    Power Consumption: 0.028278405 watts
+    Cost: $53.25
+    Battery Size for 1 Day battery life: 0.6786817199999999 watt-hours
+    Battery Size for 1 Week battery life: 4.750772039999999 watt-hours
+    Battery Size for 1 Month battery life: 20.643235649999998 watt-hours
+    Battery Size for 1 Year battery life: 247.71882779999999 watt-hours
+    18650 Cells required for 1 year battery life: 20 cells
+    Battery Life with minimum 18650 cells: 371.3080705930904 days
+7.
+    PM2.5 Sensors: PMS5003 (86.70365339941714 %)
+    CO2 Sensors: SGP30 (4.843175866997732 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (4.85139517286912 %)
+    Micro Controllers: MSP430 (3.6017755607160225 %)
+    Power Consumption: 0.029929534664999997 watts
+    Cost: $76.63
+    Battery Size for 1 Day battery life: 0.71830883196 watt-hours
+    Battery Size for 1 Week battery life: 5.02816182372 watt-hours
+    Battery Size for 1 Month battery life: 21.848560305449997 watt-hours
+    Battery Size for 1 Year battery life: 262.1827236654 watt-hours
+    18650 Cells required for 1 year battery life: 22 cells
+    Battery Life with minimum 18650 cells: 385.9064342054982 days
+8.
+    PM2.5 Sensors: PMS5003 (84.00230299160081 %)
+    CO2 Sensors: SGP30 (4.692281243870715 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (4.70024446796934 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (6.605171296559126 %)
+    Power Consumption: 0.03089201019 watts
+    Cost: $93.59
+    Battery Size for 1 Day battery life: 0.74140824456 watt-hours
+    Battery Size for 1 Week battery life: 5.18985771192 watt-hours
+    Battery Size for 1 Month battery life: 22.551167438700002 watt-hours
+    Battery Size for 1 Year battery life: 270.6140092644 watt-hours
+    18650 Cells required for 1 year battery life: 22 cells
+    Battery Life with minimum 18650 cells: 373.88308267937936 days
+9.
+    PM2.5 Sensors: PMS5003 (72.52978437691675 %)
+    CO2 Sensors: SGP30 (4.051438290779034 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (4.058313946639041 %)
+    Micro Controllers: ESP32 (19.360463385665177 %)
+    Power Consumption: 0.035778405 watts
+    Cost: $83.59
+    Battery Size for 1 Day battery life: 0.85868172 watt-hours
+    Battery Size for 1 Week battery life: 6.01077204 watt-hours
+    Battery Size for 1 Month battery life: 26.11823565 watt-hours
+    Battery Size for 1 Year battery life: 313.4188278 watt-hours
+    18650 Cells required for 1 year battery life: 26 cells
+    Battery Life with minimum 18650 cells: 381.5150507687528 days
+10.
+    PM2.5 Sensors: SPS30 (2.262656671044437 %)
+    CO2 Sensors: MQ-135 (95.82114643045328 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.5217461423138181 %)
+    Micro Controllers: MSP430 (1.3944507561884614 %)
+    Power Consumption: 0.27829625985555556 watts
+    Cost: $73.22
+    Battery Size for 1 Day battery life: 6.679110236533333 watt-hours
+    Battery Size for 1 Week battery life: 46.75377165573333 watt-hours
+    Battery Size for 1 Month battery life: 203.15626969455556 watt-hours
+    Battery Size for 1 Year battery life: 2437.8752363346666 watt-hours
+    18650 Cells required for 1 year battery life: 194 cells
+    Battery Life with minimum 18650 cells: 365.9768911478125 days
+11.
+    PM2.5 Sensors: SPS30 (2.2346940165458324 %)
+    CO2 Sensors: MQ-135 (94.63695722243784 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.5152982320761741 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (2.6130505289401453 %)
+    Power Consumption: 0.28177857202222223 watts
+    Cost: $90.18
+    Battery Size for 1 Day battery life: 6.7626857285333335 watt-hours
+    Battery Size for 1 Week battery life: 47.338800099733334 watt-hours
+    Battery Size for 1 Month battery life: 205.6983575762222 watt-hours
+    Battery Size for 1 Year battery life: 2468.3802909146666 watt-hours
+    18650 Cells required for 1 year battery life: 196 cells
+    Battery Life with minimum 18650 cells: 365.18035868208204 days
+12.
+    PM2.5 Sensors: PAS-OUT-01 (6.350860963533853 %)
+    CO2 Sensors: MQ-135 (91.79202837989308 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.49980759452851786 %)
+    Micro Controllers: MSP430 (1.3573030620445448 %)
+    Power Consumption: 0.29051179211666667 watts
+    Cost: $30.29
+    Battery Size for 1 Day battery life: 6.9722830108 watt-hours
+    Battery Size for 1 Week battery life: 48.8059810756 watt-hours
+    Battery Size for 1 Month battery life: 212.07360824516664 watt-hours
+    Battery Size for 1 Year battery life: 2544.883298942 watt-hours
+    18650 Cells required for 1 year battery life: 202 cells
+    Battery Life with minimum 18650 cells: 365.0454228632873 days
+13.
+    PM2.5 Sensors: PAS-OUT-01 (6.274438313044557 %)
+    CO2 Sensors: MQ-135 (90.68745529242359 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4937931940672464 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (2.5443132004645976 %)
+    Power Consumption: 0.2940502253666667 watts
+    Cost: $47.25
+    Battery Size for 1 Day battery life: 7.057205408800001 watt-hours
+    Battery Size for 1 Week battery life: 49.400437861600004 watt-hours
+    Battery Size for 1 Month battery life: 214.6566645176667 watt-hours
+    Battery Size for 1 Year battery life: 2575.8799742120004 watt-hours
+    18650 Cells required for 1 year battery life: 206 cells
+    Battery Life with minimum 18650 cells: 367.7943108703354 days
+14.
+    PM2.5 Sensors: PMS5003 (8.707709119725374 %)
+    CO2 Sensors: MQ-135 (89.48191773642002 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.487229042074807 %)
+    Micro Controllers: MSP430 (1.3231441017798156 %)
+    Power Consumption: 0.2980117921166666 watts
+    Cost: $60.63
+    Battery Size for 1 Day battery life: 7.152283010799999 watt-hours
+    Battery Size for 1 Week battery life: 50.06598107559999 watt-hours
+    Battery Size for 1 Month battery life: 217.54860824516663 watt-hours
+    Battery Size for 1 Year battery life: 2610.5832989419996 watt-hours
+    18650 Cells required for 1 year battery life: 208 cells
+    Battery Life with minimum 18650 cells: 366.4284531306399 days
+15.
+    PM2.5 Sensors: SPS30 (2.1028612783542764 %)
+    CO2 Sensors: MQ-135 (89.05397847350126 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4848989127882143 %)
+    Micro Controllers: ESP32 (8.358261335356243 %)
+    Power Consumption: 0.2994438555555556 watts
+    Cost: $80.18
+    Battery Size for 1 Day battery life: 7.1866525333333335 watt-hours
+    Battery Size for 1 Week battery life: 50.30656773333334 watt-hours
+    Battery Size for 1 Month battery life: 218.59401455555556 watt-hours
+    Battery Size for 1 Year battery life: 2623.128174666667 watt-hours
+    18650 Cells required for 1 year battery life: 210 cells
+    Battery Life with minimum 18650 cells: 368.1825422513818 days
+16.
+    PM2.5 Sensors: PMS5003 (8.60553162195332 %)
+    CO2 Sensors: MQ-135 (88.43192418192235 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4815118271705673 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (2.481032368953756 %)
+    Power Consumption: 0.30155022536666665 watts
+    Cost: $77.59
+    Battery Size for 1 Day battery life: 7.2372054087999995 watt-hours
+    Battery Size for 1 Week battery life: 50.660437861599995 watt-hours
+    Battery Size for 1 Month battery life: 220.13166451766665 watt-hours
+    Battery Size for 1 Year battery life: 2641.579974212 watt-hours
+    18650 Cells required for 1 year battery life: 210 cells
+    Battery Life with minimum 18650 cells: 365.6107365396353 days
+17.
+    PM2.5 Sensors: PAS-OUT-01 (5.913459327232089 %)
+    CO2 Sensors: MQ-135 (85.47005351012955 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4653844413626554 %)
+    Micro Controllers: ESP32 (8.15110272127569 %)
+    Power Consumption: 0.3120001166666667 watts
+    Cost: $37.25
+    Battery Size for 1 Day battery life: 7.488002800000001 watt-hours
+    Battery Size for 1 Week battery life: 52.416019600000006 watt-hours
+    Battery Size for 1 Month battery life: 227.7600851666667 watt-hours
+    Battery Size for 1 Year battery life: 2733.1210220000003 watt-hours
+    18650 Cells required for 1 year battery life: 218 cells
+    Battery Life with minimum 18650 cells: 366.8267859087872 days
+18.
+    PM2.5 Sensors: PMS5003 (8.12206276189675 %)
+    CO2 Sensors: MQ-135 (83.46371495847654 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4544599279489047 %)
+    Micro Controllers: ESP32 (7.9597623516778055 %)
+    Power Consumption: 0.31950011666666667 watts
+    Cost: $67.59
+    Battery Size for 1 Day battery life: 7.6680028 watt-hours
+    Battery Size for 1 Week battery life: 53.676019600000004 watt-hours
+    Battery Size for 1 Month battery life: 233.23508516666666 watt-hours
+    Battery Size for 1 Year battery life: 2798.821022 watt-hours
+    18650 Cells required for 1 year battery life: 224 cells
+    Battery Life with minimum 18650 cells: 368.0749829668816 days
+
+Configurations sorted by lowest cost:
+1.
+    PM2.5 Sensors: PAS-OUT-01 (6.350860963533853 %)
+    CO2 Sensors: MQ-135 (91.79202837989308 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.49980759452851786 %)
+    Micro Controllers: MSP430 (1.3573030620445448 %)
+    Power Consumption: 0.29051179211666667 watts
+    Cost: $30.29
+    Battery Size for 1 Day battery life: 6.9722830108 watt-hours
+    Battery Size for 1 Week battery life: 48.8059810756 watt-hours
+    Battery Size for 1 Month battery life: 212.07360824516664 watt-hours
+    Battery Size for 1 Year battery life: 2544.883298942 watt-hours
+    18650 Cells required for 1 year battery life: 202 cells
+    Battery Life with minimum 18650 cells: 365.0454228632873 days
+2.
+    PM2.5 Sensors: PAS-OUT-01 (5.913459327232089 %)
+    CO2 Sensors: MQ-135 (85.47005351012955 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4653844413626554 %)
+    Micro Controllers: ESP32 (8.15110272127569 %)
+    Power Consumption: 0.3120001166666667 watts
+    Cost: $37.25
+    Battery Size for 1 Day battery life: 7.488002800000001 watt-hours
+    Battery Size for 1 Week battery life: 52.416019600000006 watt-hours
+    Battery Size for 1 Month battery life: 227.7600851666667 watt-hours
+    Battery Size for 1 Year battery life: 2733.1210220000003 watt-hours
+    18650 Cells required for 1 year battery life: 218 cells
+    Battery Life with minimum 18650 cells: 366.8267859087872 days
+3.
+    PM2.5 Sensors: PAS-OUT-01 (82.25761379165021 %)
+    CO2 Sensors: SGP30 (6.462639647455211 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (6.473607329294097 %)
+    Micro Controllers: MSP430 (4.806139231600505 %)
+    Power Consumption: 0.022429534664999997 watts
+    Cost: $46.29
+    Battery Size for 1 Day battery life: 0.5383088319599999 watt-hours
+    Battery Size for 1 Week battery life: 3.7681618237199994 watt-hours
+    Battery Size for 1 Month battery life: 16.373560305449995 watt-hours
+    Battery Size for 1 Year battery life: 196.48272366539996 watt-hours
+    18650 Cells required for 1 year battery life: 16 cells
+    Battery Life with minimum 18650 cells: 374.5062091327164 days
+4.
+    PM2.5 Sensors: PAS-OUT-01 (6.274438313044557 %)
+    CO2 Sensors: MQ-135 (90.68745529242359 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4937931940672464 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (2.5443132004645976 %)
+    Power Consumption: 0.2940502253666667 watts
+    Cost: $47.25
+    Battery Size for 1 Day battery life: 7.057205408800001 watt-hours
+    Battery Size for 1 Week battery life: 49.400437861600004 watt-hours
+    Battery Size for 1 Month battery life: 214.6566645176667 watt-hours
+    Battery Size for 1 Year battery life: 2575.8799742120004 watt-hours
+    18650 Cells required for 1 year battery life: 206 cells
+    Battery Life with minimum 18650 cells: 367.7943108703354 days
+5.
+    PM2.5 Sensors: PAS-OUT-01 (65.24413240421445 %)
+    CO2 Sensors: SGP30 (5.125960958547698 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (5.134660176201593 %)
+    Micro Controllers: ESP32 (24.495246461036256 %)
+    Power Consumption: 0.028278405 watts
+    Cost: $53.25
+    Battery Size for 1 Day battery life: 0.6786817199999999 watt-hours
+    Battery Size for 1 Week battery life: 4.750772039999999 watt-hours
+    Battery Size for 1 Month battery life: 20.643235649999998 watt-hours
+    Battery Size for 1 Year battery life: 247.71882779999999 watt-hours
+    18650 Cells required for 1 year battery life: 20 cells
+    Battery Life with minimum 18650 cells: 371.3080705930904 days
+6.
+    PM2.5 Sensors: PMS5003 (8.707709119725374 %)
+    CO2 Sensors: MQ-135 (89.48191773642002 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.487229042074807 %)
+    Micro Controllers: MSP430 (1.3231441017798156 %)
+    Power Consumption: 0.2980117921166666 watts
+    Cost: $60.63
+    Battery Size for 1 Day battery life: 7.152283010799999 watt-hours
+    Battery Size for 1 Week battery life: 50.06598107559999 watt-hours
+    Battery Size for 1 Month battery life: 217.54860824516663 watt-hours
+    Battery Size for 1 Year battery life: 2610.5832989419996 watt-hours
+    18650 Cells required for 1 year battery life: 208 cells
+    Battery Life with minimum 18650 cells: 366.4284531306399 days
+7.
+    PM2.5 Sensors: PAS-OUT-01 (78.87308465643244 %)
+    CO2 Sensors: SGP30 (6.196731226714639 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (6.207247638002162 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (8.722936478850773 %)
+    Power Consumption: 0.02339201019 watts
+    Cost: $63.25
+    Battery Size for 1 Day battery life: 0.5614082445599999 watt-hours
+    Battery Size for 1 Week battery life: 3.9298577119199996 watt-hours
+    Battery Size for 1 Month battery life: 17.076167438699997 watt-hours
+    Battery Size for 1 Year battery life: 204.91400926439997 watt-hours
+    18650 Cells required for 1 year battery life: 18 cells
+    Battery Life with minimum 18650 cells: 403.9840921427027 days
+8.
+    PM2.5 Sensors: PMS5003 (8.12206276189675 %)
+    CO2 Sensors: MQ-135 (83.46371495847654 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4544599279489047 %)
+    Micro Controllers: ESP32 (7.9597623516778055 %)
+    Power Consumption: 0.31950011666666667 watts
+    Cost: $67.59
+    Battery Size for 1 Day battery life: 7.6680028 watt-hours
+    Battery Size for 1 Week battery life: 53.676019600000004 watt-hours
+    Battery Size for 1 Month battery life: 233.23508516666666 watt-hours
+    Battery Size for 1 Year battery life: 2798.821022 watt-hours
+    18650 Cells required for 1 year battery life: 224 cells
+    Battery Life with minimum 18650 cells: 368.0749829668816 days
+9.
+    PM2.5 Sensors: SPS30 (2.262656671044437 %)
+    CO2 Sensors: MQ-135 (95.82114643045328 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.5217461423138181 %)
+    Micro Controllers: MSP430 (1.3944507561884614 %)
+    Power Consumption: 0.27829625985555556 watts
+    Cost: $73.22
+    Battery Size for 1 Day battery life: 6.679110236533333 watt-hours
+    Battery Size for 1 Week battery life: 46.75377165573333 watt-hours
+    Battery Size for 1 Month battery life: 203.15626969455556 watt-hours
+    Battery Size for 1 Year battery life: 2437.8752363346666 watt-hours
+    18650 Cells required for 1 year battery life: 194 cells
+    Battery Life with minimum 18650 cells: 365.9768911478125 days
+10.
+    PM2.5 Sensors: PMS5003 (86.70365339941714 %)
+    CO2 Sensors: SGP30 (4.843175866997732 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (4.85139517286912 %)
+    Micro Controllers: MSP430 (3.6017755607160225 %)
+    Power Consumption: 0.029929534664999997 watts
+    Cost: $76.63
+    Battery Size for 1 Day battery life: 0.71830883196 watt-hours
+    Battery Size for 1 Week battery life: 5.02816182372 watt-hours
+    Battery Size for 1 Month battery life: 21.848560305449997 watt-hours
+    Battery Size for 1 Year battery life: 262.1827236654 watt-hours
+    18650 Cells required for 1 year battery life: 22 cells
+    Battery Life with minimum 18650 cells: 385.9064342054982 days
+11.
+    PM2.5 Sensors: PMS5003 (8.60553162195332 %)
+    CO2 Sensors: MQ-135 (88.43192418192235 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4815118271705673 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (2.481032368953756 %)
+    Power Consumption: 0.30155022536666665 watts
+    Cost: $77.59
+    Battery Size for 1 Day battery life: 7.2372054087999995 watt-hours
+    Battery Size for 1 Week battery life: 50.660437861599995 watt-hours
+    Battery Size for 1 Month battery life: 220.13166451766665 watt-hours
+    Battery Size for 1 Year battery life: 2641.579974212 watt-hours
+    18650 Cells required for 1 year battery life: 210 cells
+    Battery Life with minimum 18650 cells: 365.6107365396353 days
+12.
+    PM2.5 Sensors: SPS30 (2.1028612783542764 %)
+    CO2 Sensors: MQ-135 (89.05397847350126 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.4848989127882143 %)
+    Micro Controllers: ESP32 (8.358261335356243 %)
+    Power Consumption: 0.2994438555555556 watts
+    Cost: $80.18
+    Battery Size for 1 Day battery life: 7.1866525333333335 watt-hours
+    Battery Size for 1 Week battery life: 50.30656773333334 watt-hours
+    Battery Size for 1 Month battery life: 218.59401455555556 watt-hours
+    Battery Size for 1 Year battery life: 2623.128174666667 watt-hours
+    18650 Cells required for 1 year battery life: 210 cells
+    Battery Life with minimum 18650 cells: 368.1825422513818 days
+13.
+    PM2.5 Sensors: PMS5003 (72.52978437691675 %)
+    CO2 Sensors: SGP30 (4.051438290779034 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (4.058313946639041 %)
+    Micro Controllers: ESP32 (19.360463385665177 %)
+    Power Consumption: 0.035778405 watts
+    Cost: $83.59
+    Battery Size for 1 Day battery life: 0.85868172 watt-hours
+    Battery Size for 1 Week battery life: 6.01077204 watt-hours
+    Battery Size for 1 Month battery life: 26.11823565 watt-hours
+    Battery Size for 1 Year battery life: 313.4188278 watt-hours
+    18650 Cells required for 1 year battery life: 26 cells
+    Battery Life with minimum 18650 cells: 381.5150507687528 days
+14.
+    PM2.5 Sensors: SPS30 (63.075839342949635 %)
+    CO2 Sensors: SGP30 (14.520019929605679 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (14.54466171184475 %)
+    Micro Controllers: MSP430 (7.859479015599942 %)
+    Power Consumption: 0.009983044148888889 watts
+    Cost: $89.22
+    Battery Size for 1 Day battery life: 0.23959305957333332 watt-hours
+    Battery Size for 1 Week battery life: 1.6771514170133333 watt-hours
+    Battery Size for 1 Month battery life: 7.287622228688889 watt-hours
+    Battery Size for 1 Year battery life: 87.45146674426667 watt-hours
+    18650 Cells required for 1 year battery life: 8 cells
+    Battery Life with minimum 18650 cells: 420.7133553012945 days
+15.
+    PM2.5 Sensors: SPS30 (2.2346940165458324 %)
+    CO2 Sensors: MQ-135 (94.63695722243784 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (0.5152982320761741 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (2.6130505289401453 %)
+    Power Consumption: 0.28177857202222223 watts
+    Cost: $90.18
+    Battery Size for 1 Day battery life: 6.7626857285333335 watt-hours
+    Battery Size for 1 Week battery life: 47.338800099733334 watt-hours
+    Battery Size for 1 Month battery life: 205.6983575762222 watt-hours
+    Battery Size for 1 Year battery life: 2468.3802909146666 watt-hours
+    18650 Cells required for 1 year battery life: 196 cells
+    Battery Life with minimum 18650 cells: 365.18035868208204 days
+16.
+    PM2.5 Sensors: PMS5003 (84.00230299160081 %)
+    CO2 Sensors: SGP30 (4.692281243870715 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (4.70024446796934 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (6.605171296559126 %)
+    Power Consumption: 0.03089201019 watts
+    Cost: $93.59
+    Battery Size for 1 Day battery life: 0.74140824456 watt-hours
+    Battery Size for 1 Week battery life: 5.18985771192 watt-hours
+    Battery Size for 1 Month battery life: 22.551167438700002 watt-hours
+    Battery Size for 1 Year battery life: 270.6140092644 watt-hours
+    18650 Cells required for 1 year battery life: 22 cells
+    Battery Life with minimum 18650 cells: 373.88308267937936 days
+17.
+    PM2.5 Sensors: SPS30 (44.249280105938425 %)
+    CO2 Sensors: SGP30 (10.186157420999047 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (10.20344424803083 %)
+    Micro Controllers: ESP32 (35.361118225031696 %)
+    Power Consumption: 0.014230488888888889 watts
+    Cost: $96.18
+    Battery Size for 1 Day battery life: 0.3415317333333333 watt-hours
+    Battery Size for 1 Week battery life: 2.390722133333333 watt-hours
+    Battery Size for 1 Month battery life: 10.388256888888888 watt-hours
+    Battery Size for 1 Year battery life: 124.65908266666666 watt-hours
+    18650 Cells required for 1 year battery life: 10 cells
+    Battery Life with minimum 18650 cells: 368.9261866540074 days
+18.
+    PM2.5 Sensors: SPS30 (58.94997117203695 %)
+    CO2 Sensors: SGP30 (13.570247581070547 %)
+    Air Speed Sensors: Custom Ultrasonic Anemometer (13.593277514048893 %)
+    Micro Controllers: Adafruit Feather M0 Bluefruit LE (13.886503732843611 %)
+    Power Consumption: 0.010681750582222222 watts
+    Cost: $106.18
+    Battery Size for 1 Day battery life: 0.25636201397333336 watt-hours
+    Battery Size for 1 Week battery life: 1.7945340978133335 watt-hours
+    Battery Size for 1 Month battery life: 7.7976779250222235 watt-hours
+    Battery Size for 1 Year battery life: 93.57213510026668 watt-hours
+    18650 Cells required for 1 year battery life: 8 cells
+    Battery Life with minimum 18650 cells: 393.19397767910016 days

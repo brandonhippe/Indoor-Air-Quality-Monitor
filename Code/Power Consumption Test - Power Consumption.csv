@@ -1,0 +1,32 @@
+Micro Controllers,(Time on and Time off not necessary),,,,,,,,,
+Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),,Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),,Notes
+Adafruit Feather M0 Bluefruit LE,29.95,,3.3 V,6.47 mA,,,3.3 V,4.06 uA,,
+ESP32,19.95,,3.3 V,22 mA,,,3.3 V,10 uA,,Could only find power consumption specs for ESP32-C3-WROOM: https://www.espressif.com/sites/default/files/documentation/esp32-c3-wroom-02_datasheet_en.pdf
+MSP430,12.99,,3.3 V,3.408 mA,,,3.3 V,3.21 uA,,Calculated using Active Mode Supply Current per MHz
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+PM2.5 Sensors,,,,,,,,,,
+Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
+PMS5003,30.34,,5 V,100 mA,30 s,,5 V,200 uA,570 s,Stable data 30sec after startup
+PAS-OUT-01,0,,5 V,70 mA,30 s,,5 V,200 uA,570 s,Need to request quote
+SPS30,42.93,,5 V,55 mA,10 s,,5 V,38 uA,440 s,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+CO2 Sensors,,,,,,,,,,
+Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
+SGP30,17.5,,1.8 V,48.2 mA,1 s,,1.8 V,2 uA,59 s,
+MQ-135,1.5,800 mW,,,20 s,,0 V,0 mA,40 s,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+Air Speed Sensors,,,,,,,,,,
+Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
+Custom Ultrasonic Anemometer,15.8,,3.3 V,8.8 mA,3 s,,0 V,0 mA,57 s,The wind gust peak is usually averaged over 3 seconds (historical from the time constant of cup anemometers).
