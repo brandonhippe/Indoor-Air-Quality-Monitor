@@ -10,7 +10,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 1.6771514170133333 watt-hours
     Battery Size for 1 Month battery life: 7.287622228688889 watt-hours
     Battery Size for 1 Year battery life: 87.45146674426667 watt-hours
-    18650 Cells required for 1 year battery life: 8 cells
+    18650 Cells required for 1 year battery life: 7 cells
     Battery Life with minimum 18650 cells: 420.7133553012945 days
 2.
     PM2.5 Sensors: SPS30 (58.94997117203695 %)
@@ -37,7 +37,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 10.388256888888888 watt-hours
     Battery Size for 1 Year battery life: 124.65908266666666 watt-hours
     18650 Cells required for 1 year battery life: 10 cells
-    Battery Life with minimum 18650 cells: 368.9261866540074 days
+    Battery Life with minimum 18650 cells: 295.1409493232059 days
 4.
     PM2.5 Sensors: PAS-OUT-01 (82.25761379165021 %)
     CO2 Sensors: SGP30 (6.462639647455211 %)
@@ -50,7 +50,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 16.373560305449995 watt-hours
     Battery Size for 1 Year battery life: 196.48272366539996 watt-hours
     18650 Cells required for 1 year battery life: 16 cells
-    Battery Life with minimum 18650 cells: 374.5062091327164 days
+    Battery Life with minimum 18650 cells: 187.2531045663582 days
 5.
     PM2.5 Sensors: PAS-OUT-01 (78.87308465643244 %)
     CO2 Sensors: SGP30 (6.196731226714639 %)
@@ -62,8 +62,8 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 3.9298577119199996 watt-hours
     Battery Size for 1 Month battery life: 17.076167438699997 watt-hours
     Battery Size for 1 Year battery life: 204.91400926439997 watt-hours
-    18650 Cells required for 1 year battery life: 18 cells
-    Battery Life with minimum 18650 cells: 403.9840921427027 days
+    18650 Cells required for 1 year battery life: 17 cells
+    Battery Life with minimum 18650 cells: 179.54848539675677 days
 6.
     PM2.5 Sensors: PAS-OUT-01 (65.24413240421445 %)
     CO2 Sensors: SGP30 (5.125960958547698 %)
@@ -76,7 +76,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 20.643235649999998 watt-hours
     Battery Size for 1 Year battery life: 247.71882779999999 watt-hours
     18650 Cells required for 1 year battery life: 20 cells
-    Battery Life with minimum 18650 cells: 371.3080705930904 days
+    Battery Life with minimum 18650 cells: 148.52322823723617 days
 7.
     PM2.5 Sensors: PMS5003 (86.70365339941714 %)
     CO2 Sensors: SGP30 (4.843175866997732 %)
@@ -88,8 +88,8 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 5.02816182372 watt-hours
     Battery Size for 1 Month battery life: 21.848560305449997 watt-hours
     Battery Size for 1 Year battery life: 262.1827236654 watt-hours
-    18650 Cells required for 1 year battery life: 22 cells
-    Battery Life with minimum 18650 cells: 385.9064342054982 days
+    18650 Cells required for 1 year battery life: 21 cells
+    Battery Life with minimum 18650 cells: 140.329612438363 days
 8.
     PM2.5 Sensors: PMS5003 (84.00230299160081 %)
     CO2 Sensors: SGP30 (4.692281243870715 %)
@@ -102,7 +102,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 22.551167438700002 watt-hours
     Battery Size for 1 Year battery life: 270.6140092644 watt-hours
     18650 Cells required for 1 year battery life: 22 cells
-    Battery Life with minimum 18650 cells: 373.88308267937936 days
+    Battery Life with minimum 18650 cells: 135.9574846106834 days
 9.
     PM2.5 Sensors: PMS5003 (72.52978437691675 %)
     CO2 Sensors: SGP30 (4.051438290779034 %)
@@ -114,8 +114,8 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 6.01077204 watt-hours
     Battery Size for 1 Month battery life: 26.11823565 watt-hours
     Battery Size for 1 Year battery life: 313.4188278 watt-hours
-    18650 Cells required for 1 year battery life: 26 cells
-    Battery Life with minimum 18650 cells: 381.5150507687528 days
+    18650 Cells required for 1 year battery life: 25 cells
+    Battery Life with minimum 18650 cells: 117.38924639038548 days
 10.
     PM2.5 Sensors: SPS30 (2.262656671044437 %)
     CO2 Sensors: MQ-135 (95.82114643045328 %)
@@ -128,7 +128,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 203.15626969455556 watt-hours
     Battery Size for 1 Year battery life: 2437.8752363346666 watt-hours
     18650 Cells required for 1 year battery life: 194 cells
-    Battery Life with minimum 18650 cells: 365.9768911478125 days
+    Battery Life with minimum 18650 cells: 15.091830562796392 days
 11.
     PM2.5 Sensors: SPS30 (2.2346940165458324 %)
     CO2 Sensors: MQ-135 (94.63695722243784 %)
@@ -141,7 +141,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 205.6983575762222 watt-hours
     Battery Size for 1 Year battery life: 2468.3802909146666 watt-hours
     18650 Cells required for 1 year battery life: 196 cells
-    Battery Life with minimum 18650 cells: 365.18035868208204 days
+    Battery Life with minimum 18650 cells: 14.905320762533961 days
 12.
     PM2.5 Sensors: PAS-OUT-01 (6.350860963533853 %)
     CO2 Sensors: MQ-135 (91.79202837989308 %)
@@ -154,7 +154,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 212.07360824516664 watt-hours
     Battery Size for 1 Year battery life: 2544.883298942 watt-hours
     18650 Cells required for 1 year battery life: 202 cells
-    Battery Life with minimum 18650 cells: 365.0454228632873 days
+    Battery Life with minimum 18650 cells: 14.45724446983316 days
 13.
     PM2.5 Sensors: PAS-OUT-01 (6.274438313044557 %)
     CO2 Sensors: MQ-135 (90.68745529242359 %)
@@ -166,8 +166,8 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 49.400437861600004 watt-hours
     Battery Size for 1 Month battery life: 214.6566645176667 watt-hours
     Battery Size for 1 Year battery life: 2575.8799742120004 watt-hours
-    18650 Cells required for 1 year battery life: 206 cells
-    Battery Life with minimum 18650 cells: 367.7943108703354 days
+    18650 Cells required for 1 year battery life: 205 cells
+    Battery Life with minimum 18650 cells: 14.283274208556715 days
 14.
     PM2.5 Sensors: PMS5003 (8.707709119725374 %)
     CO2 Sensors: MQ-135 (89.48191773642002 %)
@@ -180,7 +180,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 217.54860824516663 watt-hours
     Battery Size for 1 Year battery life: 2610.5832989419996 watt-hours
     18650 Cells required for 1 year battery life: 208 cells
-    Battery Life with minimum 18650 cells: 366.4284531306399 days
+    Battery Life with minimum 18650 cells: 14.093402043486153 days
 15.
     PM2.5 Sensors: SPS30 (2.1028612783542764 %)
     CO2 Sensors: MQ-135 (89.05397847350126 %)
@@ -192,8 +192,8 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 50.30656773333334 watt-hours
     Battery Size for 1 Month battery life: 218.59401455555556 watt-hours
     Battery Size for 1 Year battery life: 2623.128174666667 watt-hours
-    18650 Cells required for 1 year battery life: 210 cells
-    Battery Life with minimum 18650 cells: 368.1825422513818 days
+    18650 Cells required for 1 year battery life: 209 cells
+    Battery Life with minimum 18650 cells: 14.026001609576449 days
 16.
     PM2.5 Sensors: PMS5003 (8.60553162195332 %)
     CO2 Sensors: MQ-135 (88.43192418192235 %)
@@ -206,7 +206,7 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Month battery life: 220.13166451766665 watt-hours
     Battery Size for 1 Year battery life: 2641.579974212 watt-hours
     18650 Cells required for 1 year battery life: 210 cells
-    Battery Life with minimum 18650 cells: 365.6107365396353 days
+    Battery Life with minimum 18650 cells: 13.928028058652771 days
 17.
     PM2.5 Sensors: PAS-OUT-01 (5.913459327232089 %)
     CO2 Sensors: MQ-135 (85.47005351012955 %)
@@ -218,8 +218,8 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 52.416019600000006 watt-hours
     Battery Size for 1 Month battery life: 227.7600851666667 watt-hours
     Battery Size for 1 Year battery life: 2733.1210220000003 watt-hours
-    18650 Cells required for 1 year battery life: 218 cells
-    Battery Life with minimum 18650 cells: 366.8267859087872 days
+    18650 Cells required for 1 year battery life: 217 cells
+    Battery Life with minimum 18650 cells: 13.461533427845405 days
 18.
     PM2.5 Sensors: PMS5003 (8.12206276189675 %)
     CO2 Sensors: MQ-135 (83.46371495847654 %)
@@ -231,8 +231,8 @@ Configurations sorted by lowest power consumption:
     Battery Size for 1 Week battery life: 53.676019600000004 watt-hours
     Battery Size for 1 Month battery life: 233.23508516666666 watt-hours
     Battery Size for 1 Year battery life: 2798.821022 watt-hours
-    18650 Cells required for 1 year battery life: 224 cells
-    Battery Life with minimum 18650 cells: 368.0749829668816 days
+    18650 Cells required for 1 year battery life: 223 cells
+    Battery Life with minimum 18650 cells: 13.145535105960056 days
 
 Configurations sorted by lowest cost:
 1.
@@ -247,7 +247,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 212.07360824516664 watt-hours
     Battery Size for 1 Year battery life: 2544.883298942 watt-hours
     18650 Cells required for 1 year battery life: 202 cells
-    Battery Life with minimum 18650 cells: 365.0454228632873 days
+    Battery Life with minimum 18650 cells: 14.45724446983316 days
 2.
     PM2.5 Sensors: PAS-OUT-01 (5.913459327232089 %)
     CO2 Sensors: MQ-135 (85.47005351012955 %)
@@ -259,8 +259,8 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 52.416019600000006 watt-hours
     Battery Size for 1 Month battery life: 227.7600851666667 watt-hours
     Battery Size for 1 Year battery life: 2733.1210220000003 watt-hours
-    18650 Cells required for 1 year battery life: 218 cells
-    Battery Life with minimum 18650 cells: 366.8267859087872 days
+    18650 Cells required for 1 year battery life: 217 cells
+    Battery Life with minimum 18650 cells: 13.461533427845405 days
 3.
     PM2.5 Sensors: PAS-OUT-01 (82.25761379165021 %)
     CO2 Sensors: SGP30 (6.462639647455211 %)
@@ -273,7 +273,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 16.373560305449995 watt-hours
     Battery Size for 1 Year battery life: 196.48272366539996 watt-hours
     18650 Cells required for 1 year battery life: 16 cells
-    Battery Life with minimum 18650 cells: 374.5062091327164 days
+    Battery Life with minimum 18650 cells: 187.2531045663582 days
 4.
     PM2.5 Sensors: PAS-OUT-01 (6.274438313044557 %)
     CO2 Sensors: MQ-135 (90.68745529242359 %)
@@ -285,8 +285,8 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 49.400437861600004 watt-hours
     Battery Size for 1 Month battery life: 214.6566645176667 watt-hours
     Battery Size for 1 Year battery life: 2575.8799742120004 watt-hours
-    18650 Cells required for 1 year battery life: 206 cells
-    Battery Life with minimum 18650 cells: 367.7943108703354 days
+    18650 Cells required for 1 year battery life: 205 cells
+    Battery Life with minimum 18650 cells: 14.283274208556715 days
 5.
     PM2.5 Sensors: PAS-OUT-01 (65.24413240421445 %)
     CO2 Sensors: SGP30 (5.125960958547698 %)
@@ -299,7 +299,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 20.643235649999998 watt-hours
     Battery Size for 1 Year battery life: 247.71882779999999 watt-hours
     18650 Cells required for 1 year battery life: 20 cells
-    Battery Life with minimum 18650 cells: 371.3080705930904 days
+    Battery Life with minimum 18650 cells: 148.52322823723617 days
 6.
     PM2.5 Sensors: PMS5003 (8.707709119725374 %)
     CO2 Sensors: MQ-135 (89.48191773642002 %)
@@ -312,7 +312,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 217.54860824516663 watt-hours
     Battery Size for 1 Year battery life: 2610.5832989419996 watt-hours
     18650 Cells required for 1 year battery life: 208 cells
-    Battery Life with minimum 18650 cells: 366.4284531306399 days
+    Battery Life with minimum 18650 cells: 14.093402043486153 days
 7.
     PM2.5 Sensors: PAS-OUT-01 (78.87308465643244 %)
     CO2 Sensors: SGP30 (6.196731226714639 %)
@@ -324,8 +324,8 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 3.9298577119199996 watt-hours
     Battery Size for 1 Month battery life: 17.076167438699997 watt-hours
     Battery Size for 1 Year battery life: 204.91400926439997 watt-hours
-    18650 Cells required for 1 year battery life: 18 cells
-    Battery Life with minimum 18650 cells: 403.9840921427027 days
+    18650 Cells required for 1 year battery life: 17 cells
+    Battery Life with minimum 18650 cells: 179.54848539675677 days
 8.
     PM2.5 Sensors: PMS5003 (8.12206276189675 %)
     CO2 Sensors: MQ-135 (83.46371495847654 %)
@@ -337,8 +337,8 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 53.676019600000004 watt-hours
     Battery Size for 1 Month battery life: 233.23508516666666 watt-hours
     Battery Size for 1 Year battery life: 2798.821022 watt-hours
-    18650 Cells required for 1 year battery life: 224 cells
-    Battery Life with minimum 18650 cells: 368.0749829668816 days
+    18650 Cells required for 1 year battery life: 223 cells
+    Battery Life with minimum 18650 cells: 13.145535105960056 days
 9.
     PM2.5 Sensors: SPS30 (2.262656671044437 %)
     CO2 Sensors: MQ-135 (95.82114643045328 %)
@@ -351,7 +351,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 203.15626969455556 watt-hours
     Battery Size for 1 Year battery life: 2437.8752363346666 watt-hours
     18650 Cells required for 1 year battery life: 194 cells
-    Battery Life with minimum 18650 cells: 365.9768911478125 days
+    Battery Life with minimum 18650 cells: 15.091830562796392 days
 10.
     PM2.5 Sensors: PMS5003 (86.70365339941714 %)
     CO2 Sensors: SGP30 (4.843175866997732 %)
@@ -363,8 +363,8 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 5.02816182372 watt-hours
     Battery Size for 1 Month battery life: 21.848560305449997 watt-hours
     Battery Size for 1 Year battery life: 262.1827236654 watt-hours
-    18650 Cells required for 1 year battery life: 22 cells
-    Battery Life with minimum 18650 cells: 385.9064342054982 days
+    18650 Cells required for 1 year battery life: 21 cells
+    Battery Life with minimum 18650 cells: 140.329612438363 days
 11.
     PM2.5 Sensors: PMS5003 (8.60553162195332 %)
     CO2 Sensors: MQ-135 (88.43192418192235 %)
@@ -377,7 +377,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 220.13166451766665 watt-hours
     Battery Size for 1 Year battery life: 2641.579974212 watt-hours
     18650 Cells required for 1 year battery life: 210 cells
-    Battery Life with minimum 18650 cells: 365.6107365396353 days
+    Battery Life with minimum 18650 cells: 13.928028058652771 days
 12.
     PM2.5 Sensors: SPS30 (2.1028612783542764 %)
     CO2 Sensors: MQ-135 (89.05397847350126 %)
@@ -389,8 +389,8 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 50.30656773333334 watt-hours
     Battery Size for 1 Month battery life: 218.59401455555556 watt-hours
     Battery Size for 1 Year battery life: 2623.128174666667 watt-hours
-    18650 Cells required for 1 year battery life: 210 cells
-    Battery Life with minimum 18650 cells: 368.1825422513818 days
+    18650 Cells required for 1 year battery life: 209 cells
+    Battery Life with minimum 18650 cells: 14.026001609576449 days
 13.
     PM2.5 Sensors: PMS5003 (72.52978437691675 %)
     CO2 Sensors: SGP30 (4.051438290779034 %)
@@ -402,8 +402,8 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 6.01077204 watt-hours
     Battery Size for 1 Month battery life: 26.11823565 watt-hours
     Battery Size for 1 Year battery life: 313.4188278 watt-hours
-    18650 Cells required for 1 year battery life: 26 cells
-    Battery Life with minimum 18650 cells: 381.5150507687528 days
+    18650 Cells required for 1 year battery life: 25 cells
+    Battery Life with minimum 18650 cells: 117.38924639038548 days
 14.
     PM2.5 Sensors: SPS30 (63.075839342949635 %)
     CO2 Sensors: SGP30 (14.520019929605679 %)
@@ -415,7 +415,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Week battery life: 1.6771514170133333 watt-hours
     Battery Size for 1 Month battery life: 7.287622228688889 watt-hours
     Battery Size for 1 Year battery life: 87.45146674426667 watt-hours
-    18650 Cells required for 1 year battery life: 8 cells
+    18650 Cells required for 1 year battery life: 7 cells
     Battery Life with minimum 18650 cells: 420.7133553012945 days
 15.
     PM2.5 Sensors: SPS30 (2.2346940165458324 %)
@@ -429,7 +429,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 205.6983575762222 watt-hours
     Battery Size for 1 Year battery life: 2468.3802909146666 watt-hours
     18650 Cells required for 1 year battery life: 196 cells
-    Battery Life with minimum 18650 cells: 365.18035868208204 days
+    Battery Life with minimum 18650 cells: 14.905320762533961 days
 16.
     PM2.5 Sensors: PMS5003 (84.00230299160081 %)
     CO2 Sensors: SGP30 (4.692281243870715 %)
@@ -442,7 +442,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 22.551167438700002 watt-hours
     Battery Size for 1 Year battery life: 270.6140092644 watt-hours
     18650 Cells required for 1 year battery life: 22 cells
-    Battery Life with minimum 18650 cells: 373.88308267937936 days
+    Battery Life with minimum 18650 cells: 135.9574846106834 days
 17.
     PM2.5 Sensors: SPS30 (44.249280105938425 %)
     CO2 Sensors: SGP30 (10.186157420999047 %)
@@ -455,7 +455,7 @@ Configurations sorted by lowest cost:
     Battery Size for 1 Month battery life: 10.388256888888888 watt-hours
     Battery Size for 1 Year battery life: 124.65908266666666 watt-hours
     18650 Cells required for 1 year battery life: 10 cells
-    Battery Life with minimum 18650 cells: 368.9261866540074 days
+    Battery Life with minimum 18650 cells: 295.1409493232059 days
 18.
     PM2.5 Sensors: SPS30 (58.94997117203695 %)
     CO2 Sensors: SGP30 (13.570247581070547 %)
