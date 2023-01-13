@@ -55,6 +55,23 @@ def calcDutyCycle(dutyCycles):
     return [onTime, maxPeriod - onTime]
 
 
+def calcPower(component):
+    power = 0
+    period = component["Time (On)"] + component["Time (Off)"]
+
+    if "Typical Power Consumption (On)" in component:
+        power += component["Typical Power Consumption (On)"] * component["Time (On)"] / period
+    else:
+        power += component["Voltage (On)"] * component["Typical Current (On)"] * component["Time (On)"] / period
+
+    if "Typical Power Consumption (Off)" in component:
+        power += component["Typical Power Consumption (Off)"] * component["Time (Off)"] / period
+    else:
+        power += component["Voltage (Off)"] * component["Typical Current (Off)"] * component["Time (Off)"] / period
+
+    return power
+
+
 def main():
     with open("Power Consumption Test - Power Consumption.csv", newline='') as f:
         lines = [line.strip().strip(',') for line in f.readlines()]
@@ -94,6 +111,32 @@ def main():
 
             prevLineBlank = False
 
+    output = []
+    for i in components:
+        if "Time (Off)" in components[i]:
+            if "Typical Power Consumption (Off)" in components[i]:
+                p1 = calcPower(components[i])
+
+                powerInfo = components[i]["Typical Power Consumption (Off)"]
+                components[i]["Typical Power Consumption (Off)"] = 0
+
+                p2 = calcPower(components[i])
+
+                components[i]["Typical Power Consumption (Off)"] = powerInfo
+            elif "Voltage (Off)" in components[i]:
+                p1 = calcPower(components[i])
+
+                voltageInfo = components[i]["Voltage (Off)"]
+                components[i]["Voltage (Off)"] = 0
+
+                p2 = calcPower(components[i])
+                
+                components[i]["Voltage (Off)"] = voltageInfo
+
+            output.append(f"{i}: Sleep power accounts for {(p1 - p2) / p1 * 100} % of total used power.")
+
+    output.append('\n')
+
     groupings = [[i for i in components if components[i]["Type"] == g] for g in groupings]
     for i in range(len(groupings) - 1, -1, -1):
         if len(groupings[i]) == 0:
@@ -117,17 +160,7 @@ def main():
                 components[i]["Time (On)"], components[i]["Time (Off)"] = calcDutyCycle(dutyCycles)
                 calculated = True
 
-            period = components[i]["Time (On)"] + components[i]["Time (Off)"]
-
-            if "Typical Power Consumption (On)" in components[i]:
-                power[items][i] += components[i]["Typical Power Consumption (On)"] * components[i]["Time (On)"] / period
-            else:
-                power[items][i] += components[i]["Voltage (On)"] * components[i]["Typical Current (On)"] * components[i]["Time (On)"] / period
-
-            if "Typical Power Consumption (Off)" in components[i]:
-                power[items][i] += components[i]["Typical Power Consumption (Off)"] * components[i]["Time (Off)"] / period
-            else:
-                power[items][i] += components[i]["Voltage (Off)"] * components[i]["Typical Current (Off)"] * components[i]["Time (Off)"] / period
+            power[items][i] += calcPower(components[i])
 
             if calculated:
                 del(components[i]["Time (On)"])
@@ -138,7 +171,6 @@ def main():
     powerSorted = sorted(power.keys(), key=lambda e: sum(power[e].values()))
     costSorted = sorted(cost.keys(), key=lambda e: cost[e])
 
-    output = []
     output.append("Configurations sorted by lowest power consumption:")
     for i, config in enumerate(powerSorted):
         output.append(f"{i + 1}.")
