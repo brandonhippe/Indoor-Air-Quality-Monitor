@@ -1,5 +1,6 @@
 from itertools import product
 from collections import defaultdict
+from math import ceil
 
 
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
@@ -98,7 +99,7 @@ def main():
         if len(groupings[i]) == 0:
             groupings.pop(i)
 
-    power = defaultdict(lambda: 0)
+    power = defaultdict(lambda: defaultdict(lambda: 0))
     cost = defaultdict(lambda: 0)
     batterySize = {}
 
@@ -113,29 +114,28 @@ def main():
                 dutyCycles.append([components[i]["Time (On)"], components[i]["Time (Off)"]])
                 calculated = False
             else:
-                ### Calculate duty cycle for microcontroller based on duty cycles of other components
                 components[i]["Time (On)"], components[i]["Time (Off)"] = calcDutyCycle(dutyCycles)
                 calculated = True
 
             period = components[i]["Time (On)"] + components[i]["Time (Off)"]
 
             if "Typical Power Consumption (On)" in components[i]:
-                power[items] += components[i]["Typical Power Consumption (On)"] * components[i]["Time (On)"] / period
+                power[items][i] += components[i]["Typical Power Consumption (On)"] * components[i]["Time (On)"] / period
             else:
-                power[items] += components[i]["Voltage (On)"] * components[i]["Typical Current (On)"] * components[i]["Time (On)"] / period
+                power[items][i] += components[i]["Voltage (On)"] * components[i]["Typical Current (On)"] * components[i]["Time (On)"] / period
 
             if "Typical Power Consumption (Off)" in components[i]:
-                power[items] += components[i]["Typical Power Consumption (Off)"] * components[i]["Time (Off)"] / period
+                power[items][i] += components[i]["Typical Power Consumption (Off)"] * components[i]["Time (Off)"] / period
             else:
-                power[items] += components[i]["Voltage (Off)"] * components[i]["Typical Current (Off)"] * components[i]["Time (Off)"] / period
+                power[items][i] += components[i]["Voltage (Off)"] * components[i]["Typical Current (Off)"] * components[i]["Time (Off)"] / period
 
             if calculated:
                 del(components[i]["Time (On)"])
                 del(components[i]["Time (Off)"])
 
-        batterySize[items] = power[items] * 24
+        batterySize[items] = sum(power[items].values()) * 24
 
-    powerSorted = sorted(power.keys(), key=lambda e: power[e])
+    powerSorted = sorted(power.keys(), key=lambda e: sum(power[e].values()))
     costSorted = sorted(cost.keys(), key=lambda e: cost[e])
 
     output = []
@@ -143,33 +143,36 @@ def main():
     for i, config in enumerate(powerSorted):
         output.append(f"{i + 1}.")
         for item in config:
-            output.append(f"    {components[item]['Type']}: {item}")
+            output.append(f"    {components[item]['Type']}: {item} ({power[config][item] / sum(power[config].values()) * 100} %)")
 
-        output.append(f"    Power Consumption: {power[config]} watts")
+        output.append(f"    Power Consumption: {sum(power[config].values())} watts")
         output.append(f"    Cost: ${cost[config]}")
         output.append(f"    Battery Size for 1 Day battery life: {batterySize[config]} watt-hours")
         output.append(f"    Battery Size for 1 Week battery life: {batterySize[config] * 7} watt-hours")
         output.append(f"    Battery Size for 1 Month battery life: {batterySize[config] * 365 / 12} watt-hours")
-        output.append(f"    Battery Size for 2 Months battery life: {batterySize[config] * 365 * 2 / 12} watt-hours")
-        output.append(f"    Battery Size for 3 Months battery life: {batterySize[config] * 365 * 3 / 12} watt-hours")
-        output.append(f"    Battery Size for 6 Months battery life: {batterySize[config] * 365 * 6 / 12} watt-hours")
         output.append(f"    Battery Size for 1 Year battery life: {batterySize[config] * 365} watt-hours")
+        minCells = ceil(batterySize[config] * 365 / 12.6)
+        minCells -= minCells - ceil(minCells / 2) * 2
+        output.append(f"    18650 Cells required for 1 year battery life: {minCells} cells")
+        output.append(f"    Battery Life with minimum 18650 cells: {minCells * 12.6 / batterySize[config]} days")
+
 
     output.append("\nConfigurations sorted by lowest cost:")
     for i, config in enumerate(costSorted):
         output.append(f"{i + 1}.")
         for item in config:
-            output.append(f"    {components[item]['Type']}: {item}")
+            output.append(f"    {components[item]['Type']}: {item} ({power[config][item] / sum(power[config].values()) * 100} %)")
 
-        output.append(f"    Power Consumption: {power[config]} watts")
+        output.append(f"    Power Consumption: {sum(power[config].values())} watts")
         output.append(f"    Cost: ${cost[config]}")
         output.append(f"    Battery Size for 1 Day battery life: {batterySize[config]} watt-hours")
         output.append(f"    Battery Size for 1 Week battery life: {batterySize[config] * 7} watt-hours")
         output.append(f"    Battery Size for 1 Month battery life: {batterySize[config] * 365 / 12} watt-hours")
-        output.append(f"    Battery Size for 2 Months battery life: {batterySize[config] * 365 * 2 / 12} watt-hours")
-        output.append(f"    Battery Size for 3 Months battery life: {batterySize[config] * 365 * 3 / 12} watt-hours")
-        output.append(f"    Battery Size for 6 Months battery life: {batterySize[config] * 365 * 6 / 12} watt-hours")
         output.append(f"    Battery Size for 1 Year battery life: {batterySize[config] * 365} watt-hours")
+        minCells = ceil(batterySize[config] * 365 / 12.6)
+        minCells -= minCells - ceil(minCells / 2) * 2
+        output.append(f"    18650 Cells required for 1 year battery life: {minCells} cells")
+        output.append(f"    Battery Life with minimum 18650 cells: {minCells * 12.6 / batterySize[config]} days")
 
     if input("Write to file (y/n)? ") == 'y':
         with open("output.txt", "w") as f:
