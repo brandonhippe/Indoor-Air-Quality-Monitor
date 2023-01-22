@@ -5,22 +5,27 @@ import matplotlib.pyplot as plt
 
 
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
+MAX_T = 10800
+POWER_GOAL = 12.6 / (365 * 24)
 
 
-def gcd(a, b):
-    if (a == 0):
-        return b
+def gcd(a, b, memo = {}):
+    if (a, b) not in memo:
+        if (a == 0):
+            memo[(a, b)] = b
 
-    if (b == 0):
-        return a
+        if (b == 0):
+            memo[(a, b)] = a
 
-    if (a == b):
-        return a
+        if (a == b):
+            memo[(a, b)] = a
 
-    if (a > b):
-        return gcd(a-b, b)
-    else:
-        return gcd(a, b-a)
+        if (a > b):
+            memo[(a, b)] = gcd(a-b, b)
+        else:
+            memo[(a, b)] = gcd(a, b-a)
+
+    return memo[(a, b)]
 
 
 def lcm(nums):
@@ -62,6 +67,28 @@ def calcPower(component):
     power += component["Typical Power Consumption (On)"] * component["Time (On)"] / period
     power += component["Typical Power Consumption (Off)"] * component["Time (Off)"] / period
     return power
+
+
+def totalPower(items, components, cost, power, batterySize):
+    dutyCycles = []
+    for i in items:
+        cost[items] += components[i]["Cost"]
+        
+        if "Time (On)" in components[i] and "Time (Off)" in components[i]:
+            dutyCycles.append([components[i]["Time (On)"], components[i]["Time (Off)"]])
+            calculated = False
+        else:
+            components[i]["Time (On)"], components[i]["Time (Off)"] = calcDutyCycle(dutyCycles)
+            calculated = True
+
+        power[items][i] = calcPower(components[i])
+
+        if calculated:
+            del(components[i]["Time (On)"])
+            del(components[i]["Time (Off)"])
+
+    batterySize[items] = sum(power[items].values()) * 24
+    return sum(power[items].values())
 
 
 def main():
@@ -149,21 +176,30 @@ def main():
     axs[2, 0].set_xlabel("Sampling Rate (Samples/Hour)")
     axs[2, 1].set_xlabel("Power Consumption (Watts)")
 
+    shortestPeriod = min(components[c]["Time (On)"] for c in components if "Time (On)" in components[c])
+    firstUnder = {}
+
     for i, g in enumerate(groupings[1:]):
         for item in g:
             x, y = [], []
 
             offTime = components[item]["Time (Off)"]
-            for t in range(int(components[item]["Time (On)"]), 3601):
+            for t in range(int(components[item]["Time (On)"]), MAX_T + 1):
                 x.append(3600 / t)
                 components[item]["Time (Off)"] = t - components[item]["Time (On)"]
                 y.append(calcPower(components[item]))
 
+                if item not in firstUnder and y[-1] < POWER_GOAL / (len(groupings) - 1) and ((t < 600 and t % 60 == 0) or (t % 300 == 0)):
+                    firstUnder[item] = [t, x[-1], y[-1]]
+                
             components[item]["Time (Off)"] = offTime
 
             axs[i, 0].loglog(x, y, label = item)
             axs[i, 1].loglog(y, x, label = item)
 
+        x, y = [0, 3600 / shortestPeriod], [POWER_GOAL / (len(groupings) - 1)] * 2
+        axs[i, 0].loglog(x, y, 'r--', label = "Goal Avg Power/Item")
+        axs[i, 1].loglog(y, x, 'r--', label = "Goal Avg Power/Item")
         axs[i, 0].legend()
         axs[i, 1].legend()
 
@@ -171,31 +207,24 @@ def main():
     plt.get_current_fig_manager().window.state('zoomed')
     fig.show()
 
+    for item in list(components.keys()):
+        if item in firstUnder:
+            components[item]["Time (Off)"] = firstUnder[item][0] - components[item]["Time (On)"]
+        elif components[item]["Type"] != "Micro Controllers":
+            del components[item]
+
+            for g in groupings:
+                if item in g:
+                    g.pop(g.index(item))
+
     power = defaultdict(lambda: defaultdict(lambda: 0))
     cost = defaultdict(lambda: 0)
     batterySize = {}
 
     for items in product(*groupings):
         items = tuple(sorted(items, key=lambda e: "Time (On)" not in components[e] and "Time (Off)" not in components[e]))
-        
-        dutyCycles = []
-        for i in items:
-            cost[items] += components[i]["Cost"]
-            
-            if "Time (On)" in components[i] and "Time (Off)" in components[i]:
-                dutyCycles.append([components[i]["Time (On)"], components[i]["Time (Off)"]])
-                calculated = False
-            else:
-                components[i]["Time (On)"], components[i]["Time (Off)"] = calcDutyCycle(dutyCycles)
-                calculated = True
 
-            power[items][i] += calcPower(components[i])
-
-            if calculated:
-                del(components[i]["Time (On)"])
-                del(components[i]["Time (Off)"])
-
-        batterySize[items] = sum(power[items].values()) * 24
+        p = totalPower(items, components, cost, power, batterySize)
 
     powerSorted = sorted(power.keys(), key=lambda e: sum(power[e].values()))
 
@@ -203,15 +232,20 @@ def main():
     for i, config in enumerate(powerSorted):
         output.append(f"{i + 1}.")
         for item in config:
-            output.append(f"    {components[item]['Type']}: {item} ({power[config][item] / sum(power[config].values()) * 100} %)")
+            output.append(f"    {components[item]['Type']}: {item}")
+            if "Time (On)" in components[item]:
+                output.append(f"        Time On: {components[item]['Time (On)']} seconds")
+                output.append(f"        Time Off: {components[item]['Time (Off)']} seconds")
+                
+            output.append(f"        Percent of Total Power: {power[config][item] / sum(power[config].values()) * 100} %")
 
         output.append(f"    Power Consumption: {sum(power[config].values())} watts")
         output.append(f"    Cost: ${cost[config]}")
         output.append(f"    Battery Life on single 18650 cell: {12.6 / batterySize[config]} days")
         minCells = ceil(batterySize[config] * 365 / 12.6)
         minCells += minCells % 2
-        output.append(f"    18650 Cells required for 1 year battery life: {minCells} cells")
-        output.append(f"    Battery Life with minimum 18650 cells: {minCells * 12.6 / batterySize[config]} days")
+        output.append(f"    18650 Cells required for 1 year battery life (even only): {minCells} cells")
+        output.append(f"    Battery Life with minimum (even) 18650 cells: {minCells * 12.6 / batterySize[config]} days\n")
 
     if input("Write to file (y/n)? ") == 'y':
         with open("output.txt", "w") as f:

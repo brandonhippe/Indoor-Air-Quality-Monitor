@@ -1,6 +1,6 @@
 PMS5003: Sleep power accounts for 1.7681728880157133 % of total used power.
 PAS-OUT-01: Sleep power accounts for 2.50696378830083 % of total used power.
-SPS30: Sleep power accounts for 1.9642793483298318 % of total used power.
+SPS30: Sleep power accounts for 0.0 % of total used power.
 SGP30: Sleep power accounts for 1.2254600598385201 % of total used power.
 MQ-135: Sleep power accounts for 0.0 % of total used power.
 SCD40: Sleep power accounts for 0.0 % of total used power.
@@ -11,242 +11,127 @@ Wind Sensor Rev. C: Sleep power accounts for 0.0 % of total used power.
 
 Configurations sorted by lowest power consumption:
 1.
-    PM2.5 Sensors: SPS30 (83.45774555288169 %)
-    CO2 Sensors: SGP30 (2.613321422224212 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (6.480017461558458 %)
-    Micro Controllers: MSP430 (7.448915563335643 %)
-    Power Consumption: 0.011203673513333333 watts
-    Cost: $81.32
-    Battery Life on single 18650 cell: 46.85963040383182 days
-    18650 Cells required for 1 year battery life: 8 cells
-    Battery Life with minimum 18650 cells: 374.8770432306546 days
-2.
-    PM2.5 Sensors: SPS30 (82.53533255613381 %)
-    CO2 Sensors: SCD30 (3.6896833277028196 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (6.408397358641739 %)
-    Micro Controllers: MSP430 (7.366586757521633 %)
-    Power Consumption: 0.011328885513333333 watts
-    Cost: $122.77
-    Battery Life on single 18650 cell: 46.34171643645886 days
-    18650 Cells required for 1 year battery life: 8 cells
-    Battery Life with minimum 18650 cells: 370.7337314916709 days
-3.
-    PM2.5 Sensors: SPS30 (68.88846028723648 %)
-    CO2 Sensors: SCD40 (18.23453059187661 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (5.348795640283806 %)
-    Micro Controllers: MSP430 (7.5282134806031005 %)
-    Power Consumption: 0.013573148963333333 watts
-    Cost: $113.77
-    Battery Life on single 18650 cell: 38.679307316101905 days
-    18650 Cells required for 1 year battery life: 10 cells
-    Battery Life with minimum 18650 cells: 386.7930731610191 days
-4.
-    PM2.5 Sensors: SPS30 (52.01080844191858 %)
-    CO2 Sensors: SGP30 (1.6286200758004126 %)
-    Air Speed Sensors: Wind Sensor Rev. C (41.71841253228647 %)
-    Micro Controllers: MSP430 (4.642158949994533 %)
-    Power Consumption: 0.017977673513333334 watts
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Percent of Total Power: 35.594227337736676 %
+    CO2 Sensors: SGP30
+        Time On: 1.0 seconds
+        Time Off: 239.0 seconds
+        Percent of Total Power: 28.35254942748567 %
+    Air Speed Sensors: Wind Sensor Rev. C
+        Time On: 3.0 seconds
+        Time Off: 1197.0 seconds
+        Percent of Total Power: 29.122549639966373 %
+    Micro Controllers: MSP430
+        Percent of Total Power: 6.930673594811294 %
+    Power Consumption: 0.0012876619823333332 watts
     Cost: $95.36999999999999
-    Battery Life on single 18650 cell: 29.202888772600534 days
-    18650 Cells required for 1 year battery life: 14 cells
-    Battery Life with minimum 18650 cells: 408.84044281640746 days
-5.
-    PM2.5 Sensors: SPS30 (51.65106593888872 %)
-    CO2 Sensors: SCD30 (2.309024159116126 %)
-    Air Speed Sensors: Wind Sensor Rev. C (41.42985931428455 %)
-    Micro Controllers: MSP430 (4.610050587710598 %)
-    Power Consumption: 0.018102885513333333 watts
+    Battery Life on single 18650 cell: 407.71569495952923 days
+    18650 Cells required for 1 year battery life (even only): 2 cells
+    Battery Life with minimum (even) 18650 cells: 815.4313899190585 days
+
+2.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Percent of Total Power: 33.71825288123783 %
+    CO2 Sensors: SCD30
+        Time On: 2.0 seconds
+        Time Off: 298.0 seconds
+        Percent of Total Power: 30.7510466276889 %
+    Air Speed Sensors: Wind Sensor Rev. C
+        Time On: 3.0 seconds
+        Time Off: 1197.0 seconds
+        Percent of Total Power: 27.587661448285495 %
+    Micro Controllers: MSP430
+        Percent of Total Power: 7.943039042787777 %
+    Power Consumption: 0.0013593033273333333 watts
     Cost: $136.82
-    Battery Life on single 18650 cell: 29.00090151999919 days
-    18650 Cells required for 1 year battery life: 14 cells
-    Battery Life with minimum 18650 cells: 406.0126212799887 days
-6.
-    PM2.5 Sensors: SPS30 (45.95402210984518 %)
-    CO2 Sensors: SCD40 (12.163866320829932 %)
-    Air Speed Sensors: Wind Sensor Rev. C (36.860200972211906 %)
-    Micro Controllers: MSP430 (5.021910597112978 %)
-    Power Consumption: 0.020347148963333332 watts
+    Battery Life on single 18650 cell: 386.22726027599697 days
+    18650 Cells required for 1 year battery life (even only): 2 cells
+    Battery Life with minimum (even) 18650 cells: 772.4545205519939 days
+
+3.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Percent of Total Power: 33.272272921131076 %
+    CO2 Sensors: SCD40
+        Time On: 15.0 seconds
+        Time Off: 1785.0 seconds
+        Percent of Total Power: 29.94504562901796 %
+    Air Speed Sensors: Wind Sensor Rev. C
+        Time On: 3.0 seconds
+        Time Off: 1197.0 seconds
+        Percent of Total Power: 27.222768753652694 %
+    Micro Controllers: MSP430
+        Percent of Total Power: 9.559912696198278 %
+    Power Consumption: 0.001377523364333333 watts
     Cost: $127.82
-    Battery Life on single 18650 cell: 25.80214068054834 days
-    18650 Cells required for 1 year battery life: 16 cells
-    Battery Life with minimum 18650 cells: 412.83425088877345 days
-7.
-    PM2.5 Sensors: PAS-OUT-01 (93.24095540305414 %)
-    CO2 Sensors: SGP30 (0.7604410264776996 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (1.8855970368417074 %)
-    Micro Controllers: MSP430 (4.113006533626458 %)
-    Power Consumption: 0.03850239398 watts
-    Cost: $38.39
-    Battery Life on single 18650 cell: 13.635515762285074 days
-    18650 Cells required for 1 year battery life: 28 cells
-    Battery Life with minimum 18650 cells: 381.7944413439821 days
-8.
-    PM2.5 Sensors: PAS-OUT-01 (92.93871336108104 %)
-    CO2 Sensors: SCD30 (1.0821276374632833 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (1.8794848440151766 %)
-    Micro Controllers: MSP430 (4.099674157440497 %)
-    Power Consumption: 0.03862760598 watts
-    Cost: $79.84
-    Battery Life on single 18650 cell: 13.591316020770906 days
-    18650 Cells required for 1 year battery life: 28 cells
-    Battery Life with minimum 18650 cells: 380.55684858158537 days
-9.
-    PM2.5 Sensors: PAS-OUT-01 (88.23976325996117 %)
-    CO2 Sensors: SCD40 (6.083382007476431 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (1.7844587221930865 %)
-    Micro Controllers: MSP430 (3.8923960103693265 %)
-    Power Consumption: 0.040684605979999997 watts
-    Cost: $70.84
-    Battery Life on single 18650 cell: 12.904143652222732 days
-    18650 Cells required for 1 year battery life: 30 cells
-    Battery Life with minimum 18650 cells: 387.124309566682 days
-10.
-    PM2.5 Sensors: PAS-OUT-01 (79.2907668748049 %)
-    CO2 Sensors: SGP30 (0.6466681072908184 %)
-    Air Speed Sensors: Wind Sensor Rev. C (16.564923441811604 %)
-    Micro Controllers: MSP430 (3.497641576092673 %)
-    Power Consumption: 0.04527639398 watts
-    Cost: $52.440000000000005
-    Battery Life on single 18650 cell: 11.595446409268124 days
-    18650 Cells required for 1 year battery life: 32 cells
-    Battery Life with minimum 18650 cells: 371.05428509658 days
-11.
-    PM2.5 Sensors: PAS-OUT-01 (79.07209277093506 %)
-    CO2 Sensors: SCD30 (0.9206722779457062 %)
-    Air Speed Sensors: Wind Sensor Rev. C (16.51923943682487 %)
-    Micro Controllers: MSP430 (3.4879955142943597 %)
-    Power Consumption: 0.04540160598 watts
-    Cost: $93.89
-    Battery Life on single 18650 cell: 11.563467605777412 days
-    18650 Cells required for 1 year battery life: 32 cells
-    Battery Life with minimum 18650 cells: 370.03096338487717 days
-12.
-    PM2.5 Sensors: PAS-OUT-01 (75.64486831983429 %)
-    CO2 Sensors: SCD40 (5.215071005336765 %)
-    Air Speed Sensors: Wind Sensor Rev. C (15.803245470717467 %)
-    Micro Controllers: MSP430 (3.3368152041114802 %)
-    Power Consumption: 0.04745860598 watts
-    Cost: $84.89
-    Battery Life on single 18650 cell: 11.06227182950223 days
-    18650 Cells required for 1 year battery life: 34 cells
-    Battery Life with minimum 18650 cells: 376.1172422030758 days
-13.
-    PM2.5 Sensors: PMS5003 (95.1359298408725 %)
-    CO2 Sensors: SGP30 (0.5472428020874143 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (1.3569486260210892 %)
-    Micro Controllers: MSP430 (2.9598787310189816 %)
-    Power Consumption: 0.05350239398 watts
-    Cost: $68.73
-    Battery Life on single 18650 cell: 9.812645022879778 days
-    18650 Cells required for 1 year battery life: 38 cells
-    Battery Life with minimum 18650 cells: 372.8805108694316 days
-14.
-    PM2.5 Sensors: PMS5003 (94.91380245275681 %)
-    CO2 Sensors: SCD30 (0.7794493010855078 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (1.3537803650432505 %)
-    Micro Controllers: MSP430 (2.9529678811144278 %)
-    Power Consumption: 0.05362760598 watts
-    Cost: $110.18
-    Battery Life on single 18650 cell: 9.789734044734248 days
-    18650 Cells required for 1 year battery life: 38 cells
-    Battery Life with minimum 18650 cells: 372.00989369990145 days
-15.
-    PM2.5 Sensors: PMS5003 (91.4076684286525 %)
-    CO2 Sensors: SCD40 (4.444675429487523 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (1.30377145931634 %)
-    Micro Controllers: MSP430 (2.843884682543641 %)
-    Power Consumption: 0.055684605979999996 watts
-    Cost: $101.18
-    Battery Life on single 18650 cell: 9.428099395882626 days
-    18650 Cells required for 1 year battery life: 40 cells
-    Battery Life with minimum 18650 cells: 377.12397583530503 days
-16.
-    PM2.5 Sensors: PMS5003 (84.44433490312787 %)
-    CO2 Sensors: SGP30 (0.48574239543451875 %)
-    Air Speed Sensors: Wind Sensor Rev. C (12.442681960185832 %)
-    Micro Controllers: MSP430 (2.627240741251788 %)
-    Power Consumption: 0.06027639398 watts
-    Cost: $82.78
-    Battery Life on single 18650 cell: 8.709877372130084 days
-    18650 Cells required for 1 year battery life: 42 cells
-    Battery Life with minimum 18650 cells: 365.8148496294635 days
-17.
-    PM2.5 Sensors: PMS5003 (84.26928253671575 %)
-    CO2 Sensors: SCD30 (0.6920345795746009 %)
-    Air Speed Sensors: Wind Sensor Rev. C (12.416888389496425 %)
-    Micro Controllers: MSP430 (2.621794494213215 %)
-    Power Consumption: 0.06040160598 watts
-    Cost: $124.23
-    Battery Life on single 18650 cell: 8.691821872647498 days
-    18650 Cells required for 1 year battery life: 42 cells
-    Battery Life with minimum 18650 cells: 365.0565186511949 days
-18.
-    PM2.5 Sensors: PMS5003 (81.49397381090894 %)
-    CO2 Sensors: SCD40 (3.9626244633005814 %)
-    Air Speed Sensors: Wind Sensor Rev. C (12.00795291909267 %)
-    Micro Controllers: MSP430 (2.535448806697815 %)
-    Power Consumption: 0.06245860598 watts
-    Cost: $115.23
-    Battery Life on single 18650 cell: 8.40556704336487 days
-    18650 Cells required for 1 year battery life: 44 cells
-    Battery Life with minimum 18650 cells: 369.8449499080543 days
-19.
-    PM2.5 Sensors: SPS30 (14.470001274847814 %)
-    CO2 Sensors: MQ-135 (82.53538925441697 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (1.123512986225751 %)
-    Micro Controllers: MSP430 (1.8710964845094813 %)
-    Power Consumption: 0.06461874574666666 watts
-    Cost: $65.32
-    Battery Life on single 18650 cell: 8.124577379731669 days
-    18650 Cells required for 1 year battery life: 46 cells
-    Battery Life with minimum 18650 cells: 373.7305594676568 days
-20.
-    PM2.5 Sensors: SPS30 (13.097035609909854 %)
-    CO2 Sensors: MQ-135 (74.70413523887122 %)
-    Air Speed Sensors: Wind Sensor Rev. C (10.505269017966263 %)
-    Micro Controllers: MSP430 (1.6935601332526873 %)
-    Power Consumption: 0.07139274574666665 watts
-    Cost: $79.36999999999999
-    Battery Life on single 18650 cell: 7.353688312576385 days
-    18650 Cells required for 1 year battery life: 50 cells
-    Battery Life with minimum 18650 cells: 367.68441562881924 days
-21.
-    PM2.5 Sensors: PAS-OUT-01 (39.21656904321306 %)
-    CO2 Sensors: MQ-135 (58.26045540310204 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (0.7930704491747265 %)
-    Micro Controllers: MSP430 (1.7299051045101697 %)
-    Power Consumption: 0.09154293931333334 watts
-    Cost: $22.39
-    Battery Life on single 18650 cell: 5.7350135787428576 days
-    18650 Cells required for 1 year battery life: 64 cells
-    Battery Life with minimum 18650 cells: 367.0408690395429 days
-22.
-    PM2.5 Sensors: PAS-OUT-01 (36.51456224200359 %)
-    CO2 Sensors: MQ-135 (54.246332021546664 %)
-    Air Speed Sensors: Wind Sensor Rev. C (7.628390440529999 %)
-    Micro Controllers: MSP430 (1.6107152959197524 %)
-    Power Consumption: 0.09831693931333332 watts
-    Cost: $36.44
-    Battery Life on single 18650 cell: 5.339873308370999 days
-    18650 Cells required for 1 year battery life: 70 cells
-    Battery Life with minimum 18650 cells: 373.79113158596994 days
-23.
-    PM2.5 Sensors: PMS5003 (47.77416535347088 %)
-    CO2 Sensors: MQ-135 (50.058064548496006 %)
-    Air Speed Sensors: Custom Ultrasonic Anemometer (0.6814154036664019 %)
-    Micro Controllers: MSP430 (1.4863546943667052 %)
-    Power Consumption: 0.10654293931333335 watts
-    Cost: $52.730000000000004
-    Battery Life on single 18650 cell: 4.927590728992575 days
-    18650 Cells required for 1 year battery life: 76 cells
-    Battery Life with minimum 18650 cells: 374.49689540343576 days
-24.
-    PM2.5 Sensors: PMS5003 (44.91826227255937 %)
-    CO2 Sensors: MQ-135 (47.06563171977406 %)
-    Air Speed Sensors: Wind Sensor Rev. C (6.618604460593226 %)
-    Micro Controllers: MSP430 (1.3975015470733478 %)
-    Power Consumption: 0.11331693931333334 watts
-    Cost: $66.78
-    Battery Life on single 18650 cell: 4.633023122415258 days
-    18650 Cells required for 1 year battery life: 80 cells
-    Battery Life with minimum 18650 cells: 370.6418497932207 days
+    Battery Life on single 18650 cell: 381.1187625511377 days
+    18650 Cells required for 1 year battery life (even only): 2 cells
+    Battery Life with minimum (even) 18650 cells: 762.2375251022754 days
+
+4.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Percent of Total Power: 30.73968731061792 %
+    CO2 Sensors: SGP30
+        Time On: 1.0 seconds
+        Time Off: 239.0 seconds
+        Percent of Total Power: 24.485669982102426 %
+    Air Speed Sensors: Custom Ultrasonic Anemometer
+        Time On: 3.0 seconds
+        Time Off: 117.0 seconds
+        Percent of Total Power: 24.345832350009392 %
+    Micro Controllers: MSP430
+        Percent of Total Power: 20.42881035727026 %
+    Power Consumption: 0.0014910149498333334 watts
+    Cost: $81.32
+    Battery Life on single 18650 cell: 352.10914555798706 days
+    18650 Cells required for 1 year battery life (even only): 2 cells
+    Battery Life with minimum (even) 18650 cells: 704.2182911159741 days
+
+5.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Percent of Total Power: 28.983076061947816 %
+    CO2 Sensors: SCD30
+        Time On: 2.0 seconds
+        Time Off: 298.0 seconds
+        Percent of Total Power: 26.43256536849641 %
+    Air Speed Sensors: Custom Ultrasonic Anemometer
+        Time On: 3.0 seconds
+        Time Off: 117.0 seconds
+        Percent of Total Power: 22.95459624106267 %
+    Micro Controllers: MSP430
+        Percent of Total Power: 21.629762328493097 %
+    Power Consumption: 0.0015813826398333336 watts
+    Cost: $122.77
+    Battery Life on single 18650 cell: 331.9879621641295 days
+    18650 Cells required for 1 year battery life (even only): 2 cells
+    Battery Life with minimum (even) 18650 cells: 663.975924328259 days
+
+6.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Percent of Total Power: 28.486206436466095 %
+    CO2 Sensors: SCD40
+        Time On: 15.0 seconds
+        Time Off: 1785.0 seconds
+        Percent of Total Power: 25.637585792819483 %
+    Air Speed Sensors: Custom Ultrasonic Anemometer
+        Time On: 3.0 seconds
+        Time Off: 117.0 seconds
+        Percent of Total Power: 22.561075497681145 %
+    Micro Controllers: MSP430
+        Percent of Total Power: 23.315132273033278 %
+    Power Consumption: 0.0016089658493333332 watts
+    Cost: $113.77
+    Battery Life on single 18650 cell: 326.2965464540662 days
+    18650 Cells required for 1 year battery life (even only): 2 cells
+    Battery Life with minimum (even) 18650 cells: 652.5930929081323 days
