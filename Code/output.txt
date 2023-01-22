@@ -56,27 +56,6 @@ Configurations sorted by lowest power consumption:
     PM2.5 Sensors: SPS30
         Time On: 10.0 seconds
         Time Off: 5990.0 seconds
-        Percent of Total Power: 33.272272921131076 %
-    CO2 Sensors: SCD40
-        Time On: 15.0 seconds
-        Time Off: 1785.0 seconds
-        Percent of Total Power: 29.94504562901796 %
-    Air Speed Sensors: Wind Sensor Rev. C
-        Time On: 3.0 seconds
-        Time Off: 1197.0 seconds
-        Percent of Total Power: 27.222768753652694 %
-    Micro Controllers: MSP430
-        Percent of Total Power: 9.559912696198278 %
-    Power Consumption: 0.001377523364333333 watts
-    Cost: $127.82
-    Battery Life on single 18650 cell: 381.1187625511377 days
-    18650 Cells required for 1 year battery life (even only): 2 cells
-    Battery Life with minimum (even) 18650 cells: 762.2375251022754 days
-
-4.
-    PM2.5 Sensors: SPS30
-        Time On: 10.0 seconds
-        Time Off: 5990.0 seconds
         Percent of Total Power: 30.73968731061792 %
     CO2 Sensors: SGP30
         Time On: 1.0 seconds
@@ -94,7 +73,7 @@ Configurations sorted by lowest power consumption:
     18650 Cells required for 1 year battery life (even only): 2 cells
     Battery Life with minimum (even) 18650 cells: 704.2182911159741 days
 
-5.
+4.
     PM2.5 Sensors: SPS30
         Time On: 10.0 seconds
         Time Off: 5990.0 seconds
@@ -114,6 +93,27 @@ Configurations sorted by lowest power consumption:
     Battery Life on single 18650 cell: 331.9879621641295 days
     18650 Cells required for 1 year battery life (even only): 2 cells
     Battery Life with minimum (even) 18650 cells: 663.975924328259 days
+
+5.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Percent of Total Power: 33.272272921131076 %
+    CO2 Sensors: SCD40
+        Time On: 15.0 seconds
+        Time Off: 1785.0 seconds
+        Percent of Total Power: 29.94504562901796 %
+    Air Speed Sensors: Wind Sensor Rev. C
+        Time On: 3.0 seconds
+        Time Off: 1197.0 seconds
+        Percent of Total Power: 27.222768753652694 %
+    Micro Controllers: MSP430
+        Percent of Total Power: 9.559912696198278 %
+    Power Consumption: 0.001377523364333333 watts
+    Cost: $127.82
+    Battery Life on single 18650 cell: 381.1187625511377 days
+    18650 Cells required for 1 year battery life (even only): 2 cells
+    Battery Life with minimum (even) 18650 cells: 762.2375251022754 days
 
 6.
     PM2.5 Sensors: SPS30

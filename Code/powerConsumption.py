@@ -69,7 +69,7 @@ def calcPower(component):
     return power
 
 
-def totalPower(items, components, cost, power, batterySize):
+def totalPower(items, components, power, samplingRates, cost, batterySize):
     dutyCycles = []
     for i in items:
         cost[items] += components[i]["Cost"]
@@ -81,6 +81,7 @@ def totalPower(items, components, cost, power, batterySize):
             components[i]["Time (On)"], components[i]["Time (Off)"] = calcDutyCycle(dutyCycles)
             calculated = True
 
+        samplingRates[items][i] = 3600 / (components[i]["Time (On)"] + components[i]["Time (Off)"])
         power[items][i] = calcPower(components[i])
 
         if calculated:
@@ -218,18 +219,19 @@ def main():
                     g.pop(g.index(item))
 
     power = defaultdict(lambda: defaultdict(lambda: 0))
+    samplingRates = defaultdict(lambda: {})
     cost = defaultdict(lambda: 0)
     batterySize = {}
 
     for items in product(*groupings):
         items = tuple(sorted(items, key=lambda e: "Time (On)" not in components[e] and "Time (Off)" not in components[e]))
 
-        p = totalPower(items, components, cost, power, batterySize)
+        p = totalPower(items, components, power, samplingRates, cost, batterySize)
 
-    powerSorted = sorted(power.keys(), key=lambda e: sum(power[e].values()))
+    groupsSorted = sorted(power.keys(), key=lambda e: sum(power[e][i] / samplingRates[e][i] for i in e))
 
     output.append("Configurations sorted by lowest power consumption:")
-    for i, config in enumerate(powerSorted):
+    for i, config in enumerate(groupsSorted):
         output.append(f"{i + 1}.")
         for item in config:
             output.append(f"    {components[item]['Type']}: {item}")
