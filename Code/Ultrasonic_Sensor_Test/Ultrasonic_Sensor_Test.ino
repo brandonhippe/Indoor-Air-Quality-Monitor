@@ -1,20 +1,33 @@
-#define trigPin 12
-#define echoPin 13
+#define trigPin1 12
+#define echoPin1 13
+#define trigPin2 15
+#define echoPin2 14
 
 
-void setup() {
-  Serial.begin(115200);
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-}
-
-void loop() {
-  digitalWrite(trigPin, HIGH);  
+float ultrasonicPulse(int trigPin, int echoPin) {
+  digitalWrite(trigPin, HIGH);
   delayMicroseconds(1000);
   digitalWrite(trigPin, LOW);
   int duration = pulseIn(echoPin, HIGH);
-  float distance = (duration / 2) / 74.07;
-  Serial.print(distance);
+  return (duration / 2) / 74.07;
+}
+
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin1, OUTPUT);
+  pinMode(echoPin1, INPUT);
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
+  Serial.println("Starting");
+}
+
+void loop() {
+  Serial.print("Sensor 1: ");
+  Serial.print(ultrasonicPulse(trigPin1, echoPin1));
   Serial.println(" in");
-  delay(10);
+  Serial.print("Sensor 2: ");
+  Serial.print(ultrasonicPulse(trigPin2, echoPin2));
+  Serial.println(" in");
+  delay(1000);
 }
