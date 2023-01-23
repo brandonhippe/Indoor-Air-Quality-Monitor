@@ -1,0 +1,150 @@
+Configurations sorted by lowest power consumption / sampling rate:
+1.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 30.73968731061792 %
+    CO2 Sensors: SGP30
+        Time On: 1.0 seconds
+        Time Off: 239.0 seconds
+        Sleep Power %: 0.9819631044825213 %
+        Percent of Total Power: 24.485669982102426 %
+    Air Speed Sensors: Custom Ultrasonic Anemometer
+        Time On: 3.0 seconds
+        Time Off: 117.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 24.345832350009392 %
+    Micro Controllers: MSP430
+        Time On: 157.0 seconds
+        Time Off: 5843.0 seconds
+        Sleep Power %: 3.386714080587953 %
+        Percent of Total Power: 20.42881035727026 %
+    Power Consumption: 0.0014910149498333334 watts
+    Cost: $81.32
+    Battery Life on single 18650 cell: 352.10914555798706 days
+
+2.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 28.983076061947816 %
+    CO2 Sensors: SCD30
+        Time On: 2.0 seconds
+        Time Off: 298.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 26.43256536849641 %
+    Air Speed Sensors: Custom Ultrasonic Anemometer
+        Time On: 3.0 seconds
+        Time Off: 117.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 22.95459624106267 %
+    Micro Controllers: MSP430
+        Time On: 177.0 seconds
+        Time Off: 5823.0 seconds
+        Sleep Power %: 3.0055627374879723 %
+        Percent of Total Power: 21.629762328493097 %
+    Power Consumption: 0.0015813826398333336 watts
+    Cost: $122.77
+    Battery Life on single 18650 cell: 331.9879621641295 days
+
+3.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 35.594227337736676 %
+    CO2 Sensors: SGP30
+        Time On: 1.0 seconds
+        Time Off: 239.0 seconds
+        Sleep Power %: 0.9819631044825213 %
+        Percent of Total Power: 28.35254942748567 %
+    Air Speed Sensors: Wind Sensor Rev. C
+        Time On: 3.0 seconds
+        Time Off: 1197.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 29.122549639966373 %
+    Micro Controllers: MSP430
+        Time On: 42.0 seconds
+        Time Off: 5958.0 seconds
+        Sleep Power %: 11.78666394512847 %
+        Percent of Total Power: 6.930673594811294 %
+    Power Consumption: 0.0012876619823333332 watts
+    Cost: $95.36999999999999
+    Battery Life on single 18650 cell: 407.71569495952923 days
+
+4.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 33.71825288123783 %
+    CO2 Sensors: SCD30
+        Time On: 2.0 seconds
+        Time Off: 298.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 30.7510466276889 %
+    Air Speed Sensors: Wind Sensor Rev. C
+        Time On: 3.0 seconds
+        Time Off: 1197.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 27.587661448285495 %
+    Micro Controllers: MSP430
+        Time On: 52.0 seconds
+        Time Off: 5948.0 seconds
+        Sleep Power %: 9.726029993110862 %
+        Percent of Total Power: 7.943039042787777 %
+    Power Consumption: 0.0013593033273333333 watts
+    Cost: $136.82
+    Battery Life on single 18650 cell: 386.22726027599697 days
+
+5.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 28.486206436466095 %
+    CO2 Sensors: SCD40
+        Time On: 15.0 seconds
+        Time Off: 1785.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 25.637585792819483 %
+    Air Speed Sensors: Custom Ultrasonic Anemometer
+        Time On: 3.0 seconds
+        Time Off: 117.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 22.561075497681145 %
+    Micro Controllers: MSP430
+        Time On: 584.0 seconds
+        Time Off: 17416.0 seconds
+        Sleep Power %: 2.7321854445696663 %
+        Percent of Total Power: 23.315132273033278 %
+    Power Consumption: 0.0016089658493333332 watts
+    Cost: $113.77
+    Battery Life on single 18650 cell: 326.2965464540662 days
+
+6.
+    PM2.5 Sensors: SPS30
+        Time On: 10.0 seconds
+        Time Off: 5990.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 33.272272921131076 %
+    CO2 Sensors: SCD40
+        Time On: 15.0 seconds
+        Time Off: 1785.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 29.94504562901796 %
+    Air Speed Sensors: Wind Sensor Rev. C
+        Time On: 3.0 seconds
+        Time Off: 1197.0 seconds
+        Sleep Power %: 0.0 %
+        Percent of Total Power: 27.222768753652694 %
+    Micro Controllers: MSP430
+        Time On: 194.0 seconds
+        Time Off: 17806.0 seconds
+        Sleep Power %: 7.957193813706362 %
+        Percent of Total Power: 9.559912696198278 %
+    Power Consumption: 0.001377523364333333 watts
+    Cost: $127.82
+    Battery Life on single 18650 cell: 381.1187625511377 days
