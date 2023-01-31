@@ -11,8 +11,8 @@ recharging for a long time. Three features of indoor air are expected to be moni
 particle count or PM2.5, carbon dioxide (CO2) concentration, and ventilation air speed.</p>
 <br>
 <p>
-Regarding CO2, "Statistically significant decrements occurred in cognitive performance
-(decision making, problem resolution) starting at 1000 ppm (Satish et al., 2012)" . It is also a
+Regarding CO2, Statistically significant decrements occurred in cognitive performance
+(decision making, problem resolution) starting at 1000 ppm . It is also a
 good proxy for ventilation; high CO2 levels mean the room is poorly ventilated, which increases
 the risk of passing airborne diseases such as COVID. After I finish Zoom meeting in a closed
 room at home, the CO2 level is often over 1200!</p>
