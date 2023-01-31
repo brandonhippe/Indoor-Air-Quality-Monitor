@@ -12,14 +12,14 @@ particle count or PM2.5, carbon dioxide (CO2) concentration, and ventilation air
 <br>
 <p>
 Regarding CO2, "Statistically significant decrements occurred in cognitive performance
-(decision making, problem resolution) starting at 1000 ppm (Satish et al., 2012)" [1]. It is also a
+(decision making, problem resolution) starting at 1000 ppm (Satish et al., 2012)" . It is also a
 good proxy for ventilation; high CO2 levels mean the room is poorly ventilated, which increases
 the risk of passing airborne diseases such as COVID. After I finish Zoom meeting in a closed
 room at home, the CO2 level is often over 1200!</p>
 <br>
 <p>
 Regarding PM2.5, the WHO recommends an upper limit of 5 ug/m3 (microgram per cubic
-meter) average annually and 15 ug/m3 average over a 24 hour period [2]. As this project
+meter) average annually and 15 ug/m3 average over a 24 hour period. As this project
 document is being written, the outdoor air in Portland is over 30 ug/m3!</p>
 <br>
 <p>
