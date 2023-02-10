@@ -1,33 +1,46 @@
-#define trigPin1 12
-#define echoPin1 13
-#define trigPin2 15
-#define echoPin2 14
+#define trig 12
+#define echo1 13
+#define echo2 14
 
 
-float ultrasonicPulse(int trigPin, int echoPin) {
+#define halfD 0.125
+
+
+unsigned int ultrasonicPulse(int trigPin, int echoPin) {
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(1000);
   digitalWrite(trigPin, LOW);
-  int duration = pulseIn(echoPin, HIGH);
-  return (duration / 2) / 74.07;
+  return pulseIn(echoPin, HIGH);
+}
+
+
+float calcWindSpeed(unsigned int forward, unsigned int back) {
+  float invForward = 1 / forward, invBack = 1 / back;
+  return halfD * (invForward - invBack);
+}
+
+
+float calcTemperature(unsigned int forward, unsigned int back) {
+  float invForward = 1 / forward, invBack = 1 / back;
+  return halfD * (invForward + invBack);
 }
 
 
 void setup() {
   Serial.begin(9600);
-  pinMode(trigPin1, OUTPUT);
-  pinMode(echoPin1, INPUT);
-  pinMode(trigPin2, OUTPUT);
-  pinMode(echoPin2, INPUT);
+  pinMode(trig, OUTPUT);
+  pinMode(echo1, INPUT);
+  pinMode(echo2, INPUT);
   Serial.println("Starting");
 }
 
 void loop() {
-  Serial.print("Sensor 1: ");
-  Serial.print(ultrasonicPulse(trigPin1, echoPin1));
-  Serial.println(" in");
-  Serial.print("Sensor 2: ");
-  Serial.print(ultrasonicPulse(trigPin2, echoPin2));
-  Serial.println(" in");
-  delay(1000);
+  unsigned int forward = ultrasonicPulse(trig, echo1);
+  delay(100);
+  unsigned int back = ultrasonicPulse(trig, echo2);
+  float windspeed = calcWindSpeed(forward, back), temperature = calcTemperature(forward, back);
+  char printstring[100];
+  sprintf(printstring, "Wind speed: %f m/s\nTemperature: %f degrees\n", windspeed, temperature);
+  Serial.print(printstring);
+  delay(900);
 }
