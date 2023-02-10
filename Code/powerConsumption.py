@@ -206,13 +206,6 @@ def main():
                 axs[i, j].sharex(axs[i - 1, j])
                 axs[i, j].sharey(axs[i - 1, j])
         
-        axs[0, 0].set_title(leftTitle[:-1])
-        axs[0, 1].set_title(rightTitle[:-1])
-
-        axs[1, 0].set_ylabel("Power Consumption (Watts)")
-        axs[1, 1].set_ylabel("Sampling Rate (Samples/Hour)")
-        axs[2, 0].set_xlabel("Sampling Rate (Samples/Hour)")
-        axs[2, 1].set_xlabel("Power Consumption (Watts)")
 
         # Plot component power consumption
         leftTitle, rightTitle = "", ""
@@ -231,7 +224,14 @@ def main():
             axs[i, 0].legend()
             axs[i, 1].legend()
 
-        # Show plot
+        # Set Titles, Labels, and show plot
+        axs[0, 0].set_title(leftTitle[:-1])
+        axs[0, 1].set_title(rightTitle[:-1])
+
+        axs[1, 0].set_ylabel("Power Consumption (Watts)")
+        axs[1, 1].set_ylabel("Sampling Rate (Samples/Hour)")
+        axs[2, 0].set_xlabel("Sampling Rate (Samples/Hour)")
+        axs[2, 1].set_xlabel("Power Consumption (Watts)")
         plt.get_current_fig_manager().window.state('zoomed')
         fig.show()
 

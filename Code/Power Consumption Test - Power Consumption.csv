@@ -9,10 +9,10 @@ MSP430,12.99,,3.3 V,3.408 mA,,,3.3 V,3.21 uA,,Calculated using Active Mode Suppl
 ,,,,,,,,,,
 PM2.5 Sensors,,,,,,,,,,
 Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
-PMS5003,30.34,,5 V,100 mA,30 s,,5 V,200 uA,270 s,Stable data 30sec after startup
-PAS-OUT-01,0,,5 V,70 mA,30 s,,5 V,200 uA,270 s,Need to request quote
+PMS5003,39.95,,5 V,100 mA,30 s,,5 V,200 uA,270 s,Stable data 30sec after startup
+PAS-OUT-01,19,,5 V,70 mA,30 s,,5 V,200 uA,270 s,Assuming stable data after 30 sec
 SPS30,42.93,,5 V,55 mA,10 s,,0 V,0 uA,5990 s,
-,,,,,,,,,,
+PAS-IN-01,19,,5 V,70 mA,30 s,,5 V,0 uA,270 s,Assuming stable data after 30 sec
 ,,,,,,,,,,
 ,,,,,,,,,,
 ,,,,,,,,,,
@@ -23,11 +23,11 @@ SGP30,17.5,,1.8 V,48.2 mA,1 s,,1.8 V,2 uA,299 s,eCO2
 MQ-135,1.5,800 mW,,,20 s,,0 V,0 mA,280 s,eCO2
 SCD40,49.95,,3.3 V,15 mA,15 s,,0 V,0 mA,1785 s,True CO2
 SCD30,58.95,,3.3 V,19 mA,2 s,,0 V,0 mA,298 s,True CO2
-,,,,,,,,,,
+Prana CO2 Sensor,19,,5 V,20 mA,15 s,,0 V,0 mA,285 s,True CO2
 ,,,,,,,,,,
 ,,,,,,,,,,
 ,,,,,,,,,,
 Air Speed Sensors,,,,,,,,,,
 Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
 Custom Ultrasonic Anemometer,7.9,,3.3 V,4.4 mA,3 s,,0 V,0 mA,87 s,The wind gust peak is usually averaged over 3 seconds (historical from the time constant of cup anemometers).
-Wind Sensor Rev. C,21.95,,5 V,30 mA,3 s,,0 V,0 mA,1197 s,Dynamically adjust sensor rate with airspeed (need to do HVAC research)
+Wind Sensor Rev. C,21.95,,5 V,30 mA,13 s,,0 V,0 mA,1187 s,Dynamically adjust sensor rate with airspeed (need to do HVAC research)
