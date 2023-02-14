@@ -138,7 +138,7 @@ def sleepPercentage(component):
     p2 = calcPower(component)
     component["Typical Power Consumption (Off)"] = powerInfo
 
-    return (p1 - p2) / p1 * 100
+    return (p1 - p2) / p1
 
 
 def main():
@@ -199,7 +199,7 @@ def main():
     if input("Plot component power consumption (y/n)? ") == "y":
         # Prepare plot
         fig = plt.figure()
-        gs = fig.add_gridspec(3, 2, hspace=0)
+        gs = fig.add_gridspec(3, 2, hspace=0.25)
         axs = gs.subplots()
         for i in range(1, 3):
             for j in range(2):
@@ -210,8 +210,10 @@ def main():
         # Plot component power consumption
         leftTitle, rightTitle = "", ""
         for i, g in enumerate(groupings[1:]):
-            leftTitle += f"{components[g[0]]['Type']} Power Consumption vs Sampling Rate (Logarithmic)\n"
-            rightTitle += f"{components[g[0]]['Type']} Sampling Rate vs Power Consumption (Logarithmic)\n"
+            axs[i, 0].set_title(f"{components[g[0]]['Type']} Power Consumption vs Sampling Rate (Logarithmic)")
+            axs[i, 1].set_title(f"{components[g[0]]['Type']} Sampling Rate vs Power Consumption (Logarithmic)")
+            # leftTitle += f"{components[g[0]]['Type']} Power Consumption vs Sampling Rate (Logarithmic)\n"
+            # rightTitle += f"{components[g[0]]['Type']} Sampling Rate vs Power Consumption (Logarithmic)\n"
 
             for item in g:
                 x, y = powerConsumptions[item]
@@ -225,8 +227,8 @@ def main():
             axs[i, 1].legend()
 
         # Set Titles, Labels, and show plot
-        axs[0, 0].set_title(leftTitle[:-1])
-        axs[0, 1].set_title(rightTitle[:-1])
+        # axs[0, 0].set_title(leftTitle[:-1])
+        # axs[0, 1].set_title(rightTitle[:-1])
 
         axs[1, 0].set_ylabel("Power Consumption (Watts)")
         axs[1, 1].set_ylabel("Sampling Rate (Samples/Hour)")
@@ -270,15 +272,15 @@ def main():
             output.append(f"{i + 1}.")
             for item in config:
                 output.append(f"    {components[item]['Type']}: {item}")
-                output.append(f"        Time On: {cycles[config][item][0]} seconds")
-                output.append(f"        Time Off: {cycles[config][item][1]} seconds")
+                output.append(f"        Time On: {cycles[config][item][0]:.0f} seconds")
+                output.append(f"        Time Off: {cycles[config][item][1]:.0f} seconds")
                 components[item]["Time (On)"], components[item]["Time (Off)"] = cycles[config][item]
-                output.append(f"        Sleep Power %: {sleepPercentage(components[item])} %")
-                output.append(f"        Percent of Total Power: {power[config][item] / sum(power[config].values()) * 100} %")
+                output.append(f"        Sleep Power %: {sleepPercentage(components[item]):.2%}")
+                output.append(f"        Percent of Total Power: {power[config][item] / sum(power[config].values()):.2%}")
 
-            output.append(f"    Power Consumption: {sum(power[config].values())} watts")
-            output.append(f"    Cost: ${cost[config]}")
-            output.append(f"    Battery Life on single 18650 cell: {12.6 / batterySize[config]} days\n")
+            output.append(f"    Power Consumption: {sum(power[config].values()) * 1000:.3f} mW")
+            output.append(f"    Cost: ${cost[config]:.2f}")
+            output.append(f"    Battery Life on single 18650 cell: {12.6 / batterySize[config]:.2f} days\n")
 
         for o in output:
             print(o)
