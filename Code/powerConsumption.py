@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
 MAX_T = 10800
-POWER_GOAL = 12.6 / (365 * 24)
+BAT_CAP = 3.6 * 3.5 # Voltage * Amp-hours
+POWER_GOAL = BAT_CAP / (365 * 24)
 
 
 def gcd(a, b, memo = {}):
@@ -280,7 +281,7 @@ def main():
 
             output.append(f"    Power Consumption: {sum(power[config].values()) * 1000:.3f} mW")
             output.append(f"    Cost: ${cost[config]:.2f}")
-            output.append(f"    Battery Life on single 18650 cell: {12.6 / batterySize[config]:.2f} days\n")
+            output.append(f"    Battery Life on single 18650 cell: {BAT_CAP / batterySize[config]:.2f} days\n")
 
         for o in output:
             print(o)

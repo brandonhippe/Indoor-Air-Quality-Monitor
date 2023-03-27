@@ -1,7 +1,7 @@
 Micro Controllers,(Time on and Time off not necessary),,,,,,,,,
 Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),,Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),,Notes
 MSP430,12.99,,3.3 V,142 uA,,,3.3 V,1.43 uA,,Calculated using Active Mode Supply Current per MHz
-STM32,12.99,,3.3 V,185 uA,,,3.3 V,1.4 uA,,
+STM32,12.99,,3.3 V,185 uA,,,3.3 V,1.4 uA,,Cost is a placeholder
 ,,,,,,,,,,
 ,,,,,,,,,,
 ,,,,,,,,,,
@@ -12,7 +12,7 @@ Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time 
 Plantower PMS5003,39.95,,5 V,100 mA,30 s,,5 V,200 uA,270 s,Stable data 30sec after startup
 Prana Air PAS-OUT-01,19,,5 V,70 mA,30 s,,5 V,200 uA,270 s,Assuming stable data after 30 sec
 Sensirion SPS30,42.93,,5 V,55 mA,10 s,,0 V,0 uA,5990 s,
-Prana Air PAS-IN-01,19,,5 V,70 mA,30 s,,5 V,0 uA,270 s,Assuming stable data after 30 sec
+Prana Air PAS-IN-01,19,,5 V,70 mA,15 s,,5 V,0 uA,270 s,Assuming stable data after 30 sec
 ,,,,,,,,,,
 ,,,,,,,,,,
 ,,,,,,,,,,
@@ -22,7 +22,7 @@ Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time 
 Sensirion SGP30,17.5,,1.8 V,48.2 mA,1 s,,1.8 V,2 uA,299 s,eCO2
 MQ-135,1.5,800 mW,,,20 s,,0 V,0 mA,280 s,eCO2
 Sensirion SCD40,49.95,,3.3 V,15 mA,15 s,,0 V,0 mA,1785 s,True CO2
-Sensirion SCD30,58.95,,3.3 V,19 mA,2 s,,0 V,0 mA,298 s,True CO2
+Sensirion SCD30,58.95,,3.3 V,19 mA,20 s,,0 V,0 mA,298 s,True CO2
 Prana Air CO2 Sensor,19,,5 V,20 mA,15 s,,0 V,0 mA,285 s,True CO2
 ,,,,,,,,,,
 ,,,,,,,,,,
