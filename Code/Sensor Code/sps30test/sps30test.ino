@@ -1,22 +1,32 @@
-#include "sps30.h"
+#include <sps30.h>
+#include <Wire.h>
+
+
+uint64_t time_ms;
+
+
+SPS30 sps30;
+
 
 void setup() {
-  // put your setup code here, to run once:
+  for (int i = 0; i < 40; i++) {
+    digitalWrite(i, LOW);
+    pinMode(i, OUTPUT);
+  }
+
   Serial.begin(9600);
-  Serial.println("Initializing SPS30");
-  sps30_setup();
-  Serial.println("Initialized SPS30");
+  Wire.begin();
+  sps30.begin(millis());
+
+  // Set time_ms and delay to start time
+  time_ms = sps30.time_ms;
+  while (millis() < time_ms);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  int measurements[2] = {MCPM2p5, NCPM2p5};
-  uint16_t *pm2p5 = sps30_getVal(measurements, 2);
-  Serial.print("PM 2.5 Mass Concentration: ");
-  Serial.print(pm2p5[0]);
-  Serial.println(" ug/m3");
-  Serial.print("PM 2.5 Number Concentration: ");
-  Serial.print(pm2p5[1]);
-  Serial.println(" #/cm3");
-  delay(1000);
+  // Execute next function
+  sps30.startNextFunc(millis());
+
+  // Sleep until next function
+  sleep(sps30.time_ms - millis());
 }

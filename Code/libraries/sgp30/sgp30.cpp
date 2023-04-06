@@ -1,33 +1,51 @@
-#ifndef SGP30
-#define SGP30
+#include "sgp30.h"
 
 
-#include <Wire.h>
-#include <stdint.h>
-#include "crc.h"
+SGP30::SGP30() {
+	period_ms = 60000;
+	iaq_init = 0x2003;
+	measure_iaq = 0x2008;
+	get_iaq_baseline = 0x2015;
+	set_iaq_baseline = 0x201e;
+	scheduledFunc = CALIBRATION;
+	calibrationMeasurements = 0;
+}
 
 
-#define ADDR 0x58
-
-
-static const uint16_t iaq_init = 0x2003, measure_iaq = 0x2008, get_iaq_baseline = 0x2015, set_iaq_baseline = 0x201e;
-static uint16_t baseline_CO2, baselineTVOC;
-
-
-void sgp30_setup() {
-  #ifndef WIRE_BEGAN 
-  Wire.begin();
-  #define WIRE_BEGAN
-  #endif
-
+boolean SGP30::begin(uint64_t currTime_ms) {
+  uint32_t startTime = millis();
+  
   // Initialize the sensor
   Wire.beginTransmission(ADDR);
   Wire.write(iaq_init);
   Wire.endTransmission();
-  delay(10);
 
-  // Send measure_iaq commands at 1sec intervals for 15 seconds
-  for (int i = 0; i <= 15; i++) {
+  // Schedule Calibration Measurement
+  calibrationMeasurements = 0;
+  scheduledFunc = CALIBRATION;
+  time_ms = currTime_ms + 100 + startTime - millis();
+  
+  return true;
+}
+
+
+void SGP30::startNextFunc(uint64_t currTime_ms) {
+	switch (scheduledFunc) {
+		case CALIBRATION:
+			calibration(currTime_ms);
+			break;
+		case GETCO2:
+			getCO2(currTime_ms);
+	}
+}
+
+
+void SGP30::calibration(uint64_t currTime_ms) {
+  uint32_t startTime = millis();
+  
+  // Perform a new calibration measurement if 15 or less have been performed
+  if (calibrationMeasurements <= 15) {
+    calibrationMeasurements++;
     Wire.beginTransmission(ADDR);
     Wire.write(measure_iaq);
     Wire.endTransmission(false);
@@ -36,7 +54,9 @@ void sgp30_setup() {
     delay(12);
     while (Wire.available()) Wire.read();
 
-    delay(1000);
+    // Schedule new calibration measurement
+    time_ms = currTime_ms + 1000 + startTime - millis();
+    return;
   }
 
   // Obtain the measured baseline values to skip calibration process later
@@ -64,10 +84,16 @@ void sgp30_setup() {
     memcpy(&baselineTVOC, &response[3], 2);
     break;
   }
+
+  // Schedule measurement request
+  scheduledFunc = GETCO2;
+  time_ms = currTime_ms + period_ms + startTime - millis();
 }
 
 
-uint16_t sgp30_getCO2() {
+void SGP30::getCO2(uint64_t currTime_ms) {
+  uint32_t startTime = millis();
+  
   // Turn on sensor
   Wire.beginTransmission(ADDR);
   Wire.write(iaq_init);
@@ -103,11 +129,10 @@ uint16_t sgp30_getCO2() {
     if (check_crc(&response[0])) continue;
     if (check_crc(&response[3])) continue;
 
-    uint16_t co2;
     memcpy(&co2, &response[0], 2);
-    return co2;
   }
+
+  // Schedule new measurement request
+  scheduledFunc = GETCO2;
+  time_ms = currTime_ms + period_ms + startTime - millis();
 }
-
-
-#endif

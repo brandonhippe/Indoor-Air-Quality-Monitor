@@ -21,7 +21,7 @@ void setup() {
   time_ms = millis();
   nextFunc = sps30_scheduledFunc;
   sps30_time_ms = time_ms + 100 + time_ms - millis();
-  sps30_time_ms = time_ms + 200 + time_ms - millis();
+  sgp30_time_ms = time_ms + 200 + time_ms - millis();
 
   // Set time_ms and delay to start time
   time_ms = sps30_time_ms;
