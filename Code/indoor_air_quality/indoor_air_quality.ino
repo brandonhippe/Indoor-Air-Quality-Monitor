@@ -1,11 +1,18 @@
-uint64_t time_ms;
-
-#include "sgp30.h"
-#include "sps30.h"
+#include <sgp30.h>
+#include <sps30.h>
 #include <Wire.h>
 
 
-void (*nextFunc)(uint64_t);
+uint64_t time_ms;
+
+
+SGP30 sgp30;
+SPS30 sps30;
+
+
+int nextDevice;
+#define CO2 0
+#define PM 1
 
 
 void setup() {
@@ -16,30 +23,34 @@ void setup() {
 
   Serial.begin(9600);
   Wire.begin();
-
-  // Schedule initialization functions
-  time_ms = millis();
-  nextFunc = sps30_scheduledFunc;
-  sps30_time_ms = time_ms + 100 + time_ms - millis();
-  sgp30_time_ms = time_ms + 200 + time_ms - millis();
+  sps30.begin(millis());
+  sps30.begin(millis());
 
   // Set time_ms and delay to start time
-  time_ms = sps30_time_ms;
+  time_ms = sgp30.time_ms;
   while (millis() < time_ms);
 }
 
 void loop() {
   // Execute next function
-  nextFunc(time_ms);
+  uint32_t startTime = millis();
+  switch (nextDevice) {
+    case CO2:
+      sgp30.startNextFunc(time_ms + startTime - millis());
+      break;
+    case PM:
+      sps30.startNextFunc(time_ms + startTime - millis());
+      break;
+  }
 
   // Execution finished, find next function
   // *** CURRENTLY ONLY SPS30 and SGP30 implemented, have to add anemometer (conditionally) and communication ***
-  uint64_t nextTime = sgp30_time_ms;
-  nextFunc = sgp30_scheduledFunc;
+  uint64_t nextTime = sgp30.time_ms;
+  nextDevice = CO2;
   
-  if (sps30_time_ms < nextTime) {
-    nextTime = sps30_time_ms;
-    nextFunc = sps30_scheduledFunc;
+  if (sps30.time_ms < nextTime) {
+    nextTime = sps30.time_ms;
+    nextDevice = PM;
   }
 
   // Calculate time until next function
