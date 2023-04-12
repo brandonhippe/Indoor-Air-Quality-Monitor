@@ -15,6 +15,7 @@ void setup() {
   }
 
   Serial.begin(9600);
+  Serial.println("Starting");
   Wire.begin();
   sps30.begin(millis());
 
@@ -25,8 +26,11 @@ void setup() {
 
 void loop() {
   // Execute next function
+  Serial.println("Measuring");
   sps30.startNextFunc(millis());
+  Serial.println(sps30.pm2p5);
 
   // Sleep until next function
+  Serial.println("Sleeping");
   sleep(sps30.time_ms - millis());
 }

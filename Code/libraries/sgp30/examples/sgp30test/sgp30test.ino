@@ -26,6 +26,7 @@ void setup() {
 void loop() {
   // Execute next function
   sgp30.startNextFunc(millis());
+  Serial.println(sgp30.co2);
 
   // Sleep until next function
   sleep(sgp30.time_ms - millis());
