@@ -16,9 +16,11 @@
 class SGP30 {
 	public:
 		// Public Variables
+		int max_clock;
 		uint32_t period_ms;
 		uint64_t time_ms;
 		uint16_t co2;
+		boolean measurement_ready;
 		
 		// Public Functions
 		SGP30();

@@ -1,14 +1,21 @@
 #include "sgp30.h"
 
 
+#ifdef DEBUG
+boolean sgp_debug = true;
+#else
+boolean sgp_debug = false;
+#endif
+
+
 SGP30::SGP30() {
+  max_clock = 400000;
 	period_ms = 60000;
 	iaq_init = 0x2003;
 	measure_iaq = 0x2008;
 	get_iaq_baseline = 0x2015;
 	set_iaq_baseline = 0x201e;
-	scheduledFunc = CALIBRATION;
-	calibrationMeasurements = 0;
+  measurement_ready = false;
 }
 
 
@@ -42,9 +49,14 @@ void SGP30::startNextFunc(uint64_t currTime_ms) {
 
 void SGP30::calibration(uint64_t currTime_ms) {
   uint32_t startTime = millis();
+  measurement_ready = false;
+
+  if (sgp_debug) {
+    Serial.println("Performing Calibration");
+  }
   
   // Perform a new calibration measurement if 15 or less have been performed
-  if (calibrationMeasurements <= 15) {
+  if (calibrationMeasurements < 15) {
     calibrationMeasurements++;
     Wire.beginTransmission(ADDR);
     Wire.write(measure_iaq);
@@ -57,6 +69,10 @@ void SGP30::calibration(uint64_t currTime_ms) {
     // Schedule new calibration measurement
     time_ms = currTime_ms + 1000 + startTime - millis();
     return;
+  }
+
+  if (sgp_debug) {
+    Serial.println("Obtaining calibration values");
   }
 
   // Obtain the measured baseline values to skip calibration process later
@@ -93,6 +109,11 @@ void SGP30::calibration(uint64_t currTime_ms) {
 
 void SGP30::getCO2(uint64_t currTime_ms) {
   uint32_t startTime = millis();
+  measurement_ready = true;
+
+  if (sgp_debug) {
+    Serial.println("Starting measurement");
+  }
   
   // Turn on sensor
   Wire.beginTransmission(ADDR);

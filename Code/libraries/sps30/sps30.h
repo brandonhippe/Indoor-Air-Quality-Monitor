@@ -27,9 +27,11 @@
 class SPS30 {
 	public:
 		// Public Variables
+		int max_clock;
 		uint32_t period_ms;
 		uint64_t time_ms;
 		uint16_t pm2p5;
+		boolean measurement_ready;
 		int measurementIx;
 		
 		// Public Functions
@@ -41,6 +43,7 @@ class SPS30 {
 		uint16_t start_measurement, stop_measurement, data_ready, read_measured, start_sleep, wakeup;
 		uint64_t lastMeasurement;
 		int scheduledFunc;
+		boolean debug;
 		
 		// Private Functions
 		void sps30_sleep();

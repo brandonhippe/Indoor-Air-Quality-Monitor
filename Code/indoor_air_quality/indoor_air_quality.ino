@@ -3,6 +3,10 @@
 #include <Wire.h>
 
 
+#define SDA_PIN 10    // set the SDA pin to 10
+#define SCL_PIN 9    // set the SCL pin to 9
+
+
 uint64_t time_ms;
 
 
@@ -22,7 +26,23 @@ void setup() {
   }
 
   Serial.begin(9600);
+  Serial.println("Starting");
+
+  pinMode(SDA_PIN, INPUT_PULLUP);
+  pinMode(SCL_PIN, INPUT_PULLUP);
+
+  int max_clock = 400000;
+  if (sgp30.max_clock < max_clock) {
+    max_clock = sgp30.max_clock;
+  }
+
+  if (sps30.max_clock < max_clock) {
+    max_clock = sps30.max_clock;
+  }
+
+  Wire.setModule(0);
   Wire.begin();
+  Wire.setClock(max_clock);
   sps30.begin(millis());
   sps30.begin(millis());
 
