@@ -1,13 +1,9 @@
 #include <sgp30.h>
-#include <Wire.h>
+#include <NewWire.h>
 
 
 #define SDA_PIN 10    // set the SDA pin to 10
 #define SCL_PIN 9    // set the SCL pin to 9
-
-
-// Enable serial printing
-#define DEBUG
 
 
 uint64_t time_ms;
@@ -31,7 +27,7 @@ void setup() {
   Wire.setModule(0);
   Wire.begin();
   Wire.setClock(sgp30.max_clock);
-  sgp30.begin(millis());
+  sgp30.begin(millis(), true);
 
   // Set time_ms and delay to start time
   time_ms = sgp30.time_ms;

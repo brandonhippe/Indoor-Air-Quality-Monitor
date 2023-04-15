@@ -1,5 +1,5 @@
 // Include necessary libraries
-#include <Wire.h>
+#include <NewWire.h>
 #include <stdint.h>
 #include "crc.h"
 #include "Energia.h"
@@ -9,30 +9,32 @@
 #define ADDR 0x58
 
 #define CALIBRATION 0
-#define GETCO2 1
+#define SET_CALIBRATION 1
+#define GETCO2 2
 
 
 // Declare SGP30 class
 class SGP30 {
 	public:
 		// Public Variables
-		int max_clock;
-		uint32_t period_ms;
+		uint32_t period_ms, max_clock;
 		uint64_t time_ms;
 		uint16_t co2;
-		boolean measurement_ready;
+		boolean measurement_ready, debug;
 		
 		// Public Functions
 		SGP30();
-		boolean begin(uint64_t currTime_ms);
+		boolean begin(uint64_t currTime_ms, boolean _debug);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables
-		uint16_t iaq_init, measure_iaq, get_iaq_baseline, set_iaq_baseline;
+		// uint16_t iaq_init, measure_iaq, get_iaq_baseline, set_iaq_baseline;
+		uint64_t lastMeasurement;
 		uint16_t baseline_CO2, baselineTVOC;
-		int calibrationMeasurements, scheduledFunc;
+		int scheduledFunc;
 		
 		// Private Functions
 		void calibration(uint64_t currTime_ms);
+		void setCalibration(uint64_t currTime_ms);
 		void getCO2(uint64_t currTime_ms);
 };
