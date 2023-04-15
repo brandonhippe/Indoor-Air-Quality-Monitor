@@ -1,5 +1,5 @@
 // Include necessary libraries
-#include <Wire.h>
+#include <NewWire.h>
 #include <stdint.h>
 #include "crc.h"
 #include "Energia.h"
@@ -27,23 +27,21 @@
 class SPS30 {
 	public:
 		// Public Variables
-		int max_clock;
-		uint32_t period_ms;
+		uint32_t period_ms, max_clock;
 		uint64_t time_ms;
 		uint16_t pm2p5;
-		boolean measurement_ready;
+		boolean measurement_ready, debug;
 		int measurementIx;
 		
 		// Public Functions
 		SPS30();
-		boolean begin(uint64_t currTime_ms);
+		boolean begin(int measurement, uint64_t currTime_ms, boolean _debug);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables
-		uint16_t start_measurement, stop_measurement, data_ready, read_measured, start_sleep, wakeup;
+		// uint16_t start_measurement, stop_measurement, data_ready, read_measured, start_sleep, wakeup;
 		uint64_t lastMeasurement;
 		int scheduledFunc;
-		boolean debug;
 		
 		// Private Functions
 		void sps30_sleep();

@@ -1,13 +1,9 @@
 #include <sps30.h>
-#include <Wire.h>
+#include <NewWire.h>
 
 
 #define SDA_PIN 10    // set the SDA pin to 10
 #define SCL_PIN 9    // set the SCL pin to 9
-
-
-// Enable serial printing
-#define DEBUG
 
 
 uint64_t time_ms;
@@ -22,8 +18,8 @@ void setup() {
     pinMode(i, OUTPUT);
   }
 
-  pinMode(SDA_PIN, INPUT_PULLUP);
   pinMode(SCL_PIN, INPUT_PULLUP);
+  pinMode(SDA_PIN, INPUT_PULLUP);
 
   Serial.begin(9600);
   Serial.println("Starting");
@@ -31,7 +27,7 @@ void setup() {
   Wire.setModule(0);
   Wire.begin();
   Wire.setClock(sps30.max_clock);
-  sps30.begin(millis());
+  sps30.begin(MCPM2p5, millis(), true);
 
   // Set time_ms and delay to start time
   time_ms = sps30.time_ms;
