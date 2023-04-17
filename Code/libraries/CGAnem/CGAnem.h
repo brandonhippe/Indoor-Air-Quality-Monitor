@@ -19,11 +19,11 @@ class CGAnem {
 		uint32_t period_ms, max_clock;
 		uint64_t time_ms;
 		uint16_t wind;
-		boolean debug;
+		boolean measurement_ready, debug;
 		
 		// Public Functions
 		CGAnem();
-		boolean begin(uint64_t currTime_ms, boolean _debug);
+		boolean begin(int sleepPin, uint64_t currTime_ms, boolean _debug);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables

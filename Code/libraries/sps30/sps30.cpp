@@ -2,7 +2,7 @@
 
 
 static const uint8_t start_measurement[2] = {0x00, 0x10}, stop_measurement[2] = {0x01, 0x04}, data_ready[2] = {0x02, 0x02}, read_measured[2] = {0x03, 0x00}, start_sleep[2] = {0x10, 0x01}, wakeup[2] = {0x11, 0x03};
-static uint8_t init_vals[2] = {0x05, 0x00};
+static uint8_t init_vals[2];
 
 
 SPS30::SPS30() {
@@ -12,10 +12,21 @@ SPS30::SPS30() {
 }
 
 
-boolean SPS30::begin(int measurement, uint64_t currTime_ms, boolean _debug) {
+boolean SPS30::begin(int measurement, boolean _fp, uint64_t currTime_ms, boolean _debug) {
 	uint32_t startTime = millis();
 	debug = _debug;
 	measurementIx = measurement;
+	fp = _fp;
+
+	if (fp) {
+		init_vals[0] = 0x03;
+		bytes_needed = 60;
+	} else {
+		init_vals[0] = 0x05;
+		bytes_needed = 30;
+	}
+
+	init_vals[1] = 0x00;
 
 	// Schedule measurement
 	scheduledFunc = START_MEASUREMENT;
@@ -39,11 +50,13 @@ void SPS30::startNextFunc(uint64_t currTime_ms) {
 
 
 void SPS30::sps30_sleep() {
+	if (debug) Serial.println("SPS30: Stopping measurement");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &stop_measurement[0], 2);
 	Wire.endTransmission();
 	delay(20);
-  
+	
+	if (debug) Serial.println("SPS30: Sleeping");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &start_sleep[0], 2);
 	Wire.endTransmission();
@@ -56,11 +69,8 @@ void SPS30::startMeasurement(uint64_t currTime_ms) {
 	lastMeasurement = currTime_ms;
 	measurement_ready = false;
   
-	if (debug) {
-		Serial.println("SPS30: Starting measurement");
-	}
-
 	// Turn on sensor
+	if (debug) Serial.println("SPS30: Waking up");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &wakeup[0], 2);
 	Wire.endTransmission();
@@ -73,9 +83,10 @@ void SPS30::startMeasurement(uint64_t currTime_ms) {
 	delay(5);
 
 	// Put into measurement mode
+	if (debug) Serial.println("SPS30: Starting measurement");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &start_measurement[0], 2);
-	Wire.write(&init_vals[0], 2); // Set up for 16-bit integer values
+	Wire.write(&init_vals[0], 2);
 	Wire.write(calculate_crc(&init_vals[0]));
 	Wire.endTransmission();
 
@@ -91,46 +102,68 @@ void SPS30::startMeasurement(uint64_t currTime_ms) {
 void SPS30::highConcen_check(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
   
-	if (debug) {
-		Serial.println("SPS30: Starting high concentration check");
-	}
+	if (debug) Serial.println("SPS30: Starting high concentration check");
 
 	// Read and check if PM2.5 number concentration > 300/cm^3  
-	uint8_t response[30];
-	uint16_t check;
+	uint8_t response[bytes_needed];
   
 	while (1) {
+		if (debug) Serial.println("SPS30: Sending read request");
 		Wire.beginTransmission(ADDR);
 		Wire.write((uint8_t*) &read_measured[0], 2);
 		Wire.endTransmission();
 	
 		delay(20);
-		Wire.requestFrom(ADDR, 30);
+		Wire.requestFrom(ADDR, bytes_needed);
 
-		while (Wire.available() < 30);
-	
-		for (int i = 0; i < 30; i++) {
+		while (Wire.available() < bytes_needed);
+
+		if (debug) Serial.println("SPS30: Reading data");
+		for (int i = 0; i < bytes_needed; i++) {
 			response[i] = Wire.read();
 		}
 
 		// Restart request if any CRC check fails
+		if (debug) Serial.println("SPS30: CRC Checks");
 		int i;
-		for (i = 0; i < 30; i += 3) {
+		for (i = 0; i < bytes_needed; i += 3) {
 			if (check_crc(&response[i]) == 0) break;
 		}
 
-		if (i != 30) continue;
+		if (i != bytes_needed) {
+			if (debug) {
+				Serial.println("CRC CHECK FAILED!");
+				Serial.println(i);
+			}
+
+			continue;
+		}
 
 		// Obtain PM2.5 number concentration(s)
-		check = (response[18] << 8) + response[19];
+		if (debug) Serial.println("SPS30: Reading measured values");
+		if (fp) {
+			uint8_t float_bytes[4] = {response[40], response[39], response[37], response[36]};
+			pm2p5_float = *(float*)(&float_bytes[0]);
+		} else {
+			pm2p5_int = (response[18] << 8) + response[19];
+		}
 
 		break;
 	}
 
+	if (debug) {
+	}
+
 	// PM2.5 number concentration high, measurement valid
-	if (check >= 300) {
+	if (debug) Serial.println("SPS30: Scheduling new measurement");
+	if ((!fp && pm2p5_int >= 300) || (fp && pm2p5_float >= 300)) {
 		measurement_ready = true;
-		pm2p5  = (response[measurementIx * 3] << 8) + response[(measurementIx * 3) + 1];
+		if (fp) {
+			uint8_t float_bytes[4] = {response[(measurementIx * 6) + 4], response[(measurementIx * 6) + 3], response[(measurementIx * 6) + 1], response[(measurementIx * 6)]};
+			pm2p5_float = *(float*)(&float_bytes[0]);
+		} else {
+			pm2p5_int = (response[measurementIx * 3] << 8) + response[(measurementIx * 3) + 1];
+		}
 
 		// Put to sleep and schedule next measurement
 		sps30_sleep();
@@ -146,41 +179,48 @@ void SPS30::highConcen_check(uint64_t currTime_ms) {
 
 
 void SPS30::finalMeasurement(uint64_t currTime_ms) {
-	uint8_t response[30];
+	uint8_t response[bytes_needed];
 	measurement_ready = true;
 
-	if (debug) {
-		Serial.println("SPS30: Starting final measurement");
-	}
+	if (debug) Serial.println("SPS30: Starting final measurement");
   
 	while (1) {
+		if (debug) Serial.println("SPS30: Sending read request");
 		Wire.beginTransmission(ADDR);
 		Wire.write((uint8_t*) &read_measured[0], 2);
 		Wire.endTransmission();
 	
 		delay(20);
-		Wire.requestFrom(ADDR, 30);
+		Wire.requestFrom(ADDR, bytes_needed);
 
-		while (Wire.available() < 30);
-	
-		for (int i = 0; i < 30; i++) {
+		while (Wire.available() < bytes_needed);
+
+		if (debug) Serial.println("SPS30: Reading data");
+		for (int i = 0; i < bytes_needed; i++) {
 			response[i] = Wire.read();
 		}
 
 		// Restart request if any CRC check fails
+		if (debug) Serial.println("SPS30: CRC Checks");
 		int i;
-		for (i = 0; i < 30; i += 3) {
+		for (i = 0; i < bytes_needed; i += 3) {
 			if (check_crc(&response[i]) == 0) break;
 		}
 
-		if (i != 30) continue;
+		if (i != bytes_needed) continue;
 
 		// Obtain measurement
-		pm2p5  = (response[measurementIx * 3] << 8) + response[(measurementIx * 3) + 1];
+		if (debug) Serial.println("SPS30: Reading measured values");
+		if (fp) {
+			uint8_t float_bytes[4] = {response[(measurementIx * 4)], response[(measurementIx * 6) + 3], response[(measurementIx * 6) + 1], response[(measurementIx * 6)]};
+			pm2p5_float = *(float*)(&float_bytes[0]);
+		} else {
+			pm2p5_int = (response[measurementIx * 3] << 8) + response[(measurementIx * 3) + 1];
+		}
 
 		// Put to sleep and schedule next measurement
+		if (debug) Serial.println("SPS30: Scheduling new measurement");
 		sps30_sleep();
-    
 		scheduledFunc = START_MEASUREMENT;
 		time_ms = lastMeasurement + period_ms;
 		break;

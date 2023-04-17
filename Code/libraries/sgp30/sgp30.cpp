@@ -8,6 +8,7 @@ SGP30::SGP30() {
 	max_clock = 400000;
 	period_ms = 60000;
 	measurement_ready = false;
+	measurementStarted = false;
 }
 
 
@@ -45,31 +46,36 @@ void SGP30::startNextFunc(uint64_t currTime_ms) {
 
 void SGP30::calibration(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
+	lastMeasurement = currTime_ms;
 	measurement_ready = false;
 
 	if (debug) {
 		Serial.println("SGP30: Performing Calibration");
 	}
   
-	// Perform a new calibration measurement if 15 or less have been performed
-    Wire.beginTransmission(ADDR);
-    Wire.write(&measure_iaq[0], 2);
-    Wire.endTransmission();
-	
-	delay(12);
-    Wire.requestFrom(ADDR, 6);
-	
-	while (Wire.available() < 6);
-	
-    uint8_t response[6];
-	for (int i = 0; i < 6; i++) {
-		response[i] = Wire.read();
-	}
+	// Get measurement data
+	while (1) {
+		Wire.beginTransmission(ADDR);
+		Wire.write(&measure_iaq[0], 2);
+		Wire.endTransmission();
+		
+		delay(12);
+		Wire.requestFrom(ADDR, 6);
+		
+		while (Wire.available() < 6);
+		
+		uint8_t response[6];
+		for (int i = 0; i < 6; i++) {
+			response[i] = Wire.read();
+		}
 
-    // Check if new calibration measurement is needed
-	if (((response[0] << 8) + response[1]) == 400 && ((response[3] << 8) + response[4]) == 0) {
-		time_ms = currTime_ms + 1000 + millis() - startTime;
-		return;
+		// Check if new calibration measurement is needed, schedule and exit if needed
+		if (((response[0] << 8) + response[1]) == 400 && ((response[3] << 8) + response[4]) == 0) {
+			// time_ms = currTime_ms + 1000 + millis() - startTime;
+			sleep(1000);
+		} else {
+			break;
+		}
 	}
 
 	if (debug) {
@@ -103,13 +109,15 @@ void SGP30::calibration(uint64_t currTime_ms) {
 	}
 
 	// Schedule measurement request
-	scheduledFunc = SET_CALIBRATION;
-	time_ms = currTime_ms + period_ms + millis() - startTime;
+	// scheduledFunc = SET_CALIBRATION;
+	scheduledFunc = GETCO2;
+	time_ms = currTime_ms + lastMeasurement;
 }
 
 
 void SGP30::setCalibration(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
+	measurement_ready = false;
 
 	if (debug) {
 		Serial.println("SGP30: Writing Calibration");
@@ -138,29 +146,18 @@ void SGP30::setCalibration(uint64_t currTime_ms) {
 
 void SGP30::getCO2(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
-
-	if (debug) {
-		Serial.println("SGP30: Starting measurement");
+	if (!measurementStarted) {
+		lastMeasurement = currTime_ms;
+		measurementStarted = true;
 	}
-  
-	// // Turn on sensor
-	// Wire.beginTransmission(ADDR);
-	// Wire.write(&iaq_init[0], 2);
-	// Wire.endTransmission();
-	// delay(10);
 
-	// // Write calibration values
-	// Wire.beginTransmission(ADDR);
-	// Wire.write(&set_iaq_baseline[0], 2);
-	// Wire.write((uint8_t *) &baselineTVOC, 2);
-	// Wire.write(calculate_crc(&baselineTVOC));
-	// Wire.write((uint8_t *) &baseline_CO2, 2);
-	// Wire.write(calculate_crc(&baseline_CO2));
-	// Wire.endTransmission();
-	// delay(10);
+
+	if (debug) Serial.println("SGP30: Starting measurement");
 
 	// Perform measurement
 	while (1) {
+		if (debug) Serial.println("SGP30: Sending measurement request");
+
 		Wire.beginTransmission(ADDR);
 		Wire.write(&measure_iaq[0], 2);
 		Wire.endTransmission();
@@ -169,27 +166,35 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		Wire.requestFrom(ADDR, 6);
 	
 		if (Wire.available() < 6) continue;
+
+		if (debug) Serial.println("SGP30: Reading measured values");
 		uint8_t response[6];
 		for (int i = 0; i < 6; i++) {
 			response[i] = Wire.read();
 		}
 
 		// Restart request if either CRC check fails
+		if (debug) Serial.println("SGP30: CRC Checks");
 		if (check_crc(&response[0]) == 0) continue;
 		if (check_crc(&response[3]) == 0) continue;
 		
-		// Check if calibration applied
-		if (((response[0] << 8) + response[1]) == 400 && ((response[3] << 8) + response[4]) == 0) {
-			sleep(1000);
-			continue;
-		}
-	
+		// Obtain CO2 and TVOC values
 		co2 = (response[0] << 8) + response[1];
-		break;
-	}
+		tvoc = (response[3] << 8) + response[4];
+		
+		// Schedule next measurement
+		if (debug) Serial.println("SGP30: Scheduling new measurement");
+		if (co2 == 400 && tvoc == 0) {
+			scheduledFunc = GETCO2;
+			time_ms = currTime_ms + 1000 + millis() - startTime;
+		} else {
+			measurement_ready = true;
+			measurementStarted = false;
+			// scheduledFunc = SET_CALIBRATION;
+			scheduledFunc = GETCO2;
+			time_ms = lastMeasurement + period_ms;
+		}
 
-	// Schedule new measurement request
-	measurement_ready = true;
-	scheduledFunc = SET_CALIBRATION;
-	time_ms = currTime_ms + period_ms + millis() - startTime;
+		return;
+	}
 }

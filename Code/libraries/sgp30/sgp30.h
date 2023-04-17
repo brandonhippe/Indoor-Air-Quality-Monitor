@@ -19,7 +19,7 @@ class SGP30 {
 		// Public Variables
 		uint32_t period_ms, max_clock;
 		uint64_t time_ms;
-		uint16_t co2;
+		uint16_t co2, tvoc;
 		boolean measurement_ready, debug;
 		
 		// Public Functions
@@ -32,6 +32,7 @@ class SGP30 {
 		uint64_t lastMeasurement;
 		uint16_t baseline_CO2, baselineTVOC;
 		int scheduledFunc;
+		boolean measurementStarted;
 		
 		// Private Functions
 		void calibration(uint64_t currTime_ms);

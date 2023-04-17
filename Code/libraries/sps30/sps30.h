@@ -29,24 +29,24 @@ class SPS30 {
 		// Public Variables
 		uint32_t period_ms, max_clock;
 		uint64_t time_ms;
-		uint16_t pm2p5;
-		boolean measurement_ready, debug;
+		uint16_t pm2p5_int;
+		float pm2p5_float;
+		boolean measurement_ready, fp, debug;
 		int measurementIx;
 		
 		// Public Functions
 		SPS30();
-		boolean begin(int measurement, uint64_t currTime_ms, boolean _debug);
+		boolean begin(int measurement, boolean _fp, uint64_t currTime_ms, boolean _debug);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables
 		// uint16_t start_measurement, stop_measurement, data_ready, read_measured, start_sleep, wakeup;
 		uint64_t lastMeasurement;
-		int scheduledFunc;
+		int scheduledFunc, bytes_needed;
 		
 		// Private Functions
 		void sps30_sleep();
 		void startMeasurement(uint64_t currTime_ms);
 		void highConcen_check(uint64_t currTime_ms);
 		void finalMeasurement(uint64_t currTime_ms);
-	
 };

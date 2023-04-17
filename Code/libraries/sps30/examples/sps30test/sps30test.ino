@@ -2,8 +2,11 @@
 #include <NewWire.h>
 
 
-#define SDA_PIN 10    // set the SDA pin to 10
-#define SCL_PIN 9    // set the SCL pin to 9
+#define SDA_PIN 10    // Set the SDA pin to 10
+#define SCL_PIN 9     // Set the SCL pin to 9
+
+
+#define SPS_FP true
 
 
 uint64_t time_ms;
@@ -27,7 +30,7 @@ void setup() {
   Wire.setModule(0);
   Wire.begin();
   Wire.setClock(sps30.max_clock);
-  sps30.begin(MCPM2p5, millis(), true);
+  sps30.begin(MCPM2p5, SPS_FP, millis(), true);
 
   // Set time_ms and delay to start time
   time_ms = sps30.time_ms;
@@ -39,7 +42,11 @@ void loop() {
   Serial.println("Executing");
   sps30.startNextFunc(millis());
   if (sps30.measurement_ready) {
-    Serial.println(sps30.pm2p5);
+    if (sps30.fp) {
+      Serial.println(sps30.pm2p5_float);
+    } else {
+      Serial.println(sps30.pm2p5_int);
+    }
   }
 
   // Sleep until next function
