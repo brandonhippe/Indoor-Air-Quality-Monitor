@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
 MAX_T = 10800
-BAT_CAP = 3.6 * 3.5 # Voltage * Amp-hours
+BAT_CAP = 3500 * 3600 / 1000 # mAh converted to Coulombs
 POWER_GOAL = BAT_CAP / (365 * 24)
 
 
@@ -144,7 +144,7 @@ def sleepPercentage(component):
 
 def main():
     # Open, read, and parse file
-    with open("Power Consumption Test - Power Consumption.csv", newline='') as f:
+    with open("Power Consumption Test Results - Power Consumption.csv", newline='') as f:
         lines = [line.strip().strip(',') for line in f.readlines()]
 
     groupings = []
@@ -265,31 +265,31 @@ def main():
     # Sort by power consumption / avg sampling rate
     groupsSorted = sorted(power.keys(), key=lambda e: sum(power[e][i] for i in e) / geoMean(samplingRates[e]))
 
+    # Prepare print output
+    output = []
+    output.append("Configurations sorted by lowest power consumption / sampling rate:")
+    for i, config in enumerate(groupsSorted):
+        output.append(f"{i + 1}.")
+        for item in config:
+            output.append(f"    {components[item]['Type']}: {item}")
+            output.append(f"        Time On: {cycles[config][item][0]:.0f} seconds")
+            output.append(f"        Time Off: {cycles[config][item][1]:.0f} seconds")
+            components[item]["Time (On)"], components[item]["Time (Off)"] = cycles[config][item]
+            output.append(f"        Sleep Power %: {sleepPercentage(components[item]):.2%}")
+            output.append(f"        Percent of Total Power: {power[config][item] / sum(power[config].values()):.2%}")
+
+        output.append(f"    Power Consumption: {sum(power[config].values()) * 1000:.3f} mW")
+        output.append(f"    Cost: ${cost[config]:.2f}")
+        output.append(f"    Battery Life on single 18650 cell: {BAT_CAP / batterySize[config]:.2f} days\n")
+
     if input("Print Results (y/n)? ") == 'y':
-        # Prepare print output
-        output = []
-        output.append("Configurations sorted by lowest power consumption / sampling rate:")
-        for i, config in enumerate(groupsSorted):
-            output.append(f"{i + 1}.")
-            for item in config:
-                output.append(f"    {components[item]['Type']}: {item}")
-                output.append(f"        Time On: {cycles[config][item][0]:.0f} seconds")
-                output.append(f"        Time Off: {cycles[config][item][1]:.0f} seconds")
-                components[item]["Time (On)"], components[item]["Time (Off)"] = cycles[config][item]
-                output.append(f"        Sleep Power %: {sleepPercentage(components[item]):.2%}")
-                output.append(f"        Percent of Total Power: {power[config][item] / sum(power[config].values()):.2%}")
-
-            output.append(f"    Power Consumption: {sum(power[config].values()) * 1000:.3f} mW")
-            output.append(f"    Cost: ${cost[config]:.2f}")
-            output.append(f"    Battery Life on single 18650 cell: {BAT_CAP / batterySize[config]:.2f} days\n")
-
         for o in output:
             print(o)
 
-        if input("Write to file (y/n)? ") == 'y':
-            # Write to file
-            with open(f"{input('Enter extensionless output file name: ')}.txt", "w") as f:
-                f.write('\n'.join(output))
+    if input("Write to file (y/n)? ") == 'y':
+        # Write to file
+        with open(f"{input('Enter extensionless output file name: ')}.txt", "w") as f:
+            f.write('\n'.join(output))
 
 
 if __name__ == "__main__":
