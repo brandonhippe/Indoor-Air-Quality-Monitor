@@ -1,14 +1,25 @@
 #include <sgp30.h>
 #include <sps30.h>
-#include <CGAnem.h>
 #include <NewWire.h>
 
 
 #define SDA_PIN 10    	// Set the SDA pin to 10
 #define SCL_PIN 9    	// Set the SCL pin to 9
-#define CG_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
+#define ANEM_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
+
 
 #define SPS_FP true		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
+
+// Uncomment this section for Climate Guard Anemometer
+#include <CGAnem.h>
+CGAnem anem;
+//*/
+
+
+/*// Uncomment this section for Ultrasonic Anemometer
+#include <UltrasonicAnem.h>
+UltrasonicAnem anem;
+//*/
 
 
 #define debug true
@@ -19,7 +30,6 @@ uint64_t time_ms;
 
 SGP30 sgp30;
 SPS30 sps30;
-CGAnem cganem;
 
 
 int nextDevice;
@@ -54,8 +64,8 @@ void setup() {
 		max_clock = sps30.max_clock;
 	}
 	
-	if (cganem.max_clock < max_clock) {
-		max_clock = cganem.max_clock;
+	if (anem.max_clock < max_clock) {
+		max_clock = anem.max_clock;
 	}
 
 	Wire.setModule(0);
@@ -63,7 +73,7 @@ void setup() {
 	Wire.setClock(max_clock);
 	sgp30.begin(millis(), debug);
 	sps30.begin(MCPM2p5, SPS_FP, millis(), debug);
-	anem_present = cganem.begin(CG_SLEEP_PIN, millis(), debug);
+	anem_present = anem.begin(ANEM_SLEEP_PIN, millis(), debug);
 
 	uint64_t nextTime = sgp30.time_ms;
 	nextDevice = CO2;
@@ -73,8 +83,8 @@ void setup() {
 		nextDevice = PM;
 	}
 
-	if (anem_present && cganem.time_ms < nextTime) {
-		nextTime = cganem.time_ms;
+	if (anem_present && anem.time_ms < nextTime) {
+		nextTime = anem.time_ms;
 		nextDevice = ANEM;
 	}
 
@@ -109,7 +119,7 @@ void loop() {
 			sps30.startNextFunc(time_ms + startTime - millis());
 			break;
     case ANEM:
-      cganem.startNextFunc(time_ms + startTime - millis());
+      anem.startNextFunc(time_ms + startTime - millis());
       break;
 	}
 
@@ -148,9 +158,9 @@ void loop() {
   			}
   			break;
       case ANEM:
-        if (cganem.measurement_ready) {
+        if (anem.measurement_ready) {
           Serial.print("Airflow: ");
-          Serial.print(cganem.wind);
+          Serial.print(anem.wind);
           Serial.println(" m/s");
         }
         break;
@@ -168,8 +178,8 @@ void loop() {
 		nextDevice = PM;
 	}
 
-	if (anem_present && cganem.time_ms < nextTime) {
-		nextTime = cganem.time_ms;
+	if (anem_present && anem.time_ms < nextTime) {
+		nextTime = anem.time_ms;
 		nextDevice = ANEM;
 	}
 
