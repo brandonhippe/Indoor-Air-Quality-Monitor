@@ -111,7 +111,7 @@ void SGP30::calibration(uint64_t currTime_ms) {
 	// Schedule measurement request
 	// scheduledFunc = SET_CALIBRATION;
 	scheduledFunc = GETCO2;
-	time_ms = currTime_ms + lastMeasurement;
+	time_ms = lastMeasurement + period_ms;
 }
 
 
