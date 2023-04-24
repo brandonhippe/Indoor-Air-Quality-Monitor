@@ -35,6 +35,7 @@ class SGP30 {
 		boolean measurementStarted;
 		
 		// Private Functions
+		void sgp30_sleep();
 		void calibration(uint64_t currTime_ms);
 		void setCalibration(uint64_t currTime_ms);
 		void getCO2(uint64_t currTime_ms);

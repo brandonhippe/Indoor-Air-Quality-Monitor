@@ -44,17 +44,27 @@ void SGP30::startNextFunc(uint64_t currTime_ms) {
 }
 
 
+void SGP30::sgp30_sleep() {
+	// This performs a general call reset. It is possible that this resets other I2C devices on the bus
+	if (debug) Serial.println("SGP30: Sleeping");
+	Wire.beginTransmission(0x00);
+	Wire.write(0x06);
+	Wire.endTransmission();
+	delay(5);
+}
+
+
 void SGP30::calibration(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
 	lastMeasurement = currTime_ms;
 	measurement_ready = false;
 
-	if (debug) {
-		Serial.println("SGP30: Performing Calibration");
-	}
+	if (debug) Serial.println("SGP30: Performing Calibration");
   
 	// Get measurement data
 	while (1) {
+		if (debug) Serial.println("SGP30: Sending Measure Request");
+
 		Wire.beginTransmission(ADDR);
 		Wire.write(&measure_iaq[0], 2);
 		Wire.endTransmission();
@@ -72,6 +82,7 @@ void SGP30::calibration(uint64_t currTime_ms) {
 		// Check if new calibration measurement is needed, schedule and exit if needed
 		if (((response[0] << 8) + response[1]) == 400 && ((response[3] << 8) + response[4]) == 0) {
 			// time_ms = currTime_ms + 1000 + millis() - startTime;
+			if (debug) Serial.println("SGP30: Not calibrated, waiting 1 second");
 			sleep(1000);
 		} else {
 			break;
@@ -108,9 +119,12 @@ void SGP30::calibration(uint64_t currTime_ms) {
 		break;
 	}
 
+	// Put sensor to sleep
+	sgp30_sleep();
+
 	// Schedule measurement request
-	// scheduledFunc = SET_CALIBRATION;
-	scheduledFunc = GETCO2;
+	scheduledFunc = SET_CALIBRATION;
+	// scheduledFunc = GETCO2;
 	time_ms = lastMeasurement + period_ms;
 }
 
@@ -138,7 +152,7 @@ void SGP30::setCalibration(uint64_t currTime_ms) {
 	Wire.write(calculate_crc(&baseline_CO2));
 	Wire.endTransmission();
 	delay(10);
-	
+
 	scheduledFunc = GETCO2;
 	time_ms = currTime_ms + 1000 + millis() - startTime;
 }
@@ -146,6 +160,8 @@ void SGP30::setCalibration(uint64_t currTime_ms) {
 
 void SGP30::getCO2(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
+	measurement_ready = false;
+
 	if (!measurementStarted) {
 		lastMeasurement = currTime_ms;
 		measurementStarted = true;
@@ -187,14 +203,20 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		if (co2 == 400 && tvoc == 0) {
 			scheduledFunc = GETCO2;
 			time_ms = currTime_ms + 1000 + millis() - startTime;
+
+			return;
 		} else {
+
 			measurement_ready = true;
 			measurementStarted = false;
-			// scheduledFunc = SET_CALIBRATION;
-			scheduledFunc = GETCO2;
+			scheduledFunc = SET_CALIBRATION;
+			// scheduledFunc = GETCO2;
 			time_ms = lastMeasurement + period_ms;
 		}
 
-		return;
+		break;
 	}
+
+	// Put sensor to sleep
+	sgp30_sleep();
 }
