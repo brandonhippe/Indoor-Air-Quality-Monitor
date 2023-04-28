@@ -144,7 +144,7 @@ def sleepPercentage(component):
 
 def main():
     # Open, read, and parse file
-    with open("Power Consumption Test Results - Power Consumption.csv", newline='') as f:
+    with open("Power Estimation - Power Consumption.csv", newline='') as f:
         lines = [line.strip().strip(',') for line in f.readlines()]
 
     groupings = []

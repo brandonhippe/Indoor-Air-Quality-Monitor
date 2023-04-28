@@ -1,33 +1,6 @@
-Micro Controllers,(Time on and Time off not necessary),,,,,,,,,
-Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),,Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),,Notes
-MSP430,12.99,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-PM2.5 Sensors,,,,,,,,,,
-Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
-Sensirion SPS30,42.93,,,,10 s,,,,5990 s,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-CO2 Sensors,,,,,,,,,,
-Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
-Sensirion SGP30,17.5,,,,1 s,,,,299 s,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-Air Speed Sensors,,,,,,,,,,
-Name,Cost,Typical Power Consumption (On),Voltage (On),Typical Current (On),Time (On),Typical Power Consumption (Off),Voltage (Off),Typical Current (Off),Time (Off),Notes
-Custom Ultrasonic Anemometer,7.9,,,,3 s,,,,87 s,
-ClimateGuard Wind sensor with I2C,23,,,,13 s,,,,1187 s,
+Component,Name,Voltage (On),Charge Consumed (On),Typical Power Consumption (On),Period (minimum),Typical Power Consumption (Off),Notes
+Micro Controller,MSP430FR2355,3.3 V,0 C,,0 s,0.14776 mW,On characteristics included with other component(s)
+Communication,SmartMesh Mote,3.3 V,1 mC,,1 s,2.64 uW,EXAMPLE DATA
+PM2.5 Sensor,Sensirion SPS30,5 V,1.65807167 C,,30 s,253.71 uW,
+CO2 Sensor,Sensirion SGP30,3.3 V,736.95602 mC,,15 s,112.74 uW,
+Anemometer,Custom Ultrasonic Anemometer,3.3 V,,0.66 mW,3 s,0 W,EXAMPLE DATA
