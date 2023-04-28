@@ -6,7 +6,7 @@ const uint8_t iaq_init[2] = {0x20, 0x03}, measure_iaq[2] = {0x20, 0x08}, get_iaq
 
 SGP30::SGP30() {
 	max_clock = 400000;
-	period_ms = 60000;
+	period_ms = 120000;
 	measurement_ready = false;
 	measurementStarted = false;
 }

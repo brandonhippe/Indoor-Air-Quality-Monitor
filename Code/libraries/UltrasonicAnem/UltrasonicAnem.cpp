@@ -10,10 +10,10 @@ UltrasonicAnem::UltrasonicAnem() {
 	period_ms = 60000;
 	measurement_ready = false;
 	measurementStarted = false;
-	tx1 = 11;
-	rx1 = 12;
-	tx2 = 13;
-	rx2 = 14;
+	TRIG_1 = 16;
+	ECHO_1 = 17;
+	TRIG_2 = 18;
+	ECHO_2 = 19;
 	
 	double alpha = atan(2 * d / a);
 	sin_alpha = sin(alpha);
@@ -57,9 +57,9 @@ void UltrasonicAnem::measure(uint64_t currTime_ms) {
 	
 	// Send chirps
 	if (debug) Serial.println("Ultrasonic Anem: Sending chirps");
-	unsigned long t1 = pulse(tx1, rx1);
+	unsigned long t1 = pulse(TRIG_1, ECHO_1);
 	sleep(10);
-	unsigned long t2 = pulse(tx2, rx2);
+	unsigned long t2 = pulse(TRIG_2, ECHO_2);
 	
 	// Calculate wind and temperature
 	if (debug) Serial.println("Ultrasonic Anem: Calculating values");

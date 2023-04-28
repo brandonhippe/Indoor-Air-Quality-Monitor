@@ -7,7 +7,7 @@ static uint8_t init_vals[2];
 
 SPS30::SPS30() {
 	max_clock = 100000;
-	period_ms = 60000;
+	period_ms = 120000;
 	measurement_ready = false;
 }
 
@@ -30,7 +30,7 @@ boolean SPS30::begin(int measurement, boolean _fp, uint64_t currTime_ms, boolean
 
 	// Schedule measurement
 	scheduledFunc = START_MEASUREMENT;
-	time_ms = currTime_ms + 100 + millis() - startTime;
+	time_ms = currTime_ms + 60000 + millis() - startTime;
 }
 
 
