@@ -1,5 +1,6 @@
 #include <sgp30.h>
 #include <sps30.h>
+#include <IpMtWrapper.h>
 #include <NewWire.h>
 
 
@@ -30,15 +31,24 @@ uint64_t time_ms;
 
 SGP30 sgp30;
 SPS30 sps30;
+IpMtWrapper ipmtwrapper;
 
 
 int nextDevice;
 #define CO2 0
 #define PM 1
 #define ANEM 2
+#define SMARTMESH 3
 
 
 bool anem_present;
+
+
+void generateData(uint16_t *returnVal) {
+  returnVal[0] = 65535;
+  returnVal[1] = 65535;
+  returnVal[2] = 65535;
+}
 
 
 void setup() {
@@ -47,10 +57,10 @@ void setup() {
 		pinMode(i, OUTPUT);
 	}
 
-  if (debug) {
-  	Serial.begin(9600);
-  	Serial.println("Starting");
-  }
+  	if (debug) {
+  		Serial.begin(9600);
+  		Serial.println("Starting");
+  	}
 
 	pinMode(SDA_PIN, INPUT_PULLUP);
 	pinMode(SCL_PIN, INPUT_PULLUP);
@@ -67,6 +77,8 @@ void setup() {
 	if (anem.max_clock < max_clock) {
 		max_clock = anem.max_clock;
 	}
+
+	ipmtwrapper.setup(60000, (uint8_t*)ipv6Addr_manager, 61000, 100, generateData);
 
 	Wire.setModule(0);
 	Wire.begin();
@@ -99,15 +111,18 @@ void loop() {
   
   if (debug) {
     switch (nextDevice) {
-      case CO2:
-        Serial.println("eCO2");
-        break;
-      case PM:
-        Serial.println("PM");
-        break;
-      case ANEM:
-        Serial.println("Anemometer");
-        break;
+      	case CO2:
+        	Serial.println("eCO2");
+        	break;
+      	case PM:
+        	Serial.println("PM");
+        	break;
+      	case ANEM:
+        	Serial.println("Anemometer");
+        	break;
+		case SMARTMESH:
+        	Serial.println("SmartMesh");
+        	break;
     }
   }
   
@@ -118,9 +133,12 @@ void loop() {
 		case PM:
 			sps30.startNextFunc(time_ms + startTime - millis());
 			break;
-    case ANEM:
-      anem.startNextFunc(time_ms + startTime - millis());
-      break;
+    	case ANEM:
+      		anem.startNextFunc(time_ms + startTime - millis());
+      		break;
+		case SMARTMESH:
+			ipmtwrapper.startNextFunc(time_ms + startTime - millis());
+			break;
 	}
 
 	// Print out measurements
@@ -157,19 +175,20 @@ void loop() {
   				}
   			}
   			break;
-      case ANEM:
-        if (anem.measurement_ready) {
-          Serial.print("Airflow: ");
-          Serial.print(anem.wind);
-          Serial.println(" m/s");
-        }
-        break;
+      	case ANEM:
+        	if (anem.measurement_ready) {
+          		Serial.print("Airflow: ");
+          		Serial.print(anem.wind);
+          		Serial.println(" m/s");
+        	}
+        	break;
+		case SMARTMESH:
+			Serial.println("Smartmesh: Transmission complete");
+			break;
   	}
   }
 
 	// Execution finished, find next function
-	// *** NEED TO ADD SMART MESH ***
-  
 	uint64_t nextTime = sgp30.time_ms;
 	nextDevice = CO2;
   
@@ -183,6 +202,11 @@ void loop() {
 		nextDevice = ANEM;
 	}
 
+	if (ipmtwrapper.time_ms < nextTime) {
+		nextTime = ipmtwrapper.time_ms;
+		nextDevice = SMARTMESH;
+	}
+
 	// Calculate time until next function
 	// Check if millis() has overflowed
 	uint32_t currTime_32 = millis();
@@ -193,7 +217,7 @@ void loop() {
 	}
 
 	// If next time hasn't passed, sleep until then
-  if (debug) Serial.println("Sleeping\n");
+  	if (debug) Serial.println("Sleeping\n");
 	if (nextTime > currTime_ms + (millis() - currTime_32)) {
 		sleep(nextTime - (currTime_ms + (millis() - currTime_32)));
 		time_ms = nextTime;
