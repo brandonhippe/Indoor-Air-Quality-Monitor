@@ -6,12 +6,12 @@ const uint8_t dev_id = 0x05, windMSB = 0x07, windLSB = 0x08;
 
 CGAnem::CGAnem() {
 	max_clock = 200000;
-	period_ms = 60000;
+	period_ms = 10000;
 	measurement_ready = false;
 }
 
 
-boolean CGAnem::begin(int sleepPin, uint64_t currTime_ms, boolean _debug) {
+boolean CGAnem::begin(int sleepPin, boolean _debug) {
 	uint32_t startTime = millis();
 	debug = _debug;
 	sleep_pin = sleepPin;
@@ -34,7 +34,7 @@ boolean CGAnem::begin(int sleepPin, uint64_t currTime_ms, boolean _debug) {
 
 	// Schedule Measurement
 	scheduledFunc = START_MEASUREMENT;
-	time_ms = currTime_ms + period_ms + millis() - startTime;
+	time_ms = millis();
   
 	return true;
 }

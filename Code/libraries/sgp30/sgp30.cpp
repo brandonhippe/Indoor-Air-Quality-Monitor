@@ -12,20 +12,22 @@ SGP30::SGP30() {
 }
 
 
-boolean SGP30::begin(uint64_t currTime_ms, boolean _debug) {
+boolean SGP30::begin(boolean _debug) {
 	uint32_t startTime = millis();
 	debug = _debug;
   
 	// Initialize the sensor
 	Wire.beginTransmission(ADDR);
 	Wire.write(&iaq_init[0], 2);
-	Wire.endTransmission();
+	int sensed = Wire.endTransmission();
 
-	// Schedule Calibration Measurement
-	scheduledFunc = CALIBRATION;
-	time_ms = currTime_ms + 100 + millis() - startTime;
-  
-	return true;
+	if (sensed == 0) {
+		// Perform calibration
+		calibration(millis());
+		return true;
+	} else {
+		return false;
+	}
 }
 
 

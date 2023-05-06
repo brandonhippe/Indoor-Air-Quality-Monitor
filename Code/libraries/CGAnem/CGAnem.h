@@ -23,7 +23,7 @@ class CGAnem {
 		
 		// Public Functions
 		CGAnem();
-		boolean begin(int sleepPin, uint64_t currTime_ms, boolean _debug);
+		boolean begin(int sleepPin, boolean _debug);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables

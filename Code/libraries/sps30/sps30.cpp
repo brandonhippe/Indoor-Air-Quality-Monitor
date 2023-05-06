@@ -12,7 +12,7 @@ SPS30::SPS30() {
 }
 
 
-boolean SPS30::begin(int measurement, boolean _fp, uint64_t currTime_ms, boolean _debug) {
+boolean SPS30::begin(int measurement, boolean _fp, boolean _debug) {
 	uint32_t startTime = millis();
 	debug = _debug;
 	measurementIx = measurement;
@@ -28,9 +28,26 @@ boolean SPS30::begin(int measurement, boolean _fp, uint64_t currTime_ms, boolean
 
 	init_vals[1] = 0x00;
 
+	// Turn on sensor
+	if (debug) Serial.println("SPS30: Waking up");
+	Wire.beginTransmission(ADDR);
+	Wire.write((uint8_t*) &wakeup[0], 2);
+	Wire.endTransmission();
+	delay(5);
+  
+	// Send wakeup again to finish wakeup command
+	Wire.beginTransmission(ADDR);
+	Wire.write((uint8_t*) &wakeup[0], 2);
+	int sensed = Wire.endTransmission();
+	delay(5);
+
+	sps30_sleep();
+
 	// Schedule measurement
 	scheduledFunc = START_MEASUREMENT;
-	time_ms = currTime_ms + 60000 + millis() - startTime;
+	time_ms = millis();
+
+	return sensed == 0;
 }
 
 

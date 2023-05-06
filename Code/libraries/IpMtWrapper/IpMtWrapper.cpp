@@ -75,12 +75,11 @@ void IpMtWrapper::setup(
       uint8_t*       destAddr,
       uint16_t       destPort,
       TIME_T         dataPeriod,
-      data_generator dataGenerator
+      data_generator dataGenerator,
+      int payload_bytes
    ) {
    // reset local variables
    memset(&app_vars,    0, sizeof(app_vars));
-
-   period_ms = 120000;
    
    // store params
    app_vars.srcPort          = srcPort;
@@ -88,6 +87,7 @@ void IpMtWrapper::setup(
    app_vars.destPort         = destPort;
    app_vars.dataPeriod       = dataPeriod;
    app_vars.dataGenerator    = dataGenerator;
+   payloadBytes = payload_bytes;
    
    // initialize the serial port connected to the computer
    Serial.begin(BAUDRATE_CLI);
@@ -115,7 +115,8 @@ void IpMtWrapper::setup(
    // schedule first event
    fsm_scheduleEvent(2*CMD_PERIOD, &IpMtWrapper::api_getMoteStatus);
    
-   time_ms = 0xFFFFFFFF;
+   time_ms = 1000;
+   period_ms = 10000;
 }
 
 void IpMtWrapper::startNextFunc(uint64_t currTime_ms) {
@@ -491,29 +492,19 @@ void IpMtWrapper::api_requestService_reply() {
 
 void IpMtWrapper::api_sendTo(void) {
    dn_err_t err;
-   uint16_t dataVal[3];
-   uint8_t  payload[6];
+   uint8_t  payload[payloadBytes];
    uint8_t  lenWritten;
    
    // record time
    app_vars.fsmPreviousEvent = millis();
    
-   // log
-   Serial.println("");
-   Serial.print("INFO:     api_sendTo... returns ");
    
    // arm callback
    fsm_setCallback(&IpMtWrapper::api_sendTo_reply);
    
    // create payload
-   app_vars.dataGenerator(dataVal);
+   app_vars.dataGenerator(payload);
    //dn_write_uint16_t(payload, dataVal);
-   payload[0] = (dataVal[0] >> 8) & 0xff;
-   payload[1] = (dataVal[0] >> 0) & 0xff;
-   payload[2] = (dataVal[1] >> 8) & 0xff;
-   payload[3] = (dataVal[1] >> 0) & 0xff;
-   payload[4] = (dataVal[2] >> 8) & 0xff;
-   payload[5] = (dataVal[2] >> 0) & 0xff;
 
    // issue function
    err = dn_ipmt_sendTo(
@@ -529,14 +520,18 @@ void IpMtWrapper::api_sendTo(void) {
    );
    
    // log
+   Serial.println("");
+   Serial.print("INFO:     api_sendTo... returns ");
    Serial.println(err);
    
-   Serial.print("INFO:     sending value: ");
-   Serial.print(dataVal[0]);
-   Serial.print(", ");
-   Serial.print(dataVal[1]);
-   Serial.print(", ");
-   Serial.println(dataVal[2]);
+   Serial.print("INFO:     sending value(s): ");
+   for (int i = 0; i < payloadBytes; i++) {
+      Serial.print("0x");
+      Serial.print(payload[i], HEX);
+      if (i != payloadBytes - 1) Serial.print(", ");
+   }
+
+   Serial.println();
    
    // schedule timeout event
    fsm_scheduleEvent(SERIAL_RESPONSE_TIMEOUT, &IpMtWrapper::api_response_timeout);

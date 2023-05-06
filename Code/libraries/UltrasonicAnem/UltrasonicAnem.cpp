@@ -21,7 +21,7 @@ UltrasonicAnem::UltrasonicAnem() {
 }
 
 
-boolean UltrasonicAnem::begin(int sleepPin, uint64_t currTime_ms, boolean _debug) {
+boolean UltrasonicAnem::begin(int sleepPin, boolean _debug) {
 	uint32_t startTime = millis();
 	debug = _debug;
 	sleep_pin = sleepPin;
@@ -31,7 +31,7 @@ boolean UltrasonicAnem::begin(int sleepPin, uint64_t currTime_ms, boolean _debug
   
 	// Schedule Measurement
 	scheduledFunc = MEASURE;
-	time_ms = currTime_ms + 100 + millis() - startTime;
+	time_ms = millis();
   
 	return true;
 }

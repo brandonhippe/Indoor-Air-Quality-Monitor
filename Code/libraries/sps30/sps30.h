@@ -36,7 +36,7 @@ class SPS30 {
 		
 		// Public Functions
 		SPS30();
-		boolean begin(int measurement, boolean _fp, uint64_t currTime_ms, boolean _debug);
+		boolean begin(int measurement, boolean _fp, boolean _debug);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables

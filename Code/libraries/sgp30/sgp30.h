@@ -24,7 +24,7 @@ class SGP30 {
 		
 		// Public Functions
 		SGP30();
-		boolean begin(uint64_t currTime_ms, boolean _debug);
+		boolean begin(boolean _debug);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables

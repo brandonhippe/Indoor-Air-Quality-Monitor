@@ -55,7 +55,7 @@ class IpMtWrapper; // forward declaration needed here
 
 typedef void (IpMtWrapper::*fsm_timer_callback)(void);
 typedef void (IpMtWrapper::*fsm_reply_callback)(void);
-typedef void (*data_generator)(uint16_t* returnVal);
+typedef void (*data_generator)(uint8_t* payload);
 
 //=========================== IpMtWrapper object ==============================
 
@@ -69,7 +69,8 @@ class IpMtWrapper {
          uint8_t*            destAddr,
          uint16_t            destPort,
          TIME_T              dataPeriod,
-         data_generator      dataGenerator
+         data_generator      dataGenerator,
+         int                 payload_bytes
       );
       void                   loop();
       //===== attributes
@@ -102,6 +103,7 @@ class IpMtWrapper {
    private:
       //===== attributes
       uint64_t lastMeasurement;
+      int payloadBytes;
 };
 
 #endif
