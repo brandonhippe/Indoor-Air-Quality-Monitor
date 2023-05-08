@@ -6,7 +6,7 @@ const uint8_t dev_id = 0x05, windMSB = 0x07, windLSB = 0x08;
 
 CGAnem::CGAnem() {
 	max_clock = 200000;
-	period_ms = 10000;
+	period_ms = 30000;
 	measurement_ready = false;
 }
 
@@ -14,10 +14,10 @@ CGAnem::CGAnem() {
 boolean CGAnem::begin(int sleepPin, boolean _debug) {
 	uint32_t startTime = millis();
 	debug = _debug;
+
 	sleep_pin = sleepPin;
-	digitalWrite(sleep_pin, LOW);
+	digitalWrite(sleep_pin, HIGH);
 	pinMode(sleep_pin, OUTPUT);
-	
 	
 	Wire.beginTransmission(ADDR);
 	Wire.write(dev_id);
@@ -26,11 +26,8 @@ boolean CGAnem::begin(int sleepPin, boolean _debug) {
 		return false;
 	}
 	
-	while (Wire.available() == 0);
-	Wire.read();
-	
 	// Put sensor to sleep
-	digitalWrite(sleep_pin, HIGH);	
+	digitalWrite(sleep_pin, LOW);	
 
 	// Schedule Measurement
 	scheduledFunc = START_MEASUREMENT;
@@ -62,7 +59,7 @@ void CGAnem::start_measurement(uint64_t currTime_ms) {
 		Serial.println("CGAnem: Start Measurement");
 	}
 	
-	digitalWrite(sleep_pin, LOW);
+	digitalWrite(sleep_pin, HIGH);
 	
 	// Schedule measurement finish
 	scheduledFunc = FINISH_MEASUREMENT;
@@ -81,7 +78,7 @@ void CGAnem::finish_measurement(uint64_t currTime_ms) {
 	
 	Wire.beginTransmission(ADDR);
 	Wire.write(windMSB);
-	Wire.endTransmission(false);
+	Wire.endTransmission(true);
 	Wire.requestFrom(ADDR, 1);
 	
 	while (Wire.available() == 0);
@@ -89,14 +86,14 @@ void CGAnem::finish_measurement(uint64_t currTime_ms) {
 	
 	Wire.beginTransmission(ADDR);
 	Wire.write(windLSB);
-	Wire.endTransmission(false);
+	Wire.endTransmission(true);
 	Wire.requestFrom(ADDR, 1);
 	
 	while (Wire.available() == 0);
-	wind += 8;
+	wind += Wire.read();
 	
 	// Put sensor to sleep
-	digitalWrite(sleep_pin, HIGH);
+	digitalWrite(sleep_pin, LOW);
 	
 	// Schedule next measurement
 	scheduledFunc = START_MEASUREMENT;

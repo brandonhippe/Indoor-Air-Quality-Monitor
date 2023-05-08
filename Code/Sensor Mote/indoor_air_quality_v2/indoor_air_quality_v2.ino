@@ -94,7 +94,7 @@ void generateData(uint8_t* payload) {
 
 void setup() {
 	for (int i = 0; i < 40; i++) {
-		digitalWrite(i, LOW);
+		digitalWrite(i, i == ANEM_SLEEP_PIN);
 		pinMode(i, OUTPUT);
 	}
 

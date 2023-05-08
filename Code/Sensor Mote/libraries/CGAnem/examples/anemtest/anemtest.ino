@@ -28,7 +28,13 @@ void setup() {
   Wire.setModule(0);
   Wire.begin();
   Wire.setClock(cganem.max_clock);
-  cganem.begin(CG_SLEEP_PIN, millis(), true);
+  bool sensed = cganem.begin(CG_SLEEP_PIN, true);
+  if (!sensed) {
+    Serial.println("ERROR: CG_ANEM NOT CONNECTED!");
+    while (1);
+  } else {
+    Serial.println("CG_ANEM CONNECTED!");
+  }
 
   // Set time_ms and delay to start time
   time_ms = cganem.time_ms;
