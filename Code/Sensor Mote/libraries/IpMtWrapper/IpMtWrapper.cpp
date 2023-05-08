@@ -35,7 +35,7 @@ void dn_ipmt_reply_cb(uint8_t cmdId);
 
 //=========================== variables =======================================
 
-extern IpMtWrapper ipmtwrapper;
+IpMtWrapper ipmtwrapper;
 
 typedef struct {
    // fsm
@@ -75,7 +75,8 @@ void IpMtWrapper::setup(
       uint8_t*       destAddr,
       uint16_t       destPort,
       TIME_T         dataPeriod,
-      data_generator dataGenerator
+      data_generator dataGenerator,
+      IpMtWrapper    _ipmtwrapper
    ) {
    // reset local variables
    memset(&app_vars,    0, sizeof(app_vars));
@@ -86,6 +87,7 @@ void IpMtWrapper::setup(
    app_vars.destPort         = destPort;
    app_vars.dataPeriod       = dataPeriod;
    app_vars.dataGenerator    = dataGenerator;
+   ipmtwrapper = _ipmtwrapper;
    
    // initialize the serial port connected to the computer
    Serial.begin(BAUDRATE_CLI);

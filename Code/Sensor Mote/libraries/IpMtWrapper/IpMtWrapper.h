@@ -69,7 +69,8 @@ class IpMtWrapper {
          uint8_t*            destAddr,
          uint16_t            destPort,
          TIME_T              dataPeriod,
-         data_generator      dataGenerator
+         data_generator      dataGenerator,
+         IpMtWrapper         _ipmtwrapper
       );
       void                   loop();
       //===== attributes

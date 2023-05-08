@@ -9,7 +9,7 @@ const int i2c_pins[i2c_ports * 2] = {9, 10, 14, 15};
 #define ANEM_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
 
 
-#define SPS_FP false		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
+#define SPS_FP true		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
 
 // Uncomment this section for Climate Guard Anemometer
 #include <CGAnem.h>
@@ -77,7 +77,11 @@ void generateData(uint8_t* payload) {
             memcpy(&payload[1], &co2.co2, sizeof(uint16_t));
             break;
         case PM:
-            memcpy(&payload[1], &pm.pm2p5_int, sizeof(uint16_t));
+			if (pm.fp) {
+            	memcpy(&payload[1], &pm.pm2p5_float, sizeof(float));
+			} else {
+				memcpy(&payload[1], &pm.pm2p5_int, sizeof(uint16_t));
+			}
             break;
         case ANEM:
             memcpy(&payload[1], &anem.wind, sizeof(uint16_t));
@@ -122,7 +126,7 @@ void setup() {
 
     // Initialize SmartMesh IP
     smartmesh_init = false;
-    smartmesh.setup(60000, (uint8_t*)ipv6Addr_manager, 61000, 100, generateData, 2 * sizeof(uint16_t));
+    smartmesh.setup(60000, (uint8_t*)ipv6Addr_manager, 61000, 100, generateData, smartmesh);
     while (!smartmesh_init) smartmesh.loop();
 
     // Initialize CO2 Sensor
