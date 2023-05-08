@@ -69,8 +69,7 @@ class IpMtWrapper {
          uint8_t*            destAddr,
          uint16_t            destPort,
          TIME_T              dataPeriod,
-         data_generator      dataGenerator,
-         int                 payload_bytes
+         data_generator      dataGenerator
       );
       void                   loop();
       //===== attributes
@@ -98,12 +97,8 @@ class IpMtWrapper {
       //=== helpers
       void                   printState(uint8_t state);
       void                   printByteArray(uint8_t* payload, uint8_t length);
-      uint32_t period_ms;
-      uint64_t time_ms;
    private:
       //===== attributes
-      uint64_t lastMeasurement;
-      int payloadBytes;
 };
 
 #endif

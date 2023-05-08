@@ -75,8 +75,7 @@ void IpMtWrapper::setup(
       uint8_t*       destAddr,
       uint16_t       destPort,
       TIME_T         dataPeriod,
-      data_generator dataGenerator,
-      int payload_bytes
+      data_generator dataGenerator
    ) {
    // reset local variables
    memset(&app_vars,    0, sizeof(app_vars));
@@ -87,7 +86,6 @@ void IpMtWrapper::setup(
    app_vars.destPort         = destPort;
    app_vars.dataPeriod       = dataPeriod;
    app_vars.dataGenerator    = dataGenerator;
-   payloadBytes = payload_bytes;
    
    // initialize the serial port connected to the computer
    Serial.begin(BAUDRATE_CLI);
@@ -114,16 +112,6 @@ void IpMtWrapper::setup(
    
    // schedule first event
    fsm_scheduleEvent(2*CMD_PERIOD, &IpMtWrapper::api_getMoteStatus);
-   
-   time_ms = 1000;
-   period_ms = 10000;
-}
-
-void IpMtWrapper::startNextFunc(uint64_t currTime_ms) {
-   uint32_t startTime = millis();
-	lastMeasurement = currTime_ms;
-	loop();
-   time_ms = lastMeasurement + period_ms;
 }
 
 void IpMtWrapper::loop() {
@@ -492,6 +480,7 @@ void IpMtWrapper::api_requestService_reply() {
 
 void IpMtWrapper::api_sendTo(void) {
    dn_err_t err;
+   int payloadBytes = 5;
    uint8_t  payload[payloadBytes];
    uint8_t  lenWritten;
    
@@ -504,7 +493,6 @@ void IpMtWrapper::api_sendTo(void) {
    
    // create payload
    app_vars.dataGenerator(payload);
-   //dn_write_uint16_t(payload, dataVal);
 
    // issue function
    err = dn_ipmt_sendTo(

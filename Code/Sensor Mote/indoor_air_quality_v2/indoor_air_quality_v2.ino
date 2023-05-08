@@ -33,7 +33,7 @@ SGP30 co2;
 SPS30 pm;
 
 
-int nextDevice;
+uint8_t nextDevice;
 #define CO2 0
 #define PM 1
 #define ANEM 2
@@ -62,31 +62,25 @@ void nextDev() {
 }
 
 
-uint16_t littleToBigEndian(uint16_t value) {
-  return (value << 8) | (value >> 8);
-}
-
-
 void generateData(uint8_t* payload) {
-    uint16_t *data = (uint16_t *)payload;
-
     if (!smartmesh_init) {
-        data[0] = littleToBigEndian(0xBEEF);
-        data[1] = littleToBigEndian(0xBEEF);
+		uint16_t testVal = 0xBEEF;
+        memcpy(&payload[0], &testVal, sizeof(uint16_t));
+        memcpy(&payload[2], &testVal, sizeof(uint16_t));
         smartmesh_init = true;
         return;
     }
 
-    data[0] = littleToBigEndian(nextDevice);
+    payload[0] = nextDevice;
     switch (nextDevice) {
         case CO2:
-            data[1] = littleToBigEndian(co2.co2);
+            memcpy(&payload[1], &co2.co2, sizeof(uint16_t));
             break;
         case PM:
-            data[1] = littleToBigEndian(pm.pm2p5_int);
+            memcpy(&payload[1], &pm.pm2p5_int, sizeof(uint16_t));
             break;
         case ANEM:
-            data[1] = littleToBigEndian(anem.wind);
+            memcpy(&payload[1], &anem.wind, sizeof(uint16_t));
             break;
     }
 
