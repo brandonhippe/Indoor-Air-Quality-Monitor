@@ -70,7 +70,7 @@ Data_Loc = sys.path[3] + "/DataOrganization/"
 MAC_root = "00-17-0d-00-00"
 print("Data Storage Directory: " + Data_Loc)
 for file in os.listdir(Data_Loc):
-    if file.endswith(".log"):
+    if file.endswith(".log") and not file.startswith("example"):
         fileName = os.path.join(file)
         Known_Macs.append(MAC_root + "-" + fileName[0:2] + "-" + fileName[2:4] + "-" + fileName[4:6])
 print("Known Motes: " + str(Known_Macs))
