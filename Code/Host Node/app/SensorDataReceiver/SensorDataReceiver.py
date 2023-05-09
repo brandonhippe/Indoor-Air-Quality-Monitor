@@ -238,13 +238,12 @@ class dataGui(object):
         self.sensorDataFrame.after(UPDATEPERIOD,self._updateSensorData)
 
 
-def compact(payload):
-    payload_val = 0
-    for n in payload:
-        payload_val <<= 8
-        payload_val += n
+def byteHex(b):
+    h = hex(b)[2:]
+    if len(h) == 1:
+        h = '0' + h
 
-    return payload_val
+    return h
 
 
 def simple_data_Logging(mac, payload):
@@ -270,7 +269,7 @@ def simple_data_Logging(mac, payload):
     with open(Data_Loc + logname, "r+") as logFile:
         UpdateDate(logFile)
         currentDTandTM = datetime.datetime.now()
-        logFile.write(f"\n{currentDTandTM.strftime('%H:%M:%S')}, {compact(payload)}")
+        logFile.write(f"\n{currentDTandTM.strftime('%H:%M:%S')}, {''.join(byteHex(p) for p in payload)}")
 
 
 def UpdateDate(logFile):
