@@ -258,7 +258,7 @@ def simple_data_Logging(mac, payload):
     ### Sensor data is formatted (Sensor code, value) with Sensor codes: 0 -> CO2, 1 -> PM2.5, 2 -> Airflow
     if payload[0] == 0xEF:
         samples = struct.unpack('<HH', bytearray(payload[:-1]))
-    elif payload[0] == 1:
+    elif payload[0] != 0:
         samples = struct.unpack('<Bf', bytearray(payload))
     else:
         samples = struct.unpack('<BHH', bytearray(payload))[:-1]

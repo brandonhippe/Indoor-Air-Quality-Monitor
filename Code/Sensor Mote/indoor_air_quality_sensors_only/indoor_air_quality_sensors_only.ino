@@ -8,11 +8,11 @@ const int i2c_pins[i2c_ports * 2] = {9, 10, 14, 15};
 #define ANEM_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
 
 
-#define SPS_FP false		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
+#define SPS_FP true		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
 
 // Uncomment this section for Climate Guard Anemometer
-#include <CGAnem.h>
-CGAnem anem;
+#include <cgAnem.h>
+CG_Anem anem;
 //*/
 
 
@@ -175,7 +175,7 @@ void loop() {
 			case ANEM:
 				if (anem.measurement_ready) {
 					Serial.print("Airflow: ");
-					Serial.print(anem.wind);
+					Serial.print(anem.airflowRate);
 					Serial.println(" m/s");
 				}
 				break;

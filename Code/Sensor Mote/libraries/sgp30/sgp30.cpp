@@ -24,6 +24,7 @@ boolean SGP30::begin(boolean _debug) {
 	if (sensed == 0) {
 		// Perform calibration
 		calibration(millis());
+		time_ms = millis();
 		return true;
 	} else {
 		return false;

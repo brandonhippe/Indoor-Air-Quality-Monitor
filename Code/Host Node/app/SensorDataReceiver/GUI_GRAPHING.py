@@ -1,7 +1,4 @@
-try:
-    from Tkinter import *
-except:
-    from tkinter import *
+from tkinter import *
 from SensorSuiteAPI import *
 from matplotlib import pyplot as plt
 import matplotlib.dates as mdates
