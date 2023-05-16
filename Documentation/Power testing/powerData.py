@@ -4,7 +4,7 @@ from collections import defaultdict
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
 BAT_MAH = 3500 # mAh
 BAT_VOLT = 3.7 # V
-BAT_NUM = 3
+BAT_NUM = 1
 BAT_COULOMBS = BAT_NUM * BAT_MAH * 3600 / 1000 # Converts mAh to Coulombs
 MAX_T = 10 # Hours
 GOAL_DAYS = 365
@@ -119,15 +119,17 @@ def determineSampling(components, days):
         if component is None:
             raise Exception("Cannot extend measurement periods enough to meet battery life requirements")
                 
-        if component["Period"] % 5 != 0:
-            component["Period"] += 1
-        elif component["Period"] < 60:
+        if component["Period"] < 60:
+            component["Period"] -= component["Period"] % 5
             component["Period"] += 5
         elif component["Period"] < 300:
+            component["Period"] -= component["Period"] % 15
             component["Period"] += 15
         elif component["Period"] < 600:
+            component["Period"] -= component["Period"] % 30
             component["Period"] += 30
         elif component["Period"] < 6000:
+            component["Period"] -= component["Period"] % 60
             component["Period"] += 60
         else:
             component["Period"] += 300
