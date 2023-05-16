@@ -36,16 +36,19 @@ class SPS30 {
 		
 		// Public Functions
 		SPS30();
-		boolean begin(int measurement, boolean _fp, boolean _debug);
+		boolean begin(int measurement, boolean _fp, boolean _debug, int transistor_sleep);
 		void startNextFunc(uint64_t currTime_ms);
 	private:
 		// Private Variables
 		// uint16_t start_measurement, stop_measurement, data_ready, read_measured, start_sleep, wakeup;
 		uint64_t lastMeasurement;
-		int scheduledFunc, bytes_needed;
+		int scheduledFunc, bytes_needed, transistor_pin;
 		
 		// Private Functions
-		void sps30_sleep();
+		void sps30_sleep_I2C();
+		void sps30_sleep_transistor();
+		void sps30_wakeup_I2C();
+		void sps30_wakeup_transistor();
 		void startMeasurement(uint64_t currTime_ms);
 		void highConcen_check(uint64_t currTime_ms);
 		void finalMeasurement(uint64_t currTime_ms);

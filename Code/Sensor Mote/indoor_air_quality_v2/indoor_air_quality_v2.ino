@@ -8,6 +8,10 @@
 
 #define SCL 9
 #define SDA 10
+
+
+#define CO2_SLEEP_PIN 0   // Set CO2 sleep pin to 0 to disable
+#define PM_SLEEP_PIN 0    // Set PM sleep pin to 0 to disable
 #define ANEM_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
 
 
@@ -145,7 +149,7 @@ void setup() {
   bool sensed = false;
 
   // Initialize CO2 Sensor
-  sensed = co2.begin(debug);
+  sensed = co2.begin(debug, CO2_SLEEP_PIN);
   if (!sensed) {
     if (debug) Serial.println("ERROR: CO2 sensor not connected!");
     while (!powerTest);
@@ -153,7 +157,7 @@ void setup() {
 
 
   // Initialize PM Sensor
-  sensed = pm.begin(MCPM2p5, SPS_FP, debug);
+  sensed = pm.begin(MCPM2p5, SPS_FP, debug, PM_SLEEP_PIN);
   if (!sensed) {
     if (debug) Serial.println("ERROR: PM sensor not connected!");
     while (!powerTest);

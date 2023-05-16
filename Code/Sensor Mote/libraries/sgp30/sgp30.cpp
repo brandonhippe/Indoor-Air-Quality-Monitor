@@ -1,6 +1,7 @@
 #include "sgp30.h"
 
 
+#define SLEEP_LOGIC true
 const uint8_t iaq_init[2] = {0x20, 0x03}, measure_iaq[2] = {0x20, 0x08}, get_iaq_baseline[2] = {0x20, 0x15}, set_iaq_baseline[2] = {0x20, 0x1e};
 
 
@@ -12,9 +13,14 @@ SGP30::SGP30() {
 }
 
 
-boolean SGP30::begin(boolean _debug) {
+boolean SGP30::begin(boolean _debug, int transistor_sleep) {
 	uint32_t startTime = millis();
 	debug = _debug;
+
+	transistor_pin = transistor_sleep;
+
+	// Wakeup sensor
+	transistor_pin == 0 ? sgp30_wakeup_I2C() : sgp30_wakeup_transistor();
   
 	// Initialize the sensor
 	if (debug) Serial.println("SGP30: Initializing");
@@ -29,6 +35,7 @@ boolean SGP30::begin(boolean _debug) {
 		return true;
 	} else {
 		time_ms = 0xFFFFFFFFFFFFFFFF;
+		transistor_pin == 0 ? sgp30_sleep_I2C() : sgp30_sleep_transistor();
 		return false;
 	}
 }
@@ -49,14 +56,32 @@ void SGP30::startNextFunc(uint64_t currTime_ms) {
 }
 
 
-void SGP30::sgp30_sleep() {
+void SGP30::sgp30_sleep_transistor() {
+	digitalWrite(transistor_pin, SLEEP_LOGIC);
+	sleep(5);
+}
+
+
+void SGP30::sgp30_sleep_I2C() {
 	// This performs a general call reset. It is possible that this resets other I2C devices on the bus
 	if (debug) Serial.println("SGP30: Sleeping");
 	Wire.beginTransmission(0x00);
 	Wire.write(0x06);
 	Wire.endTransmission();
-	delay(5);
+	sleep(5);
 }
+
+
+void SGP30::sgp30_wakeup_I2C() {
+	sleep(5);
+}
+
+
+void SGP30::sgp30_wakeup_transistor() {
+	digitalWrite(transistor_pin, !SLEEP_LOGIC);
+	sleep(5);
+}
+
 
 
 void SGP30::calibration(uint64_t currTime_ms) {
@@ -74,7 +99,7 @@ void SGP30::calibration(uint64_t currTime_ms) {
 		Wire.write(&measure_iaq[0], 2);
 		Wire.endTransmission();
 		
-		delay(12);
+		sleep(12);
 		Wire.requestFrom(ADDR, 6);
 		
 		while (Wire.available() < 6);
@@ -104,7 +129,7 @@ void SGP30::calibration(uint64_t currTime_ms) {
 		Wire.write(&get_iaq_baseline[0], 2);
 		Wire.endTransmission();
     
-		delay(10);
+		sleep(10);
 		Wire.requestFrom(ADDR, 6);
 
 		// Restart request if less than 6 bytes available
@@ -125,11 +150,10 @@ void SGP30::calibration(uint64_t currTime_ms) {
 	}
 
 	// Put sensor to sleep
-	sgp30_sleep();
+	transistor_pin == 0 ? sgp30_sleep_I2C() : sgp30_sleep_transistor();
 
 	// Schedule measurement request
 	scheduledFunc = SET_CALIBRATION;
-	// scheduledFunc = GETCO2;
 	time_ms = lastMeasurement + period_ms;
 }
 
@@ -144,10 +168,11 @@ void SGP30::setCalibration(uint64_t currTime_ms) {
 	}
   
 	// Turn on sensor
+	transistor_pin == 0 ? sgp30_wakeup_I2C() : sgp30_wakeup_transistor();
 	Wire.beginTransmission(ADDR);
 	Wire.write(&iaq_init[0], 2);
 	Wire.endTransmission();
-	delay(10);
+	sleep(10);
 
 	// Write calibration values
 	Wire.beginTransmission(ADDR);
@@ -157,7 +182,7 @@ void SGP30::setCalibration(uint64_t currTime_ms) {
 	Wire.write((uint8_t *) &baseline_CO2, 2);
 	Wire.write(calculate_crc(&baseline_CO2));
 	Wire.endTransmission();
-	delay(10);
+	sleep(10);
 
 	scheduledFunc = GETCO2;
 	time_ms = currTime_ms + 1000 + millis() - startTime;
@@ -184,7 +209,7 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		Wire.write(&measure_iaq[0], 2);
 		Wire.endTransmission();
 	
-		delay(12);
+		sleep(12);
 		Wire.requestFrom(ADDR, 6);
 	
 		if (Wire.available() < 6) continue;
@@ -226,5 +251,5 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 	}
 
 	// Put sensor to sleep
-	sgp30_sleep();
+	transistor_pin == 0 ? sgp30_sleep_I2C() : sgp30_sleep_transistor();
 }

@@ -1,6 +1,7 @@
 #include "UltrasonicAnem.h"
 
 
+#define SLEEP_LOGIC false
 const double a = 0.05, d = 0.05; // a and d in meters
 double sin_alpha, cos_alpha;
 
@@ -27,7 +28,7 @@ boolean UltrasonicAnem::begin(int sleepPin, boolean _debug) {
 	sleep_pin = sleepPin;
 
 	// Wake up Ultrasonic Sensors
-	// digitalWrite(sleep_pin, HIGH);
+	digitalWrite(sleep_pin, !SLEEP_LOGIC);
 	if (pulse(TRIG_1, ECHO_1) == 0) {
 		digitalWrite(sleep_pin, LOW);
 		time_ms = 0xFFFFFFFFFFFFFFFF;
@@ -35,7 +36,7 @@ boolean UltrasonicAnem::begin(int sleepPin, boolean _debug) {
 	}
 
 	// Put Ultrasonic Sensors to sleep
-	// digitalWrite(sleep_pin, LOW);
+	digitalWrite(sleep_pin, SLEEP_LOGIC);
   
 	// Schedule Measurement
 	scheduledFunc = MEASURE;
@@ -61,7 +62,7 @@ void UltrasonicAnem::measure(uint64_t currTime_ms) {
 
 	// Wakeup Ultrasonic Sensors
 	if (debug) Serial.println("Ultrasonic Anem: Waking up ultrasonic sensors");
-	digitalWrite(sleep_pin, HIGH);
+	digitalWrite(sleep_pin, !SLEEP_LOGIC);
 	
 	// Send chirps
 	if (debug) Serial.println("Ultrasonic Anem: Sending chirps");
@@ -76,7 +77,7 @@ void UltrasonicAnem::measure(uint64_t currTime_ms) {
 
 	// Put Ultrasonic Sensors to sleep
 	if (debug) Serial.println("Ultrasonic Anem: Putting ultrasonic sensors to sleep");
-	digitalWrite(sleep_pin, LOW);
+	digitalWrite(sleep_pin, SLEEP_LOGIC);
 	
 	// Schedule new measurement
 	measurement_ready = true;

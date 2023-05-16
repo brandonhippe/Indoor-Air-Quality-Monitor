@@ -1,6 +1,7 @@
 #include "sps30.h"
 
 
+#define SLEEP_LOGIC true
 static const uint8_t start_measurement[2] = {0x00, 0x10}, stop_measurement[2] = {0x01, 0x04}, data_ready[2] = {0x02, 0x02}, read_measured[2] = {0x03, 0x00}, start_sleep[2] = {0x10, 0x01}, wakeup[2] = {0x11, 0x03};
 static uint8_t init_vals[2];
 
@@ -12,11 +13,13 @@ SPS30::SPS30() {
 }
 
 
-boolean SPS30::begin(int measurement, boolean _fp, boolean _debug) {
+boolean SPS30::begin(int measurement, boolean _fp, boolean _debug, int transistor_sleep) {
 	uint32_t startTime = millis();
 	debug = _debug;
 	measurementIx = measurement;
 	fp = _fp;
+
+	transistor_pin = transistor_sleep;
 
 	if (fp) {
 		init_vals[0] = 0x03;
@@ -28,22 +31,14 @@ boolean SPS30::begin(int measurement, boolean _fp, boolean _debug) {
 
 	init_vals[1] = 0x00;
 
-	// Turn on sensor
-	if (debug) Serial.println("SPS30: Initializing");
-	Wire.beginTransmission(ADDR);
-	Wire.write((uint8_t*) &wakeup[0], 2);
-	Wire.endTransmission();
-	delay(5);
-  
-	// Send wakeup again to finish wakeup command
-	Wire.beginTransmission(ADDR);
-	Wire.write((uint8_t*) &wakeup[0], 2);
-	int sensed = Wire.endTransmission();
-	delay(5);
+	transistor_pin == 0 ? sps30_wakeup_I2C() : sps30_wakeup_transistor();
 
 	bool db = debug;
 	debug = false;
-	sps30_sleep();
+	Wire.beginTransmission(ADDR);
+	Wire.write((uint8_t*) &wakeup[0], 2);
+	boolean sensed = Wire.endTransmission();
+	sleep(5);
 	debug = db;
 
 	// Schedule measurement
@@ -55,6 +50,7 @@ boolean SPS30::begin(int measurement, boolean _fp, boolean _debug) {
 		return true;
 	} else {
 		time_ms = 0xFFFFFFFFFFFFFFFF;
+		transistor_pin == 0 ? sps30_sleep_I2C() : sps30_sleep_transistor();
 		return false;
 	}
 }
@@ -75,18 +71,46 @@ void SPS30::startNextFunc(uint64_t currTime_ms) {
 }
 
 
-void SPS30::sps30_sleep() {
+void SPS30::sps30_sleep_I2C() {
 	if (debug) Serial.println("SPS30: Stopping measurement");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &stop_measurement[0], 2);
 	Wire.endTransmission();
-	delay(20);
+	sleep(20);
 	
 	if (debug) Serial.println("SPS30: Sleeping");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &start_sleep[0], 2);
 	Wire.endTransmission();
-	delay(5);
+	sleep(5);
+}
+
+
+void SPS30::sps30_sleep_transistor() {
+	digitalWrite(transistor_pin, SLEEP_LOGIC);
+	sleep(5);
+}
+
+
+void SPS30::sps30_wakeup_I2C() {
+	// Turn on sensor
+	if (debug) Serial.println("SPS30: Initializing");
+	Wire.beginTransmission(ADDR);
+	Wire.write((uint8_t*) &wakeup[0], 2);
+	Wire.endTransmission();
+	sleep(5);
+  
+	// Send wakeup again to finish wakeup command
+	Wire.beginTransmission(ADDR);
+	Wire.write((uint8_t*) &wakeup[0], 2);
+	int sensed = Wire.endTransmission();
+	sleep(5);
+}
+
+
+void SPS30::sps30_wakeup_transistor() {
+	digitalWrite(transistor_pin, !SLEEP_LOGIC);
+	sleep(5);
 }
 
 
@@ -97,16 +121,7 @@ void SPS30::startMeasurement(uint64_t currTime_ms) {
   
 	// Turn on sensor
 	if (debug) Serial.println("SPS30: Waking up");
-	Wire.beginTransmission(ADDR);
-	Wire.write((uint8_t*) &wakeup[0], 2);
-	Wire.endTransmission();
-	delay(5);
-  
-	// Send wakeup again to finish wakeup command
-	Wire.beginTransmission(ADDR);
-	Wire.write((uint8_t*) &wakeup[0], 2);
-	Wire.endTransmission();
-	delay(5);
+	transistor_pin == 0 ? sps30_wakeup_I2C() : sps30_wakeup_transistor();
 
 	// Put into measurement mode
 	if (debug) Serial.println("SPS30: Starting measurement");
@@ -139,7 +154,7 @@ void SPS30::highConcen_check(uint64_t currTime_ms) {
 		Wire.write((uint8_t*) &read_measured[0], 2);
 		Wire.endTransmission();
 	
-		delay(20);
+		sleep(20);
 		Wire.requestFrom(ADDR, bytes_needed);
 
 		while (Wire.available() < bytes_needed);
@@ -192,7 +207,7 @@ void SPS30::highConcen_check(uint64_t currTime_ms) {
 		}
 
 		// Put to sleep and schedule next measurement
-		sps30_sleep();
+		transistor_pin == 0 ? sps30_sleep_I2C() : sps30_sleep_transistor();
     
 		scheduledFunc = START_MEASUREMENT;
 		time_ms = lastMeasurement + period_ms;
@@ -216,7 +231,7 @@ void SPS30::finalMeasurement(uint64_t currTime_ms) {
 		Wire.write((uint8_t*) &read_measured[0], 2);
 		Wire.endTransmission();
 	
-		delay(20);
+		sleep(20);
 		Wire.requestFrom(ADDR, bytes_needed);
 
 		while (Wire.available() < bytes_needed);
@@ -246,7 +261,7 @@ void SPS30::finalMeasurement(uint64_t currTime_ms) {
 
 		// Put to sleep and schedule next measurement
 		if (debug) Serial.println("SPS30: Scheduling new measurement");
-		sps30_sleep();
+		transistor_pin == 0 ? sps30_sleep_I2C() : sps30_sleep_transistor();
 		scheduledFunc = START_MEASUREMENT;
 		time_ms = lastMeasurement + period_ms;
 		break;

@@ -5,6 +5,10 @@
 
 const int i2c_ports = 2;
 const int i2c_pins[i2c_ports * 2] = {9, 10, 14, 15};
+
+
+#define CO2_SLEEP_PIN 0   // Set CO2 sleep pin to 0 to disable
+#define PM_SLEEP_PIN 0    // Set PM sleep pin to 0 to disable
 #define ANEM_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
 
 
@@ -91,14 +95,14 @@ void setup() {
 	Wire.setClock(max_clock);
 
     // Initialize CO2 Sensor
-    bool sensed = co2.begin(debug);
+    bool sensed = co2.begin(debug, CO2_SLEEP_PIN);
     if (!sensed) {
         if (debug) Serial.println("ERROR: CO2 sensor not connected!");
         while (1);
     }
 
     // Initialize PM Sensor
-	sensed = pm.begin(MCPM2p5, SPS_FP, debug);
+	sensed = pm.begin(MCPM2p5, SPS_FP, debug, PM_SLEEP_PIN);
     if (!sensed) {
         if (debug) Serial.println("ERROR: PM sensor not connected!");
         while (1);
