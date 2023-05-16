@@ -1,0 +1,14 @@
+Battery Life without Anemometer: 366.37 days
+Micro Com: MSP430FR2355 + SmartMesh IP
+	Period: 59400.0 sec
+	Percent of total power: 31.19%
+PM2.5 Sensor: Sensirion SPS30
+	Period: 5400.0 sec
+	Percent of total power: 34.60%
+	Percent of component power consumed in sleep: 12.99%
+CO2 Sensor: Sensirion SGP30
+	Period: 1980.0 sec
+	Percent of total power: 34.22%
+	Percent of component power consumed in sleep: 35.19%
+
+

@@ -6,7 +6,7 @@ const uint8_t iaq_init[2] = {0x20, 0x03}, measure_iaq[2] = {0x20, 0x08}, get_iaq
 
 SGP30::SGP30() {
 	max_clock = 400000;
-	period_ms = 120000;
+	period_ms = 1320000;
 	measurement_ready = false;
 	measurementStarted = false;
 }
@@ -17,6 +17,7 @@ boolean SGP30::begin(boolean _debug) {
 	debug = _debug;
   
 	// Initialize the sensor
+	if (debug) Serial.println("SGP30: Initializing");
 	Wire.beginTransmission(ADDR);
 	Wire.write(&iaq_init[0], 2);
 	int sensed = Wire.endTransmission();
@@ -27,6 +28,7 @@ boolean SGP30::begin(boolean _debug) {
 		time_ms = millis();
 		return true;
 	} else {
+		time_ms = 0xFFFFFFFFFFFFFFFF;
 		return false;
 	}
 }
@@ -135,6 +137,7 @@ void SGP30::calibration(uint64_t currTime_ms) {
 void SGP30::setCalibration(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
 	measurement_ready = false;
+	checks = 0;
 
 	if (debug) {
 		Serial.println("SGP30: Writing Calibration");
@@ -203,7 +206,9 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		
 		// Schedule next measurement
 		if (debug) Serial.println("SGP30: Scheduling new measurement");
-		if (co2 == 400 && tvoc == 0) {
+		// if (co2 == 400 && tvoc == 0) {
+		if (checks < 15) {
+			checks++;
 			scheduledFunc = GETCO2;
 			time_ms = currTime_ms + 1000 + millis() - startTime;
 

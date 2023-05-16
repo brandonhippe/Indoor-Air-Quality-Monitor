@@ -14,7 +14,7 @@ class UltrasonicAnem {
 		// Public Variables
 		uint32_t period_ms, max_clock; // max_clock is unused, purely for I2C compatibility
 		uint64_t time_ms;
-		double wind, temp;
+		float airflowRate, temp;
 		int TRIG_1, ECHO_1, TRIG_2, ECHO_2;
 		boolean measurement_ready, debug;
 		

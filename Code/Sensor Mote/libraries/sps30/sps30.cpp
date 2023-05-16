@@ -7,7 +7,7 @@ static uint8_t init_vals[2];
 
 SPS30::SPS30() {
 	max_clock = 100000;
-	period_ms = 120000;
+	period_ms = 4680000;
 	measurement_ready = false;
 }
 
@@ -29,7 +29,7 @@ boolean SPS30::begin(int measurement, boolean _fp, boolean _debug) {
 	init_vals[1] = 0x00;
 
 	// Turn on sensor
-	if (debug) Serial.println("SPS30: Waking up");
+	if (debug) Serial.println("SPS30: Initializing");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &wakeup[0], 2);
 	Wire.endTransmission();
@@ -41,13 +41,22 @@ boolean SPS30::begin(int measurement, boolean _fp, boolean _debug) {
 	int sensed = Wire.endTransmission();
 	delay(5);
 
+	bool db = debug;
+	debug = false;
 	sps30_sleep();
+	debug = db;
 
 	// Schedule measurement
 	scheduledFunc = START_MEASUREMENT;
 	time_ms = millis();
 
-	return sensed == 0;
+
+	if (sensed == 0) {
+		return true;
+	} else {
+		time_ms = 0xFFFFFFFFFFFFFFFF;
+		return false;
+	}
 }
 
 

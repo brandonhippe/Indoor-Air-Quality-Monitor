@@ -14,18 +14,22 @@ bool CG_Anem::begin(int sleepPin, boolean _debug) {
     debug = _debug;
 
     // Wakeup sensor
-    digitalWrite(sleep_pin, HIGH);
-    pinMode(sleep_pin, OUTPUT);
-    delay(5);
+    // digitalWrite(sleep_pin, HIGH);
+    // pinMode(sleep_pin, OUTPUT);
+    // delay(5);
 
     Wire.beginTransmission(_sensor_address); // safety check, make sure the sensor is connected
     Wire.write(i2c_reg_WHO_I_AM);
-    if (Wire.endTransmission(true) != 0) return false;
+    if (Wire.endTransmission(true) != 0) {
+        digitalWrite(sleep_pin, LOW);
+        time_ms = 0xFFFFFFFFFFFFFFFF;
+        return false;
+    };
 
     // getFirmwareVersion();
 
     // Put to sleep
-    sleep();
+    // sleep();
 
     // Schedule measurement
     scheduledFunc = WAKEUP;

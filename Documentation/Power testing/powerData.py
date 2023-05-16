@@ -1,13 +1,13 @@
 from collections import defaultdict
-from copy import deepcopy
 
 
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
 BAT_MAH = 3500 # mAh
 BAT_VOLT = 3.7 # V
-BAT_NUM = 4
-BATT_ENG = BAT_NUM * BAT_MAH * 3600 / 1000 * BAT_VOLT # Converts mAh to Coulombs and mult by bat voltage
-MAX_T = 3600 * 10 # Seconds/hr * hours
+BAT_NUM = 3
+BAT_COULOMBS = BAT_NUM * BAT_MAH * 3600 / 1000 # Converts mAh to Coulombs
+MAX_T = 10 # Hours
+GOAL_DAYS = 365
 
 
 def gcd(a, b, memo = {}):
@@ -65,48 +65,41 @@ def calcDutyCycle(dutyCycles):
     return [onTime, maxPeriod - onTime]
 
 
-def componentPower(component):
-    component["Power"] = (component["Measurement Energy"] + (component["Period"] - component["Period (minimum)"]) * component["Typical Power Consumption (Off)"]) / component["Period"]
+def componentCurrent(component):
+    component["Current"] = component["Charge Consumed (On)"]
+    if component["Period"] - component["Period (minimum)"] != 0:
+        component["Current"] += (component["Typical Power Consumption (Off)"] / BAT_VOLT * (component["Period"] - component["Period (minimum)"]))
+
+    component["Current"] /= component["Period"]
 
 
 def determineSampling(components, days):
     seconds = days * 86400
-    communicationChanged = False
     i = 0
 
     while True:
-        if i == 267:
-            print("Check")
         # Calculate battery life at current sampling rates
-        if not communicationChanged:
-            components["Communication"]["Period"] = float('inf')
 
-        totalPower = 0
+        totalCurrent = 0
         dutyCycles = []
         for c in components.keys():
-            if c == "Micro Controller" or c == "Communication":
+            if c == "Micro Com":
                 continue
             
             dutyCycles.append([components[c]["Period (minimum)"], components[c]["Period"] - components[c]["Period (minimum)"]])
-            
-            if not communicationChanged:
-                components["Communication"]["Period"] = min(components["Communication"]["Period"], components[c]["Period"])
 
-        components["Communication"]["Period"] = max(components["Communication"]["Period"], components["Communication"]["Period (minimum)"])
-        componentPower(components["Communication"])
-
-        microControllerDuty = calcDutyCycle(dutyCycles)
-        components["Micro Controller"]["Period"] = sum(microControllerDuty)
-        components["Micro Controller"]["Period (minimum)"] = microControllerDuty[0]
-        componentPower(components["Micro Controller"])
+        micro_comDuty = calcDutyCycle(dutyCycles)
+        components["Micro Com"]["Period"] = sum(micro_comDuty)
+        components["Micro Com"]["Period (minimum)"] = micro_comDuty[0]
+        componentCurrent(components["Micro Com"])
         
         for c in components.keys():
-            totalPower += components[c]["Power"]
+            totalCurrent += components[c]["Current"]
 
         for c in components.keys():
-            components[c]["Percent"] = components[c]["Power"] / totalPower
+            components[c]["Percent"] = components[c]["Current"] / totalCurrent
 
-        batteryLife = BATT_ENG / totalPower
+        batteryLife = BAT_COULOMBS / totalCurrent
         
         # If greater than desired, exit and return
         if batteryLife >= seconds:
@@ -116,17 +109,15 @@ def determineSampling(components, days):
         maxPercent = 0
         component = None
         for c in components.keys():
-            if c == "Micro Controller":
+            if c == "Micro Com":
                 continue
 
-            if components[c]["Percent"] > maxPercent and components[c]["Period"] < MAX_T:
+            if components[c]["Percent"] > maxPercent and components[c]["Period"] < MAX_T * 3600:
                 component = components[c]
                 maxPercent = components[c]["Percent"]
 
         if component is None:
             raise Exception("Cannot extend measurement periods enough to meet battery life requirements")
-
-        communicationChanged = component == components["Communication"]
                 
         if component["Period"] % 5 != 0:
             component["Period"] += 1
@@ -141,7 +132,7 @@ def determineSampling(components, days):
         else:
             component["Period"] += 300
 
-        componentPower(component)
+        componentCurrent(component)
         i += 1
 
 
@@ -175,19 +166,14 @@ def main():
                 components[line[0]][columnNames[i + 1]] = ' '.join(field)
 
     for c in components.keys():
-        if "Charge Consumed (On)" in components[c]:
-            components[c]["Measurement Energy"] = components[c]['Voltage (On)'] * components[c]["Charge Consumed (On)"]
-        else:
-            components[c]["Measurement Energy"] = components[c]["Typical Power Consumption (On)"] * components[c]["Period (minimum)"]
-
-        if c == "Micro Controller":
+        if c == "Micro Com":
             continue
 
         components[c]["Period"] = components[c]["Period (minimum)"]
-        componentPower(components[c])
+        componentCurrent(components[c])
 
     output = []
-    withoutAnem = determineSampling({c: components[c] for c in components.keys() if c != "Anemometer"}, 365)
+    withoutAnem = determineSampling({c: components[c] for c in components.keys() if c != "Anemometer"}, GOAL_DAYS)
 
     output.append(f"Battery Life without Anemometer: {withoutAnem:.2f} days")
     for c in components:
@@ -196,16 +182,19 @@ def main():
 
         output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
         
-        if c != "Micro Controller":
-            output.append(f"\tPercent of component power consumed in sleep: {components[c]['Typical Power Consumption (Off)'] / components[c]['Power']:.2%}")
+        if c != "Micro Com":
+            output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
 
     output.append("\n\n")
 
-    # withAnem = determineSampling(components, 365)
+    # withAnem = determineSampling(components, GOAL_DAYS)
 
     # output.append(f"Battery Life with Anemometer: {withAnem:.2f} days")
     # for c in components:
     #     output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
+        
+    #     if c != "Micro Com":
+    #         output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
 
     if input("Print Results (y/n)? ") == 'y':
         for o in output:

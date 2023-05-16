@@ -31,7 +31,7 @@ class SGP30 {
 		// uint16_t iaq_init, measure_iaq, get_iaq_baseline, set_iaq_baseline;
 		uint64_t lastMeasurement;
 		uint16_t baseline_CO2, baselineTVOC;
-		int scheduledFunc;
+		int scheduledFunc, checks;
 		boolean measurementStarted;
 		
 		// Private Functions

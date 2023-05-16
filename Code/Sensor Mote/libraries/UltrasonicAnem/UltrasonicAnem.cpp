@@ -26,8 +26,16 @@ boolean UltrasonicAnem::begin(int sleepPin, boolean _debug) {
 	debug = _debug;
 	sleep_pin = sleepPin;
 
+	// Wake up Ultrasonic Sensors
+	// digitalWrite(sleep_pin, HIGH);
+	if (pulse(TRIG_1, ECHO_1) == 0) {
+		digitalWrite(sleep_pin, LOW);
+		time_ms = 0xFFFFFFFFFFFFFFFF;
+		return false;
+	}
+
 	// Put Ultrasonic Sensors to sleep
-	digitalWrite(sleep_pin, LOW);
+	// digitalWrite(sleep_pin, LOW);
   
 	// Schedule Measurement
 	scheduledFunc = MEASURE;
@@ -63,7 +71,7 @@ void UltrasonicAnem::measure(uint64_t currTime_ms) {
 	
 	// Calculate wind and temperature
 	if (debug) Serial.println("Ultrasonic Anem: Calculating values");
-	wind = (d / (sin_alpha * cos_alpha)) * ((1.0 / t1) - (1.0 / t2));
+	airflowRate = (d / (sin_alpha * cos_alpha)) * ((1.0 / t1) - (1.0 / t2));
 	temp = (d / sin_alpha) * ((1.0 / t1) + (1.0 / t2));
 
 	// Put Ultrasonic Sensors to sleep

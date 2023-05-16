@@ -1,6 +1,5 @@
-Component,Name,Voltage (On),Charge Consumed (On),Typical Power Consumption (On),Period (minimum),Typical Power Consumption (Off),Notes
-Micro Controller,MSP430FR2355,3.3 V,0 C,,0 s,0.14776 mW,On characteristics included with other component(s)
-Communication,SmartMesh Mote,3.3 V,1 mC,,1 s,2.64 uW,EXAMPLE DATA
-PM2.5 Sensor,Sensirion SPS30,5 V,1.65807167 C,,30 s,253.71 uW,
-CO2 Sensor,Sensirion SGP30,3.3 V,736.95602 mC,,15 s,112.74 uW,
-Anemometer,Custom Ultrasonic Anemometer,3.3 V,,0.66 mW,3 s,0 W,EXAMPLE DATA
+Component,Name,Charge Consumed (On),Period (minimum),Typical Power Consumption (Off),Notes
+Micro Com,MSP430FR2355 + SmartMesh IP,0 C,0 s,1.86133 mW,On characteristics included with other component(s)
+PM2.5 Sensor,Sensirion SPS30,2.59035 C,30 s,264.7 uW,
+CO2 Sensor,Sensirion SGP30,701.924 mC,15 s,709.37 uW,
+Anemometer,Custom Ultrasonic Anemometer,0.1 C,3 s,0 W,EXAMPLE DATA
