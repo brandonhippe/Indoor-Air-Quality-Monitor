@@ -8,7 +8,7 @@ static uint8_t init_vals[2];
 
 SPS30::SPS30() {
 	max_clock = 100000;
-	period_ms = 4680000;
+	period_ms = 60000;
 	measurement_ready = false;
 }
 
@@ -30,16 +30,24 @@ boolean SPS30::begin(int measurement, boolean _fp, boolean _debug, int transisto
 	}
 
 	init_vals[1] = 0x00;
+	
+	if (transistor_pin != 0) {
+		sps30_wakeup_transistor();
+	}
 
-	transistor_pin == 0 ? sps30_wakeup_I2C() : sps30_wakeup_transistor();
-
-	bool db = debug;
-	debug = false;
+	// Turn on sensor
+	if (debug) Serial.println("SPS30: Initializing");
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &wakeup[0], 2);
-	boolean sensed = Wire.endTransmission();
+	Wire.endTransmission();
 	sleep(5);
-	debug = db;
+  
+	// Send wakeup again to finish wakeup command
+	Wire.beginTransmission(ADDR);
+	Wire.write((uint8_t*) &wakeup[0], 2);
+	int sensed = Wire.endTransmission();
+	Serial.println(sensed);
+	sleep(5);
 
 	// Schedule measurement
 	scheduledFunc = START_MEASUREMENT;
@@ -50,7 +58,10 @@ boolean SPS30::begin(int measurement, boolean _fp, boolean _debug, int transisto
 		return true;
 	} else {
 		time_ms = 0xFFFFFFFFFFFFFFFF;
-		transistor_pin == 0 ? sps30_sleep_I2C() : sps30_sleep_transistor();
+		if (transistor_pin != 0) {
+			sps30_sleep_transistor();
+		}
+		
 		return false;
 	}
 }
@@ -103,7 +114,7 @@ void SPS30::sps30_wakeup_I2C() {
 	// Send wakeup again to finish wakeup command
 	Wire.beginTransmission(ADDR);
 	Wire.write((uint8_t*) &wakeup[0], 2);
-	int sensed = Wire.endTransmission();
+	Wire.endTransmission();
 	sleep(5);
 }
 

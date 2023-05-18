@@ -7,7 +7,7 @@ const uint8_t iaq_init[2] = {0x20, 0x03}, measure_iaq[2] = {0x20, 0x08}, get_iaq
 
 SGP30::SGP30() {
 	max_clock = 400000;
-	period_ms = 1320000;
+	period_ms = 60000;
 	measurement_ready = false;
 	measurementStarted = false;
 }
@@ -35,7 +35,10 @@ boolean SGP30::begin(boolean _debug, int transistor_sleep) {
 		return true;
 	} else {
 		time_ms = 0xFFFFFFFFFFFFFFFF;
-		transistor_pin == 0 ? sgp30_sleep_I2C() : sgp30_sleep_transistor();
+		if (transistor_pin != 0) {
+			sgp30_sleep_transistor();
+		}
+		
 		return false;
 	}
 }
@@ -92,7 +95,7 @@ void SGP30::calibration(uint64_t currTime_ms) {
 	if (debug) Serial.println("SGP30: Performing Calibration");
   
 	// Get measurement data
-	while (1) {
+	for (int i = 0; i <= 15; i++) {
 		if (debug) Serial.println("SGP30: Sending Measure Request");
 
 		Wire.beginTransmission(ADDR);
@@ -109,14 +112,7 @@ void SGP30::calibration(uint64_t currTime_ms) {
 			response[i] = Wire.read();
 		}
 
-		// Check if new calibration measurement is needed, schedule and exit if needed
-		if (((response[0] << 8) + response[1]) == 400 && ((response[3] << 8) + response[4]) == 0) {
-			// time_ms = currTime_ms + 1000 + millis() - startTime;
-			if (debug) Serial.println("SGP30: Not calibrated, waiting 1 second");
-			sleep(1000);
-		} else {
-			break;
-		}
+		sleep(1000);
 	}
 
 	if (debug) {
@@ -163,18 +159,19 @@ void SGP30::setCalibration(uint64_t currTime_ms) {
 	measurement_ready = false;
 	checks = 0;
 
-	if (debug) {
-		Serial.println("SGP30: Writing Calibration");
-	}
   
 	// Turn on sensor
+	if (debug) Serial.println("SGP30: Waking up");
 	transistor_pin == 0 ? sgp30_wakeup_I2C() : sgp30_wakeup_transistor();
+
+	if (debug) Serial.println("SGP30: Initializing");
 	Wire.beginTransmission(ADDR);
 	Wire.write(&iaq_init[0], 2);
 	Wire.endTransmission();
 	sleep(10);
 
 	// Write calibration values
+	if (debug) Serial.println("SGP30: Writing Calibration");
 	Wire.beginTransmission(ADDR);
 	Wire.write(&set_iaq_baseline[0], 2);
 	Wire.write((uint8_t *) &baselineTVOC, 2);

@@ -1,7 +1,7 @@
 #include "UltrasonicAnem.h"
 
 
-#define SLEEP_LOGIC false
+#define SLEEP_LOGIC true
 const double a = 0.05, d = 0.05; // a and d in meters
 double sin_alpha, cos_alpha;
 

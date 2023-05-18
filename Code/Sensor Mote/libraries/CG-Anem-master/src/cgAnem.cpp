@@ -1,9 +1,12 @@
 #include "cgAnem.h"
 
 
+#define SLEEP_LOGIC true
+
+
 CG_Anem::CG_Anem() {
     max_clock = 100000;
-    period_ms = 120000;
+    period_ms = 60000;
     measurement_ready = false;
     _sensor_address = ANEM_I2C_ADDR;
 }
@@ -14,9 +17,8 @@ bool CG_Anem::begin(int sleepPin, boolean _debug) {
     debug = _debug;
 
     // Wakeup sensor
-    // digitalWrite(sleep_pin, HIGH);
-    // pinMode(sleep_pin, OUTPUT);
-    // delay(5);
+    cg_wakeup();
+    sleep(5);
 
     Wire.beginTransmission(_sensor_address); // safety check, make sure the sensor is connected
     Wire.write(i2c_reg_WHO_I_AM);
@@ -29,7 +31,7 @@ bool CG_Anem::begin(int sleepPin, boolean _debug) {
     // getFirmwareVersion();
 
     // Put to sleep
-    // sleep();
+    cg_sleep();
 
     // Schedule measurement
     scheduledFunc = WAKEUP;
@@ -43,7 +45,7 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
             if (debug) Serial.println("CG Anem: Waking up");
             measurement_ready = false;
             lastMeasurement = currTime_ms;
-            digitalWrite(sleep_pin, HIGH);
+            cg_wakeup();
 
             // Schedule new measurement
             time_ms = currTime_ms + 10000;
@@ -56,7 +58,7 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
 
             if (measurement_ready) {
                 // Put to sleep
-                sleep();
+                cg_sleep();
 
                 // Schedule new measurement
                 scheduledFunc = WAKEUP;
@@ -69,8 +71,13 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
     }
 }
 
-void CG_Anem::sleep() {
-    digitalWrite(sleep_pin, LOW);
+
+void CG_Anem::cg_wakeup() {
+    digitalWrite(sleep_pin, !SLEEP_LOGIC);
+}
+
+void CG_Anem::cg_sleep() {
+    digitalWrite(sleep_pin, SLEEP_LOGIC);
 }
 
 /*get new necessary data*/

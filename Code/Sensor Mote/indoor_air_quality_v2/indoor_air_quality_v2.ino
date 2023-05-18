@@ -10,9 +10,9 @@
 #define SDA 10
 
 
-#define CO2_SLEEP_PIN 0   // Set CO2 sleep pin to 0 to disable
-#define PM_SLEEP_PIN 0    // Set PM sleep pin to 0 to disable
-#define ANEM_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
+#define ANEM_SLEEP_PIN 5   // Set Anemometer sleep pin to 5
+#define PM_SLEEP_PIN 6    // Set PM sleep pin to 6
+#define CO2_SLEEP_PIN 7   // Set CO2 sleep pin to 7
 
 
 #define SPS_FP true		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
@@ -111,7 +111,11 @@ void generateData(uint8_t* payload) {
 
 
 void setup() {
-  for (int i = 0; i < 40; i++) {
+  for (int i = 2; i <= 40; i++) {
+    if (i == 21) {
+      continue;
+    }
+    
     digitalWrite(i, LOW);
     pinMode(i, OUTPUT);
   }

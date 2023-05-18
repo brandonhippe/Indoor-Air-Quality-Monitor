@@ -58,7 +58,8 @@ private:
     // Additional variables / functions for IAQ node
     uint64_t lastMeasurement;
     int scheduledFunc;
-    void sleep();
+    void cg_sleep();
+    void cg_wakeup();
 
 public:
     // Additional variables / functions for IAQ Node
