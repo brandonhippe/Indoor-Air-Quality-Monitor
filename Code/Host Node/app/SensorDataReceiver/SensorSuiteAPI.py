@@ -11,21 +11,15 @@ import tkinter.font as tkFont
 from SensorSuiteAPI import *
 import time
 import re
+import binascii
+import struct
 # ================================ Classes for reading and golding data logs ==========================================
 
 class sample: # Sample Object structure
-    def __init__(self, timestamp, temp, humid, N2O#, o2, co2, accel, wind, rain
-    ):
-
+    def __init__(self, timestamp, measurement):
         self.timestamp = timestamp
-        self.temp = temp
-        self.humid = humid
-        self.N2O = N2O
-        #self.o2 = o2 COMMENTING OUT SENSORS WE DON'T USE SO WE CAN READ 3 DATA VALUES FROM LOG FILE
-        #self.co2 = co2
-        #self.accel = accel
-        #self.wind = wind
-        #self.rain = rain
+        self.type = ['CO2', 'PM', 'Airflow'][measurement[0]]
+        self.value = measurement[1]
 
 class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
     def __init__(self, Directory, Logname):
@@ -49,16 +43,9 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
         self.CurrentDate = None
         self.dates = []             # arranging all dates string into an array
         self.timesInDate = []       # row = new date, col = timestamps that correspond to the date
-        self.samples = []
-        self.timestamp = []
-        self.temp = []
-        self.humid = []
-        self.N2O = []
-        self.o2 = []
-        self.co2 = []
-        self.accel = []
-        self.wind = []
-        self.rain = []
+        self.samples = {"CO2": [], "PM": [], "Airflow": []} 
+        self.timestamp = 0
+        
         for line in Loglines:
             word = line.split()
             #print word
@@ -67,36 +54,21 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                     self.CurrentDate = word[1]
                     self.dates.append(word[1])
                     self.timesInDate.append([])
-                if word[0] != "~" and word[0] != "--":                  # Convert Logfile text into organized sample objects
+                if word[0] != "~" and word[0] != "--" and word[1][:2] != 'ef':                  # Convert Logfile text into organized sample objects
+                    payload = binascii.unhexlify(word[1])
+                    if payload[0] != 0:
+                        value = struct.unpack('<Bf', bytearray(payload))
+                    else:
+                        value = struct.unpack('<BHH', bytearray(payload))[:-1]
+
                     timedate = self.CurrentDate +':'+ word[0][0:-1]     # combine time stamp with current date
-                    self.timestamp.append(DtSeconds(datetime.strptime(timedate, "%m/%d/%Y:%H:%M:%S")))
-                    self.timesInDate[-1].append(self.timestamp[-1])
-                    self.temp.append(float(word[1][0:-1])/100)
-                    self.humid.append(float(word[2][0:-1]) / 100)
-                    #self.lux.append(float(word[3][0:-1]) / 100) REPLACED THIS CODE WITH THE TWO LINES OF CODE BELOW
-                    if word[3][len(word[3])-1] == ',': self.N2O.append(float(word[3][0:-1]) / 100)
-                    else:self.N2O.append(float(word[3]) / 100)
-                    #self.o2.append(float(word[4][0:-1]) / 100) COMMENTING OUT SENSORS WE DON'T USE SO WE CAN READ 3 DATA VALUES FROM LOG FILE
-                    #self.co2.append(float(word[5][0:-1]))
-                    #self.accel.append((float(word[6][0:-1]) / 100))#,
-                                       # float(word[7][0:-1]) / 100 * 0,
-                                       # float(word[8][0:-1]) / 100 * 0))
-                    #self.wind.append(float(word[9][0:-1]) / 100)
+                    timestamp = DtSeconds(datetime.strptime(timedate, "%m/%d/%Y:%H:%M:%S"))
+                    self.timestamp = max(timestamp, self.timestamp)
+                    self.timesInDate[-1].append(timestamp)
+                     
+                    s = sample(timestamp, value)
+                    self.samples[s.type].append(s)
 
-                    #if word[10][len(word[10])-1] == ',': self.rain.append(float(word[10][0:-1]) / 100)
-                    #else:self.rain.append(float(word[10]) / 100)
-
-                    self.samples.append(sample(
-                        self.timestamp[-1],
-                        self.temp[-1],
-                        self.humid[-1],
-                        self.N2O[-1],
-                        #self.o2[-1], COMMENTING OUT SENSORS WE DON'T USE SO WE CAN READ 3 DATA VALUES FROM LOG FILE
-                        #self.co2[-1],
-                        #self.accel[-1],
-                        #self.wind[-1],
-                        #self.rain[-1]
-                        ))
         self.Logfile.seek(0)
         self.Logfile.close()
 
