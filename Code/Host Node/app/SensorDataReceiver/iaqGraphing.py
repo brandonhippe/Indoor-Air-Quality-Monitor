@@ -4,11 +4,11 @@ import tkinter as tk
 import matplotlib.dates as mdates
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class IAQGraph:
-    def __init__(self) -> None:
+    def __init__(self):
         self.dir = sys.path[0] + "/DataOrganization/"
 
         # load in mesh network
@@ -20,12 +20,7 @@ class IAQGraph:
         self.window.title("Indoor Air Quality")
 
         self.fig = Figure(figsize = (5, 4), dpi = 100)
-        self.ax = self.fig.add_subplot(111)
-        self.line, = self.ax.plot([datetime.utcfromtimestamp(s.timestamp) for s in self.MainMesh.Motes[0].samples['CO2']], [s.value for s in self.MainMesh.Motes[0].samples['CO2']])
-
-        # Format x-axis ticks
-        self.ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
-        self.ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+        self.ax = {"CO2": self.fig.add_subplot(3, 1, 1), "PM": self.fig.add_subplot(3, 1, 2), "Airflow": self.fig.add_subplot(3, 1, 3)}
 
         # Put plot into canvas
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
@@ -33,16 +28,75 @@ class IAQGraph:
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
         # Button to trigger plot update
-        update_button = tk.Button(self.window, text="Update Plot", command=self.update)
-        update_button.pack(side=tk.BOTTOM)
+        example_button = tk.Button(self.window, text="Plot Example", command=self.plotExample)
+        example_button.pack(side=tk.BOTTOM)
 
         self.window.state('zoomed')
 
+
+    def plotExample(self):
+        for mote in self.MainMesh.Motes:
+            if 'example' not in mote.Logname:
+                continue
+            
+            for type in self.ax.keys():
+                if len(mote.samples[type]) == 0:
+                    continue
+                
+                samples = []
+                times = []
+                for s in mote.samples[type]:
+                    t = datetime.utcfromtimestamp(s.timestamp)
+                    samples.append(s.value)
+                    times.append(t)
+
+                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
+
+        for ax in self.ax.values():
+            ax.legend()
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
+            ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+            ax.relim()
+            ax.autoscale_view()
+
+        self.canvas.draw()
+
+
     def update(self):
-        self.line.set_xdata([datetime.utcfromtimestamp(s.timestamp) for s in self.MainMesh.Motes[0].samples['PM']])
-        self.line.set_ydata([s.value for s in self.MainMesh.Motes[0].samples['PM']])
-        self.ax.relim()
-        self.ax.autoscale_view()
+        curr_day = datetime.now()
+        last_day = curr_day - timedelta(days=1)
+
+        for ax in self.ax.values():
+            ax.cla()
+
+        for mote in self.MainMesh.Motes:
+            if 'example' in mote.Logname:
+                continue
+            
+            for type in self.ax.keys():
+                if len(mote.samples[type]) == 0:
+                    continue
+                
+                samples = []
+                times = []
+                for s in mote.samples[type]:
+                    t = datetime.utcfromtimestamp(s.timestamp)
+
+                    if not (last_day <= t <= curr_day):
+                        continue
+
+                    samples.append(s.value)
+                    times.append(t)
+
+                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
+
+        for ax in self.ax.values():
+            ax.legend()
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
+            ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+            ax.set_xlim(last_day, curr_day)
+            ax.autoscale_view()
+
         self.canvas.draw()
 
 
