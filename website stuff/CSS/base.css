@@ -1,0 +1,337 @@
+/* footer */
+	.footer #button{
+		width:35px;
+		height:35px;
+		border: #727172 12px solid;
+		opacity: .8;
+		border-radius:35px;
+		margin:0 auto;
+		position:relative;
+		-webkit-transition: all 1s ease;
+	    -moz-transition: all 1s ease;
+	    -o-transition: all 1s ease;
+	    -ms-transition: all 1s ease;
+	    transition: all 1s ease;
+	}
+	.footer #button:hover{
+		width:20px;
+		height:20px;
+		border: #3A3A3A 12px solid;
+		-webkit-transition: all 1s ease;
+	    -moz-transition: all 1s ease;
+	    -o-transition: all 1s ease;
+	    -ms-transition: all 1s ease;
+	    transition: all 1s ease;
+		position:relative;
+	}
+	.footer {
+		bottom:0;
+		left:0;
+		position:fixed;
+	    width: 100%;
+	    height: 2em;
+	    overflow:hidden;
+	    margin:0 auto;
+		-webkit-transition: all 1s ease;
+	    -moz-transition: all 1s ease;
+	    -o-transition: all 1s ease;
+	    -ms-transition: all 1s ease;
+	    transition: all 1s ease;
+		z-index:999;
+	}
+	.footer:hover {
+		-webkit-transition: all 1s ease;
+	    -moz-transition: all 1s ease;
+	    -o-transition: all 1s ease;
+	    -ms-transition: all 1s ease;
+	    transition: all 1s ease;
+		height: 10em;
+	}
+	.footer #container{
+		margin-top:5px;
+		width:100%;
+		min-width: 400px;
+	height:100%;
+	  position:relative;
+	  top:0;
+	  left:0;
+		background: #3A3A3A;
+	}
+	.footer #cont{
+	  position:relative;
+	  top:-45px;
+	  right:190px;
+		width:150px;
+		height:auto;
+		margin:0 auto;
+	}
+	.footer_center{
+		width:500px;
+		float:left;
+	  text-align:center;
+	}
+	.footer_center a:hover{
+		color: #fff;
+	}
+	.footer {
+		  text-align: center;
+		  color: #6495ED;
+		  font-family: Menlo, monospace;
+		}
+		.footer a{
+		  text-align: center;
+		  color: #6495ED;
+		  font-family: Menlo, monospace;
+		}
+		.footer i:hover {
+			color: #FFF;
+		}
+
+/* Floating Social Media Bar */
+
+	.fl-fl {
+	  background: #000000;
+	  text-transform: uppercase;
+	  letter-spacing: 3px;
+	  padding: 4px;
+	  width: 190px;
+	  position: fixed;
+	  right: -160px;
+	  z-index: 1000;
+	  font: normal normal 10px Arial;
+	  -webkit-transition: all .25s ease;
+	  -moz-transition: all .25s ease;
+	  -ms-transition: all .25s ease;
+	  -o-transition: all .25s ease;
+	  transition: all .25s ease;
+	}
+
+	.fa {
+	  font-size: 20px;
+	  color: #fff;
+	  padding: 10px 0;
+	  width: 40px;
+	  margin-left: 8px;
+	}
+
+	.fl-fl:hover {
+	  right: 0;
+	}
+
+	.fl-fl a {
+	  color: #fff !important;
+	  text-decoration: none;
+	  text-align: center;
+	  line-height: 43px!important;
+	  vertical-align: top!important;
+	}
+
+	.float-fb {
+	  top: 120px;
+	}
+
+	.float-tw {
+	  top: 165px;
+	}
+
+	.float-ig {
+	  top: 210px;
+	}
+	@media only screen and (max-width: 500px) {
+	     .fl-fl {
+	        display: none;
+	        visibility:none;
+	        font-size: 1px;
+	        z-index: -1;
+	        position: absolute;
+	        top: 1px;
+
+	    }
+	    .float-sm {
+	    	display: none;
+	    	visibility:none;
+	    	font-size: 1px;
+	    	z-index: -1;
+	    	position: absolute;
+	        top: 1px;
+	    }
+	}
+
+/*body*/
+		body {
+			font-family: "Sawarabi Mincho", "Helvetica Neue", Helvetica, sans-serif;
+		  	font-size: 19px;
+		  	background-color:  #121212;
+		  	z-index: 1;
+	  		line-height: 1.5em;
+		}
+		.blue{
+			color: #6495ED;
+
+		}
+		.white{
+			color: #f1f1f1;
+		}
+		.red {
+			color: red;
+		}
+		.title {
+			color:#6495ED; 
+			text-align: center;
+		}
+		.flex-container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			background-image:url('../PICS/.jpg'); <!--ADD BACKGROUND LATER -->
+			background-size:cover;
+			background-position:center;
+		  
+		}
+
+		.flex-container > div {
+			background-color: #121212;
+			width: 400px;
+			margin: 10px;
+			padding: 10px;
+			text-align: center;
+			opacity: .9;
+			font-size: 15px;
+		}
+			.courses {
+			text-align: center;
+			opacity: 1;
+			border: 5px solid;
+			border-color: #f1f1f1 #6495ED #888 #6495ED;
+		}
+		.courses h4 {
+			text-align: left;
+		}
+		.courses ul {
+	   	list-style: none;
+	   	display: inline-block; 
+		text-align: left;
+		}
+		.courses a {
+			color:#6495ED;
+			transition: 0.3s;
+		}
+		.courses a:hover {
+		  color: #f1f1f1;
+		  transition: 0.3s;
+		}
+
+		.boxmodelarticle {
+			min-width: 400px;
+			width: 60%;
+		  	justify-content: center;
+		  	align-items: center;
+			margin-left: auto;
+			margin-right: 20%;
+			overflow: auto;
+		}
+		.background
+		{
+			background-image:url('../PICS/background2.jpg');
+			  background-size:cover;
+			  background-position:center;
+		}
+
+		.quote {
+			background-color: #292929;
+			color: #f1f1f1;
+			text-align: center;
+			border: 1px;
+			width: auto;
+			margin:0 auto;
+		}
+		.picture {
+			 display: block;
+		  margin-left: auto;
+		  margin-right: auto;
+		  width: 88%;
+		}
+	a {
+		color: #6495ED;
+	}
+	a:hover{
+		color: #fff
+	}
+
+	/* Single-direction drop shadow */
+
+	hr {
+	border-color: white;
+	border-top: 1px solid #ccc;
+    height: 12px;
+    border: 0;
+    box-shadow: inset 0 12px 12px -12px rgba(255, 255, 255, 0.5);
+}
+/*header*/
+	.header {
+		position: sticky;
+		top: 0;
+		width:100%;
+		z-index: 3;
+		padding-top: 10px;
+	 	text-align: center;
+	  	background: #121212;
+	}
+	.header a:hover {
+		color: #F1F1F1;
+		opacity: .5;
+	}
+
+/*sidebar*/
+	.sidebar {
+	  height: 100%;
+	  width: 0;
+	  position: fixed;
+	  z-index: 3;
+	  top: 0;
+	  left: 0;
+	  background-color: #111;
+	  overflow-x: hidden;
+	  transition: 0.5s;
+	  padding-top: 60px;
+	}
+
+	.sidebar a {
+	  padding: 8px 8px 8px 32px;
+	  text-decoration: none;
+	  font-size: 25px;
+	  color: #6495ED;
+	  display: block;
+	  transition: 0.3s;
+	}
+
+	.sidebar a:hover {
+	  color: #f1f1f1;
+	}
+
+	.sidebar .closebtn {
+	  position: absolute;
+	  top: 0;
+	  right: 25px;
+	  font-size: 36px;
+	  margin-left: 50px;
+	}
+
+	.openbtn {
+	  font-size: 20px;
+	  float: left;
+	  cursor: pointer;
+	  background-color: #6495ED;
+	  color: white;
+	  padding: 10px 15px;
+	  border: none;
+	}
+
+	.openbtn:hover {
+	  background-color: #444;
+	}
+	/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+	@media screen and (max-height: 450px) {
+	  .sidebar {padding-top: 15px;}
+	  .sidebar a {font-size: 18px;}
+
