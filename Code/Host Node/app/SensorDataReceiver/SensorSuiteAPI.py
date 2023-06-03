@@ -54,7 +54,7 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                     self.CurrentDate = word[1]
                     self.dates.append(word[1])
                     self.timesInDate.append([])
-                if word[0] != "~" and word[0] != "--" and word[1][:2] != 'ef':                  # Convert Logfile text into organized sample objects
+                if word[0] != "~" and word[0] != "--" and word[1][:2] != 'ef' and word[1][:2] != '69':                  # Convert Logfile text into organized sample objects
                     payload = binascii.unhexlify(word[1])
                     if payload[0] != 0:
                         value = struct.unpack('<Bf', bytearray(payload))
