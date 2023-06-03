@@ -1,49 +1,29 @@
 from collections import defaultdict
+import math
 
 
 UNIT_PREFIXES = {'p': -12, 'n': -9, 'u': -6, 'm': -3}
-BAT_MAH = 3500 # mAh
+BAT_MAH = 3250 # mAh
 BAT_VOLT = 3.7 # V
-BAT_NUM = 1
+BAT_NUM = 4
 BAT_COULOMBS = BAT_NUM * BAT_MAH * 3600 / 1000 # Converts mAh to Coulombs
 MAX_T = 10 # Hours
 GOAL_DAYS = 365
 
 
-def gcd(a, b, memo = {}):
-    # Memoized calculation of greatest common denominator of two numbers
-    if (a, b) not in memo:
-        if (a == 0):
-            memo[(a, b)] = b
-
-        if (b == 0):
-            memo[(a, b)] = a
-
-        if (a == b):
-            memo[(a, b)] = a
-
-        if (a > b):
-            memo[(a, b)] = gcd(a-b, b)
-        else:
-            memo[(a, b)] = gcd(a, b-a)
-
-    return memo[(a, b)]
+def lcm(data):
+    val = 1
+    for n in data:
+        val = int(val * n / math.gcd(val, n))
 
 
-def lcm(nums):
-    # Calculate least common multiple from gcd
-    while len(nums) >= 2:
-        a = nums.pop(0)
-        b = nums.pop(0)
-        nums.append(a * b / gcd(a, b))
-
-    return nums[0]
+    return val
 
 
 def calcDutyCycle(dutyCycles):
     # Calculate Micro Controller's duty cycle
-    periods = [sum(p) for p in dutyCycles]
-    maxPeriod = lcm(periods[:])
+    periods = [int(sum(p)) for p in dutyCycles]
+    maxPeriod = lcm(periods)
 
     t = 0
     onTime = 0
@@ -175,28 +155,28 @@ def main():
         componentCurrent(components[c])
 
     output = []
-    withoutAnem = determineSampling({c: components[c] for c in components.keys() if c != "Anemometer"}, GOAL_DAYS)
+    # withoutAnem = determineSampling({c: components[c] for c in components.keys() if c != "Anemometer"}, GOAL_DAYS)
 
-    output.append(f"Battery Life without Anemometer: {withoutAnem:.2f} days")
-    for c in components:
-        if c == "Anemometer":
-            continue
-
-        output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
-        
-        if c != "Micro Com":
-            output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
-
-    output.append("\n\n")
-
-    # withAnem = determineSampling(components, GOAL_DAYS)
-
-    # output.append(f"Battery Life with Anemometer: {withAnem:.2f} days")
+    # output.append(f"Battery Life without Anemometer: {withoutAnem:.2f} days")
     # for c in components:
+    #     if c == "Anemometer":
+    #         continue
+
     #     output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
         
     #     if c != "Micro Com":
     #         output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
+
+    # output.append("\n\n")
+
+    withAnem = determineSampling(components, GOAL_DAYS)
+
+    output.append(f"Battery Life with Anemometer: {withAnem:.2f} days")
+    for c in components:
+        output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
+        
+        if c != "Micro Com":
+            output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
 
     if input("Print Results (y/n)? ") == 'y':
         for o in output:
