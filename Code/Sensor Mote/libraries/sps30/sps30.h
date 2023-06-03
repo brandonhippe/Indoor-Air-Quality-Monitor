@@ -27,8 +27,8 @@
 class SPS30 {
 	public:
 		// Public Variables
-		uint32_t period_ms, max_clock;
-		uint64_t time_ms;
+		uint32_t max_clock;
+		uint64_t period_ms, time_ms;
 		uint16_t pm2p5_int;
 		float pm2p5_float;
 		boolean measurement_ready, fp, debug;

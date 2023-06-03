@@ -6,7 +6,9 @@
 
 CG_Anem::CG_Anem() {
     max_clock = 100000;
+    period_ms = 0xFFFFFFFFFFFFFFFF;
     period_ms = 60000;
+    measurement_started = false;
     measurement_ready = false;
     _sensor_address = ANEM_I2C_ADDR;
 }
@@ -43,6 +45,7 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
     switch (scheduledFunc) {
         case WAKEUP:
             if (debug) Serial.println("CG Anem: Waking up");
+            measurement_started = true;
             measurement_ready = false;
             lastMeasurement = currTime_ms;
             cg_wakeup();
@@ -58,6 +61,7 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
 
             if (measurement_ready) {
                 // Put to sleep
+                measurement_started = false;
                 cg_sleep();
 
                 // Schedule new measurement
@@ -74,10 +78,12 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
 
 void CG_Anem::cg_wakeup() {
     digitalWrite(sleep_pin, !SLEEP_LOGIC);
+    sleep(5);
 }
 
 void CG_Anem::cg_sleep() {
-    digitalWrite(sleep_pin, SLEEP_LOGIC);
+    if (!measurement_started) digitalWrite(sleep_pin, SLEEP_LOGIC);
+    sleep(5);
 }
 
 /*get new necessary data*/

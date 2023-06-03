@@ -58,16 +58,17 @@ private:
     // Additional variables / functions for IAQ node
     uint64_t lastMeasurement;
     int scheduledFunc;
-    void cg_sleep();
-    void cg_wakeup();
+    boolean measurement_started;
 
 public:
     // Additional variables / functions for IAQ Node
-    uint32_t period_ms, max_clock;
-    uint64_t time_ms;
+    uint32_t max_clock;
+    uint64_t period_ms, time_ms;
     boolean measurement_ready, debug;
     int sleep_pin;
     void startNextFunc(uint64_t currTime_ms);
+    void cg_sleep();
+    void cg_wakeup();
 
     CG_Anem();
 

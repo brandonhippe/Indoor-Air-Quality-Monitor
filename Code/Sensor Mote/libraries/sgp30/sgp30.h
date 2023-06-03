@@ -17,29 +17,28 @@
 class SGP30 {
 	public:
 		// Public Variables
-		uint32_t period_ms, max_clock;
-		uint64_t time_ms;
-		uint16_t co2, tvoc;
+		uint32_t max_clock;
+		uint64_t period_ms, time_ms;
+		uint16_t co2, tvoc, baseline_CO2, baselineTVOC;
 		boolean measurement_ready, debug;
 		
 		// Public Functions
 		SGP30();
 		boolean begin(boolean _debug, int transistor_sleep);
 		void startNextFunc(uint64_t currTime_ms);
+		void sgp30_wakeup_transistor();
+		void sgp30_sleep_transistor();
+		void calibration(uint64_t currTime_ms);
 	private:
 		// Private Variables
 		// uint16_t iaq_init, measure_iaq, get_iaq_baseline, set_iaq_baseline;
 		uint64_t lastMeasurement;
-		uint16_t baseline_CO2, baselineTVOC;
 		int scheduledFunc, checks, transistor_pin;
-		boolean measurementStarted;
+		boolean measurement_started;
 		
 		// Private Functions
 		void sgp30_sleep_I2C();
-		void sgp30_sleep_transistor();
 		void sgp30_wakeup_I2C();
-		void sgp30_wakeup_transistor();
-		void calibration(uint64_t currTime_ms);
 		void setCalibration(uint64_t currTime_ms);
 		void getCO2(uint64_t currTime_ms);
 };

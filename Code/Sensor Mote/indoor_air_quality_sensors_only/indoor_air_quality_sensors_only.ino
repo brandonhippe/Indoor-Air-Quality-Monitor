@@ -7,12 +7,15 @@
 
 #define SCL 9
 #define SDA 10
+#define LB 27
 
 
-#define ANEM_SLEEP_PIN 5   // Set Anemometer sleep pin to 5
-#define PM_SLEEP_PIN 0    // Set PM sleep pin to 0 to disable
-#define CO2_SLEEP_PIN 7   // Set CO2 sleep pin to 0 to disable
+#define ANEM_SLEEP_PIN 5   // Set Anemometer sleep pin to 5 to enable, 0 to disable
+#define PM_SLEEP_PIN 6    // Set PM sleep pin to 6 to enable, 0 to disable
+#define CO2_SLEEP_PIN 7   // Set CO2 sleep pin to 7 to enable, 0 to disable
 
+
+#define BATTERY_LIFE 2    // Set to 0 for 1 year, 1 for 6 months, or 2 for 3 months
 
 
 #define SPS_FP true		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
@@ -20,12 +23,14 @@
 /*// Uncomment this section for Climate Guard Anemometer
   #include <cgAnem.h>
   CG_Anem anem;
+  #define ANEM_OFFSET 0
   //*/
 
 
 // Uncomment this section for Ultrasonic Anemometer
 #include <UltrasonicAnem.h>
 UltrasonicAnem anem;
+#define ANEM_OFFSET 1
 //*/
 
 
@@ -48,6 +53,21 @@ uint8_t nextDevice;
 
 bool anem_present;
 
+
+const uint64_t pm_periods[3][3] =   {{4320000, 15600000, 6300000},
+                                     {2040000,  6600000, 2880000},
+                                     { 960000,  2820000, 1320000}};
+                                  
+const uint64_t co2_periods[3][3] =  {{2220000, 13200000, 3060000},
+                                     {1080000,  5400000, 1500000},
+                                     { 510000,  2400000,  720000}};
+                                  
+const uint64_t anem_periods[3][3] = {{0xFFFFFFFFFFFFFFFF, 5160000, 40000},
+                                     {0xFFFFFFFFFFFFFFFF, 2160000, 20000},
+                                     {0xFFFFFFFFFFFFFFFF,  960000, 10000}};
+
+
+bool alertSent = false;
 
 
 void nextDev() {
@@ -73,22 +93,20 @@ void nextDev() {
 
 
 void setup() {
-  for (int i = 2; i <= 40; i++) {
-    if (i == 21) {
-      continue;
-    }
-    
+  Serial.begin(9600);
+  Serial.println("Starting");
+  
+  for (int i = 1; i <= 40; i++) {
     digitalWrite(i, LOW);
     pinMode(i, OUTPUT);
   }
 
-  if (debug) {
-    Serial.begin(9600);
-    Serial.println("Starting");
-  }
+  pinMode(1, INPUT);
+  pinMode(21, INPUT);
 
   pinMode(SCL, INPUT_PULLUP);
   pinMode(SDA, INPUT_PULLUP);
+  pinMode(LB, INPUT_PULLUP);
 
   int max_clock = 400000;
   if (co2.max_clock < max_clock) {
@@ -107,20 +125,19 @@ void setup() {
   Wire.begin();
   Wire.setClock(max_clock);
 
-
   bool sensed = false;
-
-  // Initialize CO2 Sensor
-  sensed = co2.begin(debug, CO2_SLEEP_PIN);
-  if (!sensed) {
-    if (debug) Serial.println("ERROR: CO2 sensor not connected!");
-    while (!powerTest);
-  }
 
   // Initialize PM Sensor
   sensed = pm.begin(MCPM2p5, SPS_FP, debug, PM_SLEEP_PIN);
   if (!sensed) {
     if (debug) Serial.println("ERROR: PM sensor not connected!");
+    while (!powerTest);
+  }
+
+  // Initialize CO2 Sensor
+  sensed = co2.begin(debug, CO2_SLEEP_PIN);
+  if (!sensed) {
+    if (debug) Serial.println("ERROR: CO2 sensor not connected!");
     while (!powerTest);
   }
 
@@ -133,6 +150,24 @@ void setup() {
     anem.time_ms = 0xFFFFFFFFFFFFFFFF;
   }
 
+  // Set Measurement Periods
+  if (!powerTest) {
+    if (anem_present) {
+      pm.period_ms = pm_periods[BATTERY_LIFE][1 + ANEM_OFFSET];
+      co2.period_ms = co2_periods[BATTERY_LIFE][1 + ANEM_OFFSET];
+      anem.period_ms = anem_periods[BATTERY_LIFE][1 + ANEM_OFFSET];
+      Serial.println((uint32_t)pm.period_ms);
+      Serial.println((uint32_t)co2.period_ms);
+      Serial.println((uint32_t)anem.period_ms);
+    } else {
+      pm.period_ms = pm_periods[BATTERY_LIFE][0];
+      co2.period_ms = co2_periods[BATTERY_LIFE][0];
+      anem.period_ms = anem_periods[BATTERY_LIFE][0];
+      Serial.println((uint32_t)pm.period_ms);
+      Serial.println((uint32_t)co2.period_ms);
+    }
+  }
+
   if (debug) Serial.println("Sleeping to first device function");
   nextDev();
   time_ms = nextTime;
@@ -142,24 +177,47 @@ void setup() {
 }
 
 void loop() {
-  // Execute next function
-  Serial.println("Started loop execution");
-  uint32_t startTime = millis();
-
-  if (debug) Serial.println("Performing device function");
-  switch (nextDevice) {
-    case CO2:
-      if (debug) Serial.println("eCO2");
-      co2.startNextFunc(time_ms + startTime - millis());
-      break;
-    case PM:
-      if (debug) Serial.println("PM");
-      pm.startNextFunc(time_ms + startTime - millis());
-      break;
-    case ANEM:
-      if (debug) Serial.println("Anemometer");
-      anem.startNextFunc(time_ms + startTime - millis());
-      break;
+  if (digitalRead(LB) && alertSent) {
+    alertSent = false;
+    if (debug) Serial.println("Battery Charged");
+  }
+  
+  if (!digitalRead(LB) && !alertSent) {
+    alertSent = true;
+    if (debug) Serial.println("ALERT: LOW BATTERY");
+  } else {
+    // Execute next function
+    Serial.println("Started loop execution");
+    uint32_t startTime = millis();
+  
+    if (debug) Serial.println("Performing device function");
+    switch (nextDevice) {
+      case CO2:
+        if (debug) Serial.println("eCO2");
+  
+        if (anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_wakeup();
+        co2.startNextFunc(time_ms + startTime - millis());
+        if (co2.measurement_ready && anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_sleep();
+  
+        break;
+      case PM:
+        if (debug) Serial.println("PM");
+  
+        if (anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_wakeup();
+        if (CO2_SLEEP_PIN != 0) co2.sgp30_wakeup_transistor();
+        pm.startNextFunc(time_ms + startTime - millis());
+        if (pm.measurement_ready && anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_sleep();
+        if (pm.measurement_ready && CO2_SLEEP_PIN != 0) co2.sgp30_sleep_transistor();
+        break;
+      case ANEM:
+        if (debug) Serial.println("Anemometer");
+  
+        if (CO2_SLEEP_PIN != 0) co2.sgp30_wakeup_transistor();
+        anem.startNextFunc(time_ms + startTime - millis());
+        if (anem.measurement_ready && CO2_SLEEP_PIN != 0) co2.sgp30_sleep_transistor();
+  
+        break;
+    }
   }
 
   // Print out measurements
@@ -222,9 +280,23 @@ void loop() {
   // If next time hasn't passed, sleep until then
   if (debug) Serial.println("Sleeping\n");
   if (nextTime > currTime_ms + (millis() - currTime_32)) {
-    sleep(nextTime - (currTime_ms + (millis() - currTime_32)));
-    time_ms = nextTime;
+    uint32_t sleepTime = nextTime - (currTime_ms + (millis() - currTime_32));
+    if (debug) Serial.println(sleepTime);
+    uint64_t i;
+    for (i = 0xFFFFFFFFFFFFFFFF; (i + 65536) < sleepTime && (digitalRead(LB) || alertSent); i += 65536) {
+      if (debug) Serial.println((uint32_t)i);
+      sleep(65536);
+    }
+
+    if (i + 65536 < sleepTime) {
+      time_ms = nextTime - sleepTime + i + 1;
+    } else {
+      sleep(sleepTime % 65536);
+      time_ms = nextTime;
+    }
   } else {
     time_ms = currTime_ms + (millis() - currTime_32);
   }
+
+  Serial.println();
 }

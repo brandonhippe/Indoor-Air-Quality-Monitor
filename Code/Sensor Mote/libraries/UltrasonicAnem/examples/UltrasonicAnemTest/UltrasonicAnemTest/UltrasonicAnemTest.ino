@@ -16,6 +16,8 @@ void setup() {
     pinMode(i, OUTPUT);
   }
 
+  sleep(1000);
+
   Serial.begin(9600);
   Serial.println("Starting");
   
