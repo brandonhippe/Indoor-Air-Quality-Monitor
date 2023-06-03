@@ -32,7 +32,7 @@ boolean SGP30::begin(boolean _debug, int transistor_sleep) {
 
 	if (sensed == 0) {
 		// Perform calibration
-		calibration(millis());
+		// calibration(millis());
 		if (debug) Serial.println("SGP30: Finished Initialization");
 		return true;
 	} else {
