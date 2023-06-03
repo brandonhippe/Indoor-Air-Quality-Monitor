@@ -5,6 +5,11 @@ import matplotlib.dates as mdates
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from datetime import datetime, timedelta
+import matplotlib.animation as animation
+import time
+
+from matplotlib import style
+# style.use('ggplot')
 
 
 class IAQGraph:
@@ -21,6 +26,8 @@ class IAQGraph:
 
         self.fig = Figure(figsize = (5, 4), dpi = 100)
         self.ax = {"CO2": self.fig.add_subplot(3, 1, 1), "PM": self.fig.add_subplot(3, 1, 2), "Airflow": self.fig.add_subplot(3, 1, 3)}
+        for title in self.ax.keys():
+            self.ax[title].set_title(title)
 
         # Put plot into canvas
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
@@ -31,10 +38,19 @@ class IAQGraph:
         example_button = tk.Button(self.window, text="Plot Example", command=self.plotExample)
         example_button.pack(side=tk.BOTTOM)
 
+        plot_button = tk.Button(self.window, text="Plot Data", command=self.plot)
+        plot_button.pack(side=tk.BOTTOM)
+
         self.window.state('zoomed')
+
+        #self.window.after(1000, self.update)
 
 
     def plotExample(self):
+        #self.ax.clear()
+        #self.update()
+        #self.window.after(1000, self.update)
+        #tk.after_cancel(self.window)
         for mote in self.MainMesh.Motes:
             if 'example' not in mote.Logname:
                 continue
@@ -52,9 +68,11 @@ class IAQGraph:
 
                 self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
 
-        for ax in self.ax.values():
+        for title, ax in zip(self.ax.keys(), self.ax.values()):
+            ax.set_title(title)
             ax.legend()
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
+            # ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.relim()
             ax.autoscale_view()
@@ -62,12 +80,58 @@ class IAQGraph:
         self.canvas.draw()
 
 
+
+
+
+    def plot(self):
+        #self.ax.clear()
+        self.update()
+        for mote in self.MainMesh.Motes:
+            if 'example' in mote.Logname:
+                continue
+            
+            for type in self.ax.keys():
+                if len(mote.samples[type]) == 0:
+                    continue
+                
+                samples = []
+                times = []
+                for s in mote.samples[type]:
+                    t = datetime.utcfromtimestamp(s.timestamp)
+                    samples.append(s.value)
+                    times.append(t)
+
+                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
+
+        for title, ax in zip(self.ax.keys(), self.ax.values()):
+            ax.set_title(title)
+            #ax.legend()
+            # ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+            ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+            ax.relim()
+            ax.autoscale_view()
+
+        self.canvas.draw()
+        self.window.after(10000, self.update)
+
+
+
+
+
+
+
+
+
     def update(self):
+
         curr_day = datetime.now()
         last_day = curr_day - timedelta(days=1)
+        last_day = curr_day - timedelta(days=.1) #Time delta changed for Testing CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
         for ax in self.ax.values():
-            ax.cla()
+            #ax.cla() 
+            ax.clear() 
 
         for mote in self.MainMesh.Motes:
             if 'example' in mote.Logname:
@@ -90,17 +154,28 @@ class IAQGraph:
 
                 self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
 
-        for ax in self.ax.values():
+        for title, ax in zip(self.ax.keys(), self.ax.values()):
+            ax.set_title(title)
             ax.legend()
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
+            # ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.set_xlim(last_day, curr_day)
             ax.autoscale_view()
 
         self.canvas.draw()
 
+        self.MainMesh = MeshNetwork(self.dir)
+        self.MainMesh.LoadMesh()
+
+
+        self.window.after(10000, self.update)
+
 
 if __name__ == '__main__':
     iaq_graph = IAQGraph()
 
+    #time.sleep(1000)
+    #iaq_graph.clear()
+    #iaq_graph.mainloop()
     tk.mainloop()
