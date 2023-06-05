@@ -7,6 +7,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from datetime import datetime, timedelta
 import matplotlib.animation as animation
 import time
+import matplotlib.pyplot as plt
+
 
 from matplotlib import style
 # style.use('ggplot')
@@ -28,6 +30,8 @@ class IAQGraph:
         self.ax = {"CO2": self.fig.add_subplot(3, 1, 1), "PM": self.fig.add_subplot(3, 1, 2), "Airflow": self.fig.add_subplot(3, 1, 3)}
         for title in self.ax.keys():
             self.ax[title].set_title(title)
+
+        self.default_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
         # Put plot into canvas
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
@@ -51,7 +55,7 @@ class IAQGraph:
         #self.update()
         #self.window.after(1000, self.update)
         #tk.after_cancel(self.window)
-        for mote in self.MainMesh.Motes:
+        for i, mote in enumerate(self.MainMesh.Motes):
             if 'example' not in mote.Logname:
                 continue
             
@@ -66,7 +70,7 @@ class IAQGraph:
                     samples.append(s.value)
                     times.append(t)
 
-                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
+                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0], color = self.default_colors[i])
 
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
@@ -84,11 +88,9 @@ class IAQGraph:
 
 
     def plot(self):
-        #self.ax.clear()
+        #self.ax.clear()        
         self.update()
-        for mote in self.MainMesh.Motes:
-            if 'example' in mote.Logname:
-                continue
+        for i, mote in enumerate([m for m in self.MainMesh.Motes if 'example' not in m.Logname]):
             
             for type in self.ax.keys():
                 if len(mote.samples[type]) == 0:
@@ -101,7 +103,7 @@ class IAQGraph:
                     samples.append(s.value)
                     times.append(t)
 
-                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
+                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0], color = self.default_colors[i])
 
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
@@ -127,15 +129,13 @@ class IAQGraph:
 
         curr_day = datetime.now()
         last_day = curr_day - timedelta(days=1)
-        last_day = curr_day - timedelta(days=.1) #Time delta changed for Testing CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+        # last_day = curr_day - timedelta(days=.1) #Time delta changed for Testing CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
         for ax in self.ax.values():
             #ax.cla() 
             ax.clear() 
 
-        for mote in self.MainMesh.Motes:
-            if 'example' in mote.Logname:
-                continue
+        for i, mote in enumerate([m for m in self.MainMesh.Motes if 'example' not in m.Logname]):
             
             for type in self.ax.keys():
                 if len(mote.samples[type]) == 0:
@@ -152,7 +152,7 @@ class IAQGraph:
                     samples.append(s.value)
                     times.append(t)
 
-                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0])
+                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0], color = self.default_colors[i])
 
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
