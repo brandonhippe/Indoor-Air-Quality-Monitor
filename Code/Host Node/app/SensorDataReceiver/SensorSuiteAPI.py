@@ -56,10 +56,7 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                     self.timesInDate.append([])
                 if word[0] != "~" and word[0] != "--" and word[1][:2] != 'ef' and word[1][:2] != '69':                  # Convert Logfile text into organized sample objects
                     payload = binascii.unhexlify(word[1])
-                    if payload[0] != 0:
-                        value = struct.unpack('<Bf', bytearray(payload))
-                    else:
-                        value = struct.unpack('<BHH', bytearray(payload))[:-1]
+                    value = struct.unpack('<Bf', bytearray(payload))
 
                     timedate = self.CurrentDate +':'+ word[0][0:-1]     # combine time stamp with current date
                     timestamp = DtSeconds(datetime.strptime(timedate, "%m/%d/%Y:%H:%M:%S"))
