@@ -50,6 +50,8 @@ class IAQGraph:
         plot_button.pack(side=tk.BOTTOM)
 
         self.window.state('zoomed')
+        
+        self.batteryAlerts = set()
 
 
     def plotExample(self):
@@ -96,6 +98,13 @@ class IAQGraph:
             ax.clear() 
 
         for i, mote in enumerate([m for m in self.MainMesh.Motes if 'example' not in m.Logname]):
+            if mote.battery == 0 and mote.Logname not in self.batteryAlerts:
+                self.batteryAlerts.add(mote.Logname)
+                self.show_popup(mote)
+
+            if mote.battery != 0 and mote.Logname in self.batteryAlerts:
+                self.batteryAlerts.remove(mote.Logname)
+
             for type in self.ax.keys():
                 if len(mote.samples[type]) == 0:
                     continue
@@ -129,6 +138,24 @@ class IAQGraph:
 
 
         self.window.after(10000, self.update)
+
+    
+    def show_popup(self, mote):
+        popup_window = tk.Toplevel()
+        popup_window.title("BATTERY ALERT")
+        
+        # Add content to the popup window
+        t = f"ALERT: Mote {mote.Logname.split('.')[0]} "
+        if mote.UID != 'None':
+            t += f'({mote.UID})'
+
+        t += f' LOW BATTERY'
+        label = tk.Label(popup_window, text=t)
+        label.pack(padx=20, pady=20)
+        
+        # Add a button to close the popup window
+        close_button = tk.Button(popup_window, text="Close", command=popup_window.destroy)
+        close_button.pack(pady=10)
 
 
 if __name__ == '__main__':

@@ -264,7 +264,10 @@ def simple_data_Logging(mac, payload):
     else:
         samples = struct.unpack('<Bf', bytearray(payload))
 
-    print (f'sensor data received --> {logname}            Data: {samples}')
+    if payload[0] == 0x69:
+        print(f'sensor data received --> {logname}            ALERT: {"LOW BATTERY" if samples[1] == 0 else "Battery Charging"}')
+    else:
+        print(f'sensor data received --> {logname}            Data: {samples}')
 
     ### ADD NEW DATA TO LOG
     with open(Data_Loc + logname, "r+") as logFile:

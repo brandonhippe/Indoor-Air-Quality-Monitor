@@ -31,6 +31,7 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
         self.status = 'Disconnected'
         self.UID = None
         self.coord = None
+        self.battery = 0x6969
         #self.Logfile.close()
 
     # load a single mote from logfile into ram, using motes MAC address:
@@ -65,6 +66,10 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                      
                     s = sample(timestamp, value)
                     self.samples[s.type].append(s)
+                if word[1][:2] == '69':
+                    # Battery alert
+                    payload = binascii.unhexlify(word[1])
+                    self.battery = struct.unpack('<HH', bytearray(payload[:-1]))[1]
 
         self.Logfile.seek(0)
         self.Logfile.close()
