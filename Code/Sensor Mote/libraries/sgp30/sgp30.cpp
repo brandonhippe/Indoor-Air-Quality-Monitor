@@ -228,6 +228,8 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 	uint32_t startTime = millis();
 	measurement_ready = false;
 
+	int measured_co2, measured_tvoc;
+
 
 	if (debug) Serial.println("SGP30: Starting measurement");
 	// Wakeup sensor
@@ -271,17 +273,22 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		if (check_crc(&response[3]) == 0) continue;
 		
 		// Obtain CO2 and TVOC values
-		co2 = (response[0] << 8) + response[1];
-		tvoc = (response[3] << 8) + response[4];
+		measured_co2 = (response[0] << 8) + response[1];
+		measured_tvoc = (response[3] << 8) + response[4];
+
+		if (checks >= 15) {
+			if (debug) Serial.println(checks - 15);
+			co2_readings[checks - 15] = measured_co2;
+			tvoc_readings[checks - 15] = measured_tvoc;
+		}
 
 		if (debug) {
-			Serial.println(co2);
-			Serial.println(tvoc);
+			Serial.println(measured_co2);
+			Serial.println(measured_tvoc);
 		}
 		
 		// Schedule next measurement
 		if (debug) Serial.println("SGP30: Scheduling new measurement");
-		// if (co2 == 400 && tvoc == 0) {
 		if (checks < 30) {
 			checks++;
 			scheduledFunc = GETCO2;
@@ -289,6 +296,14 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 
 			return;
 		} else {
+			co2 = 0;
+			for (int i = 0; i < 15; i++) {
+				co2 += co2_readings[i];
+			}
+
+			co2 = co2 / 15.0;
+			if (debug) Serial.println(co2);
+			
 			checks = 0;
 			measurement_ready = true;
 			measurement_started = false;

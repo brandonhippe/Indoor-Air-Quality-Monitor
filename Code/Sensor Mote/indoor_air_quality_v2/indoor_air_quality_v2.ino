@@ -117,7 +117,7 @@ void generateData(uint8_t* payload) {
   payload[0] = nextDevice;
   switch (nextDevice) {
     case CO2:
-      memcpy(&payload[1], &co2.co2, sizeof(uint16_t));
+      memcpy(&payload[1], &co2.co2, sizeof(float));
       break;
     case PM:
       if (pm.fp) {

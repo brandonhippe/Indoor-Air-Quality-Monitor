@@ -19,7 +19,8 @@ class SGP30 {
 		// Public Variables
 		uint32_t max_clock;
 		uint64_t period_ms, time_ms;
-		uint16_t co2, tvoc, baseline_CO2, baselineTVOC;
+		uint16_t co2_readings[15], tvoc_readings[15], baseline_CO2, baselineTVOC;
+		float co2, tvoc;
 		boolean measurement_ready, debug;
 		
 		// Public Functions

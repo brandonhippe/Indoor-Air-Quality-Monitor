@@ -259,10 +259,10 @@ def simple_data_Logging(mac, payload):
     ### Battery alert is formatted (0x6969, alert) with 0 for low battery, 0x6969 for battery charged
     if payload[0] == 0xEF or payload[0] == 0x69:
         samples = struct.unpack('<HH', bytearray(payload[:-1]))
-    elif payload[0] != 0:
-        samples = struct.unpack('<Bf', bytearray(payload))
+    # elif payload[0] == 0:
+        # samples = struct.unpack('<BHH', bytearray(payload))[:-1]
     else:
-        samples = struct.unpack('<BHH', bytearray(payload))[:-1]
+        samples = struct.unpack('<Bf', bytearray(payload))
 
     print (f'sensor data received --> {logname}            Data: {samples}')
 
