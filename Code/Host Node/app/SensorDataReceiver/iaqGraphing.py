@@ -14,6 +14,8 @@ import tkinter.simpledialog as simpledialog
 from matplotlib import style
 # style.use('ggplot')
 
+PLOT_UNITS = {"CO2": "PPM", "PM": "µg/m3", "Airflow": "m/s"}
+
 
 class IAQGraph:
     def __init__(self):
@@ -31,6 +33,7 @@ class IAQGraph:
         self.ax = {"CO2": self.fig.add_subplot(311), "PM": self.fig.add_subplot(312), "Airflow": self.fig.add_subplot(313)}
         for title in self.ax.keys():
             self.ax[title].set_title(title)
+            self.ax[title].set_ylabel(PLOT_UNITS[title])
             # self.ax[title].tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)  # Remove x-axis ticks and labels
 
         self.fig.tight_layout(pad=1.0)  # Adjust the padding between subplots
@@ -78,6 +81,7 @@ class IAQGraph:
 
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
+            self.ax[title].set_ylabel(PLOT_UNITS[title])
             ax.legend()
             # ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
@@ -124,6 +128,7 @@ class IAQGraph:
 
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
+            self.ax[title].set_ylabel(PLOT_UNITS[title])
             ax.legend()
             # ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
