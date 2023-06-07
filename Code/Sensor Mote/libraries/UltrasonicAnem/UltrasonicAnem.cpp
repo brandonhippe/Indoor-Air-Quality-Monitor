@@ -6,11 +6,13 @@ const double a = 0.04, d = 0.05; // a (pitch) and d (height) in meters
 double sin_alpha, cos_alpha;
 unsigned long t1, t2;
 
+double percent = 0.05;
+
 
 UltrasonicAnem::UltrasonicAnem() {
 	max_clock = 400000;
 	period_ms = 0xFFFFFFFFFFFFFFFF;
-	period_ms = 60000;
+	period_ms = 20000;
 	measurement_ready = false;
 	measurementStarted = false;
 	TRIG_1 = 36;
@@ -37,7 +39,7 @@ boolean UltrasonicAnem::begin(int sleepPin, boolean _debug) {
 	// Wake up Ultrasonic Sensors
 	if (debug) Serial.println("Ultrasonic Anem: Initializing");
 	digitalWrite(sleep_pin, !SLEEP_LOGIC);
-	sleep(5);
+	sleep(100);
 	
 	normal1 = pulse(TRIG_1, ECHO_1);
 	if (debug) Serial.println(normal1);
@@ -84,7 +86,7 @@ void UltrasonicAnem::measure(uint64_t currTime_ms) {
 	// Wakeup Ultrasonic Sensors
 	if (debug) Serial.println("Ultrasonic Anem: Waking up ultrasonic sensors");
 	digitalWrite(sleep_pin, !SLEEP_LOGIC);
-	sleep(5);
+	sleep(100);
 	
 	// Send chirps
 	if (debug) Serial.println("Ultrasonic Anem: Sending chirps");
@@ -98,7 +100,7 @@ void UltrasonicAnem::measure(uint64_t currTime_ms) {
 	if (debug) Serial.println("Ultrasonic Anem: Calculating values");
 	// airflowRate = (d / (sin_alpha * cos_alpha)) * ((1.0 / t1) - (1.0 / t2));
 	// temp = (d / sin_alpha) * ((1.0 / t1) + (1.0 / t2));
-	recorded[measurements] = vent_flow * ((t1 != normal1) - (t2 != normal2));
+	recorded[measurements] = vent_flow * (!withinPercent(t1, normal1) - !withinPercent(t2, normal2));
 	Serial.println(recorded[measurements]);
 
 	// Put Ultrasonic Sensors to sleep
@@ -137,6 +139,11 @@ unsigned long UltrasonicAnem::pulse(int trig, int echo) {
 	digitalWrite(trig, LOW);
   
 	return pulseIn(echo, HIGH, 10000);
+}
+
+
+boolean UltrasonicAnem::withinPercent(int t, int normal) {
+	return (((1 - percent) * normal) <= t && t <= ((1 + percent) * normal));
 }
 
 

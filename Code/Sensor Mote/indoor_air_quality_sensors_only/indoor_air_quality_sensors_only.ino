@@ -2,7 +2,7 @@
 #include <sps30.h>
 
 
-#define powerTest true
+#define powerTest false
 
 
 #define SCL 9

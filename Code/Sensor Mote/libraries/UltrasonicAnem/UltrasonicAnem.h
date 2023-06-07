@@ -34,4 +34,5 @@ class UltrasonicAnem {
 		// Private Functions
 		void measure(uint64_t currTime_ms);
 		unsigned long pulse(int trig, int echo);
+		boolean withinPercent(int t, int normal);
 };
