@@ -15,6 +15,7 @@ from matplotlib import style
 print(style.available)
 style.use('seaborn-whitegrid')
 
+TIMESTAMP_FORMAT = "%m/%d %H:%M:%S"
 PLOT_UNITS = {"CO2": "PPM", "PM": "µg/m3", "Airflow": "m/s"}
 
 
@@ -34,9 +35,10 @@ class IAQGraph:
         self.ax = {"CO2": self.fig.add_subplot(311), "PM": self.fig.add_subplot(312), "Airflow": self.fig.add_subplot(313)}
         for title in self.ax.keys():
             self.ax[title].set_title(title)
-            self.ax[title].set_ylabel(PLOT_UNITS[title])
+            # self.ax[title].set_ylabel(PLOT_UNITS[title])
             # self.ax[title].tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)  # Remove x-axis ticks and labels
 
+        self.ax['Airflow'].set_xlabel("Time of Day")
         self.fig.tight_layout(pad=1.0)  # Adjust the padding between subplots
 
         self.default_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
@@ -84,11 +86,12 @@ class IAQGraph:
             ax.set_title(title)
             self.ax[title].set_ylabel(PLOT_UNITS[title])
             ax.legend()
-            # ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter(TIMESTAMP_FORMAT))
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.relim()
             ax.autoscale_view()
+
+        self.ax['Airflow'].set_xlabel("Time of Day")
 
         self.canvas.draw()
 
@@ -131,11 +134,12 @@ class IAQGraph:
             ax.set_title(title)
             self.ax[title].set_ylabel(PLOT_UNITS[title])
             ax.legend()
-            # ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d/%Y:%H:%M:%S"))
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter(TIMESTAMP_FORMAT))
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.set_xlim(start_time, end_time)
             ax.autoscale_view()
+
+        self.ax['Airflow'].set_xlabel("Time of Day")
 
         self.canvas.draw()
 
