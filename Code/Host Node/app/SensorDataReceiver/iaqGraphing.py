@@ -12,7 +12,8 @@ import tkinter.simpledialog as simpledialog
 
 
 from matplotlib import style
-# style.use('ggplot')
+print(style.available)
+style.use('seaborn-whitegrid')
 
 PLOT_UNITS = {"CO2": "PPM", "PM": "µg/m3", "Airflow": "m/s"}
 
