@@ -1,0 +1,318 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simple Sectioned Essay Template
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing essay content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[hidelinks, 12pt]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage{geometry} % Required to change the page size to A4
+%\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+\usepackage[graphicx]{realboxes}
+\usepackage{adjustbox}
+\usepackage{rotating}
+\usepackage{graphicx} % Required for including pictures
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+\usepackage{setspace} % To control linespacing
+\usepackage{enumerate} % For enumerating lists
+\usepackage{enumitem} % more enumerating stuff
+\usepackage{multicol} % for multicoumn formating
+\usepackage{multirow} % for multicoumn formating
+\usepackage{adjustbox}
+\usepackage{changepage}
+\usepackage{fancyhdr}
+\usepackage[usenames,dvipsnames]{xcolor} %To change text colors, color options located at: http://en.wikibooks.org/wiki/LaTeX/Colors
+\usepackage[font={footnotesize}]{caption}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{arydshln}
+\usepackage{titlesec} % To control section colors
+\usepackage{color}
+\usepackage{hyperref} % for web links
+\usepackage{pdfpages}
+
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+
+\linespread{1.2} % Line spacing
+\widowpenalty=8999 
+\clubpenalty=8999 
+
+%%%%% Define PSU official colors
+\definecolor{PSUgreen}{RGB}{106,127,16}
+\definecolor{PSUltgreen}{RGB}{168,180,0}
+\definecolor{PSUblue}{RGB}{0,117,154}
+\definecolor{PSUltblue}{RGB}{161,216,224}
+\definecolor{PSUgray}{RGB}{71,67,52}
+\definecolor{PSUBrown}{RGB}{96,53,29}
+\definecolor{PSUsienna}{RGB}{163,63,31}
+\definecolor{PSUred}{RGB}{210,73,42}
+\definecolor{PSUorange}{RGB}{220,155,50}
+\definecolor{PSUyellow}{RGB}{230,220,143}
+\definecolor{PSUtan}{RGB}{232,221,162}
+\definecolor{PSUpurple}{RGB}{101,3,96}
+
+%----------------------------------------------------------------------------------------
+%  Section Colors
+%----------------------------------------------------------------------------------------
+\titleformat{\section}
+{\color{PSUgreen}\normalfont\Large\bfseries}
+{\color{PSUgreen}\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\color{PSUblue}\normalfont\large\bfseries}
+{\color{PSUblue}\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\color{PSUblue}\normalfont\normalsize\bfseries}
+{\color{PSUblue}\thesubsubsection}{1em}{}
+
+\titleformat{\subparagraph}
+{\color{PSUblue}\normalfont\normalsize\bfseries}
+{\color{PSUblue}\thesubsubsection}{1em}{}
+
+%----------------------------------------------------------------------------------------
+%  Watermark
+%----------------------------------------------------------------------------------------
+%\usepackage{draftwatermark} % for watermarks
+%\SetWatermarkText{\textbf{DRAFT}}
+%\SetWatermarkScale{5}
+%\SetWatermarkColor[gray]{0.9}
+%----------------------------------------------------------------------------------------
+\begin{document}
+\pagestyle{fancy}
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+\center % Center everything on the page
+
+\HRule \\[0.4cm]
+{ \huge \color{PSUgreen}\bfseries Indoor Air Quality Capstone \\[0.4cm] \Large \emph{Team 1}}\\[0.4cm] % Title of your document
+\HRule \\[0.5cm]
+
+\textsc{\large Portland State University \\ Maseeh College of Engineering \& Computer Science \\ Department of Electrical \& Computer Engineering}\\[1.0cm]
+
+\begin{minipage}{0.5\textwidth}
+\large
+\emph{Authors:}\\
+\textsc{Adam A. Dezay}\\ 
+\textsc{Manuel A. Garcia}\\ 
+\textsc{Brandon P. Hippe}\\ 
+\textsc{Mercedes C. Newton}\\ 
+\emph{Industry Sponsor:}\\
+\textsc{PSU ECE Dept, WEST Lab (Dr. David C. Burnett)}\\ 
+\emph{Faculty Advisor:}\\
+\textsc{Dr. John M. Acken}\\ 
+\end{minipage}\\[0.5cm]
+\vfill % Fill the rest of the page with whitespace
+\includegraphics[width=3.5in]{psuMCECSlogo_horiz.png}
+\vfill
+\textsc{\color{PSUgray}\normalsize Senior Project Developement \\ Portland, Oregon}\\[0.5cm] % Major heading such as course name
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	Header
+%----------------------------------------------------------------------------------------
+\fancyhf{}  % clears the default page numbering
+\fancyhead[L]{\footnotesize{\textcolor{PSUgray}{Indoor Air Quality}}}
+%\fancyhead[C]{\footnotesize{center head}}
+\fancyhead[R]{\footnotesize{\textcolor{PSUgray}{Portland State University}}}
+%----------------------------------------------------------------------------------------
+%    Footer
+%----------------------------------------------------------------------------------------
+%\patchcmd{\footrule}{\hrule}{\color{PSUgreen}\hrule}{}{}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyfoot[L]{\footnotesize\color{PSUgray}\sffamily
+1900 SW 4$^{th}$ Ave, suite 160, Portland, OR 97201 \textbullet\ \href{https://web.cecs.pdx.edu/~dburnett/capstone2023/}{web.cecs.pdx.edu/~dburnett/capstone2023}}
+%\fancyfoot[C]{~}
+\fancyfoot[R]{\footnotesize~\newline\color{PSUgray}\sffamily\thepage}
+
+%----------------------------------------------------------------------------------------
+%    TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+\setcounter{tocdepth}{2}
+\tableofcontents % Include a table of contents
+%\setlength{\parskip}{3ex plus 2ex minus 2ex}
+
+%----------------------------------------------------------------------------------------
+%    Section: List of Figures & Tables
+%----------------------------------------------------------------------------------------
+\newpage
+\listoffigures
+\newpage
+\listoftables
+
+%----------------------------------------------------------------------------------------
+%    Section: Exec summ
+%----------------------------------------------------------------------------------------
+\newpage
+\section*{Executive Summary}
+\label{Executive Summary}
+\input{Section_Exec_Sum}
+\pagebreak
+
+%----------------------------------------------------------------------------------------
+%    Section: Background
+%----------------------------------------------------------------------------------------
+\newpage
+\section*{Background}
+\label{Background}
+\input{Section_Background}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%   Section: Requirements
+%----------------------------------------------------------------------------------------
+\newpage
+\section{ Requirements}
+\label{Requirements}
+\input{Section_Requirements}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%   Section: Stakeholders
+%----------------------------------------------------------------------------------------
+\newpage
+\section{ Stakeholders and Preexisting Design}
+\label{Stakeholders}
+\input{Section_Stakeholders}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%   Section: Objective and Deliverables
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Objective and Deliverables}
+\label{Obj and deliv}
+\input{Section_Obj}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%   Section: Approach
+%----------------------------------------------------------------------------------------
+% \newpage
+% \section{Approach}
+% \label{Approach}
+% \input{Section_Approach}
+% \pagebreak
+%----------------------------------------------------------------------------------------
+%   Section: Design
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Design}
+\label{Design}
+\input{Section_design}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%   Section: Test Plan
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Test Plan}
+\label{Test plan}
+\input{Section_TestPlan}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%   Section: Results
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Results}
+\label{Results}
+\input{Section_Results}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%	Section: Post mortem
+%----------------------------------------------------------------------------------------
+\newpage
+\section*{Post Mortem}
+\label{Post Mortem}
+\input{Section_Postmort}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%	Section: Project Resources
+%----------------------------------------------------------------------------------------
+\newpage
+\section*{Project Resources}
+\label{Project Resources}
+\input{Section_Resource}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%	Section: Software Manual
+%----------------------------------------------------------------------------------------
+\newpage
+\section*{Software Manual}
+\label{Software Manual}
+\input{Section_Software}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%	Section: Hardware Manual
+%----------------------------------------------------------------------------------------
+\newpage
+\section*{Hardware Manual}
+\label{Hardware Manual}
+\input{Section_Hardware}
+\pagebreak
+
+%----------------------------------------------------------------------------------------
+%    APPENDICES
+%----------------------------------------------------------------------------------------
+\newpage
+\appendix
+\renewcommand\thesection{}
+
+\section*{Appendix 1: BOM}
+\phantomsection
+\addcontentsline{toc}{section}{Appendix 1: BOM}
+\input{Appendix 1}
+
+\newpage
+\appendix
+\renewcommand\thesection{}
+
+\section*{Appendix 2: Troubleshooting}
+\phantomsection
+\addcontentsline{toc}{section}{Appendix 2: Troubleshooting}
+\input{Appendix 2}
+\pagebreak
+
+\newpage
+\appendix
+\renewcommand\thesection{}
+
+\section*{Appendix 3: Weekly Progress Reports}
+\phantomsection
+\addcontentsline{toc}{section}{Appendix 3: Weekly Progress Reports}
+\includepdf[pages=-]{All weekly reports.pdf}
+\pagebreak
+
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+\newpage
+\bibliographystyle{plain}
+\bibliography{references}
+
+
+%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------
+%    Section: Authors, Lab, Disclaimer & Acknowledgements
+%----------------------------------------------------------------------------------------
+\newpage
+\input{Bios}
+\pagebreak
+%----------------------------------------------------------------------------------------
+
+\end{document}

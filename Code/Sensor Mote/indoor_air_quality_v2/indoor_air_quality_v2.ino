@@ -4,7 +4,7 @@
 
 
 #define powerTest false
-#define anemOnly false
+#define anemOnly true
 
 
 #define SCL 9
@@ -208,7 +208,22 @@ void setup() {
       pm.period_ms = pm_periods[BATTERY_LIFE][1 + ANEM_OFFSET];
       co2.period_ms = co2_periods[BATTERY_LIFE][1 + ANEM_OFFSET];
       anem.period_ms = anem_periods[BATTERY_LIFE][1 + ANEM_OFFSET];
-      if (debug) {
+    } else {
+      pm.period_ms = pm_periods[BATTERY_LIFE][0];
+      co2.period_ms = co2_periods[BATTERY_LIFE][0];
+      anem.period_ms = anem_periods[BATTERY_LIFE][0];
+    }
+
+    if (anem_present && anemOnly) {
+      Serial.println("Anemometer only mode enabled");
+      pm.period_ms = 0xFFFFFFFFFFFFFFFF;
+      co2.period_ms = 0xFFFFFFFFFFFFFFFF;
+      pm.time_ms = 0xFFFFFFFFFFFFFFFF;
+      co2.time_ms = 0xFFFFFFFFFFFFFFFF;
+      anem.period_ms = 60000;
+    }
+
+    if (debug) {
         Serial.print("PM: ");
         Serial.print((uint32_t)pm.period_ms);
         Serial.println(" ms");
@@ -219,26 +234,6 @@ void setup() {
         Serial.print((uint32_t)anem.period_ms);
         Serial.println(" ms");
       }
-    } else {
-      pm.period_ms = pm_periods[BATTERY_LIFE][0];
-      co2.period_ms = co2_periods[BATTERY_LIFE][0];
-      anem.period_ms = anem_periods[BATTERY_LIFE][0];
-      if (debug) {
-        Serial.print("PM: ");
-        Serial.print((uint32_t)pm.period_ms);
-        Serial.println(" ms");
-        Serial.print("CO2: ");
-        Serial.print((uint32_t)co2.period_ms);
-        Serial.println(" ms");
-      }
-    }
-
-    if (anem_present && anemOnly) {
-      Serial.println("Anemometer only mode enabled");
-      pm.period_ms = 0xFFFFFFFFFFFFFFFF;
-      co2.period_ms = 0xFFFFFFFFFFFFFFFF;
-      anem.period_ms = 60000;
-    }
   }
 
   if (debug) Serial.println("Sleeping to first device function");
