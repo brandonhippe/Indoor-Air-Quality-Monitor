@@ -306,7 +306,7 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 				}
 			}
 
-			if (average) co2 = co2 / 15.0;
+			if (avg) co2 = co2 / 15.0;
 			if (debug) Serial.println(co2);
 			
 			checks = 0;
