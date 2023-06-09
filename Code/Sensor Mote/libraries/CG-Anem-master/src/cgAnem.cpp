@@ -51,7 +51,7 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
             cg_wakeup();
 
             // Schedule new measurement
-            time_ms = 0xFFFFFFFFFFFFFFFF;
+            time_ms = period_ms == 0xFFFFFFFFFFFFFFFF ? 0xFFFFFFFFFFFFFFFF : currTime_ms + 10000;
             scheduledFunc = TAKE_MEASUREMENT;
             break;
         case TAKE_MEASUREMENT:
@@ -66,7 +66,7 @@ void CG_Anem::startNextFunc(uint64_t currTime_ms){
 
                 // Schedule new measurement
                 scheduledFunc = WAKEUP;
-                time_ms = lastMeasurement + period_ms;
+                time_ms = period_ms == 0xFFFFFFFFFFFFFFFF ? 0xFFFFFFFFFFFFFFFF : lastMeasurement + period_ms;
             } else {
                 // Schedule new measurement
                 time_ms = currTime_ms + 1000;
