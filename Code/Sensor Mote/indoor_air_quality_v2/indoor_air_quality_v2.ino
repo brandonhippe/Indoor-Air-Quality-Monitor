@@ -4,6 +4,7 @@
 
 
 #define powerTest false
+#define anemOnly false
 
 
 #define SCL 9
@@ -21,18 +22,18 @@
 
 #define SPS_FP true		// Set to true for PM sensor floating point values, false for 16-bit unsigned integers
 
-/*// Uncomment this section for Climate Guard Anemometer
-  #include <cgAnem.h>
-  CG_Anem anem;
-  #define ANEM_OFFSET 0
-  //*/
-
-
-// Uncomment this section for Ultrasonic Anemometer
-#include <UltrasonicAnem.h>
-UltrasonicAnem anem;
-#define ANEM_OFFSET 1
+// Uncomment this section for Climate Guard Anemometer
+#include <cgAnem.h>
+CG_Anem anem;
+#define ANEM_OFFSET 0
 //*/
+
+
+/*// Uncomment this section for Ultrasonic Anemometer
+  #include <UltrasonicAnem.h>
+  UltrasonicAnem anem;
+  #define ANEM_OFFSET 1
+  //*/
 
 
 #define debug true
@@ -59,17 +60,17 @@ IpMtWrapper smartmesh;
 bool dataSent, smartmesh_init;
 
 
-const uint64_t pm_periods[3][3] =   {{4320000, 15600000, 6300000},
-                                     {2040000,  6600000, 2880000},
-                                     { 960000,  2820000, 1320000}};
+const uint64_t pm_periods[3][3] =   {{4320000, 11700000, 6300000},
+                                     {2040000,  4320000, 2880000},
+                                     { 960000,  1920000, 1320000}};
                                   
-const uint64_t co2_periods[3][3] =  {{2220000, 13200000, 3060000},
-                                     {1080000,  5400000, 1500000},
-                                     { 510000,  2400000,  720000}};
+const uint64_t co2_periods[3][3] =  {{2220000, 10200000, 3060000},
+                                     {1080000,  3660000, 1500000},
+                                     { 510000,  1620000,  720000}};
                                   
-const uint64_t anem_periods[3][3] = {{0xFFFFFFFFFFFFFFFF, 5160000, 40000},
-                                     {0xFFFFFFFFFFFFFFFF, 2160000, 20000},
-                                     {0xFFFFFFFFFFFFFFFF,  960000, 10000}};
+const uint64_t anem_periods[3][3] = {{0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 40000},
+                                     {0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 20000},
+                                     {0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 10000}};
 
 
 bool alertSent = false;
@@ -231,6 +232,13 @@ void setup() {
         Serial.println(" ms");
       }
     }
+
+    if (anem_present && anemOnly) {
+      Serial.println("Anemometer only mode enabled");
+      pm.period_ms = 0xFFFFFFFFFFFFFFFF;
+      co2.period_ms = 0xFFFFFFFFFFFFFFFF;
+      anem.period_ms = 60000;
+    }
   }
 
   if (debug) Serial.println("Sleeping to first device function");
@@ -262,9 +270,8 @@ void loop() {
     switch (nextDevice) {
       case CO2:
         if (debug) Serial.println("eCO2");
-        if (anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_wakeup();
+        if (anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0 && !anem.measurement_started) anem.startNextFunc(time_ms + startTime - millis());
         co2.startNextFunc(time_ms + startTime - millis());
-        if (co2.measurement_ready && anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_sleep();
 
         if (co2.measurement_ready) {
           dataSent = false;
@@ -275,10 +282,9 @@ void loop() {
       case PM:
         if (debug) Serial.println("PM");
 
-        if (anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_wakeup();
+        if (anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0 && !anem.measurement_started) anem.startNextFunc(time_ms + startTime - millis());
         if (CO2_SLEEP_PIN != 0) co2.sgp30_wakeup_transistor();
         pm.startNextFunc(time_ms + startTime - millis());
-        if (pm.measurement_ready && anem_present && ANEM_SLEEP_PIN != 0 && ANEM_OFFSET == 0) anem.cg_sleep();
         if (pm.measurement_ready && CO2_SLEEP_PIN != 0) co2.sgp30_sleep_transistor();
 
         if (pm.measurement_ready) {
@@ -305,6 +311,10 @@ void loop() {
         while (!dataSent) smartmesh.loop();
         break;
     }
+  }
+
+  if (co2.measurement_ready && pm.measurement_ready && anem.measurement_started) {
+    anem.time_ms = time_ms;
   }
 
   // Print out measurements

@@ -8,7 +8,7 @@ BAT_VOLT = 3.7 # V
 BAT_NUM = 4
 BAT_COULOMBS = BAT_NUM * BAT_MAH * 3600 / 1000 # Converts mAh to Coulombs
 MAX_T = 10 # Hours
-GOAL_DAYS = 365
+GOAL_DAYS = 365 / 4
 
 
 def lcm(data):
@@ -155,28 +155,29 @@ def main():
         componentCurrent(components[c])
 
     output = []
-    # withoutAnem = determineSampling({c: components[c] for c in components.keys() if c != "Anemometer"}, GOAL_DAYS)
+    withoutAnem = determineSampling({c: components[c] for c in components.keys() if c != "Anemometer"}, GOAL_DAYS)
 
-    # output.append(f"Battery Life without Anemometer: {withoutAnem:.2f} days")
-    # for c in components:
-    #     if c == "Anemometer":
-    #         continue
-
-    #     output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
-        
-    #     if c != "Micro Com":
-    #         output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
-
-    # output.append("\n\n")
-
-    withAnem = determineSampling(components, GOAL_DAYS)
-
-    output.append(f"Battery Life with Anemometer: {withAnem:.2f} days")
+    output.append(f"Battery Life without Anemometer: {withoutAnem:.2f} days")
     for c in components:
+        if c == "Anemometer":
+            continue
+
         output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
         
         if c != "Micro Com":
             output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
+
+    if components["Anemometer"]["Name"] != "ClimateGuard Anemometer":
+        output.append("\n\n")
+
+        withAnem = determineSampling(components, GOAL_DAYS)
+
+        output.append(f"Battery Life with Anemometer: {withAnem:.2f} days")
+        for c in components:
+            output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
+            
+            if c != "Micro Com":
+                output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
 
     if input("Print Results (y/n)? ") == 'y':
         for o in output:
