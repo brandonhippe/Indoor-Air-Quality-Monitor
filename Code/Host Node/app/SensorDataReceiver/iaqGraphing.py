@@ -155,11 +155,11 @@ class IAQGraph:
         popup_window.title("BATTERY ALERT")
         
         # Add content to the popup window
-        t = f"ALERT: Mote {mote.Logname.split('.')[0]} "
+        t = f"{mote.battery_timestamp.strftime(TIMESTAMP_FORMAT)}\nALERT: Mote {mote.Logname.split('.')[0]} "
         if mote.UID != 'None':
             t += f'({mote.UID})'
 
-        t += f' LOW BATTERY'
+        t += ' LOW BATTERY'
         label = tk.Label(popup_window, text=t)
         label.pack(padx=20, pady=20)
         

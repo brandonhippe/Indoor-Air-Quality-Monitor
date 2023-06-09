@@ -32,6 +32,7 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
         self.UID = None
         self.coord = None
         self.battery = 0x6969
+        self.battery_timestamp = None
         #self.Logfile.close()
 
     # load a single mote from logfile into ram, using motes MAC address:
@@ -70,6 +71,10 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                     # Battery alert
                     payload = binascii.unhexlify(word[1])
                     self.battery = struct.unpack('<HH', bytearray(payload[:-1]))[1]
+                    if self.battery == 0:
+                        self.battery_timestamp = datetime.strptime(self.CurrentDate +':'+ word[0][0:-1], "%m/%d/%Y:%H:%M:%S")
+                    else:
+                        self.battery_timestamp = None
 
         self.Logfile.seek(0)
         self.Logfile.close()
