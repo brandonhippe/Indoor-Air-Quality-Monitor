@@ -3,6 +3,7 @@
 
 #define SLEEP_LOGIC true
 const uint8_t iaq_init[2] = {0x20, 0x03}, measure_iaq[2] = {0x20, 0x08}, get_iaq_baseline[2] = {0x20, 0x15}, set_iaq_baseline[2] = {0x20, 0x1e};
+const bool avg = false;
 
 
 SGP30::SGP30() {
@@ -298,10 +299,14 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		} else {
 			co2 = 0;
 			for (int i = 0; i < 15; i++) {
-				co2 += co2_readings[i];
+				if (avg) {
+					co2 += co2_readings[i];
+				} else if (co2_readings[i] > co2) {
+					co2 = co2_readings[i];
+				}
 			}
 
-			co2 = co2 / 15.0;
+			if (average) co2 = co2 / 15.0;
 			if (debug) Serial.println(co2);
 			
 			checks = 0;
