@@ -4,7 +4,7 @@
 
 
 #define powerTest false
-#define anemOnly true
+#define anemOnly false
 
 
 #define SCL 9
@@ -73,7 +73,7 @@ const uint64_t anem_periods[3][3] = {{0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 40
                                      {0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 10000}};
 
 
-bool alertSent = false;
+bool alertSent = false, upkeep = false;
 
 
 void nextDev() {
@@ -112,6 +112,15 @@ void generateData(uint8_t* payload) {
     memcpy(&payload[0], &alertVal, sizeof(uint16_t));
     memcpy(&payload[2], &state, sizeof(uint16_t));
     alertSent = !alertSent;
+    return;
+  }
+
+  if (upkeep) {
+    uint8_t upkeep_val = 0xFF;
+    for (int i = 0; i < 5; i++) {
+      memcpy(&payload[i], &upkeep_val, sizeof(uint8_t));
+    }
+    upkeep = false;
     return;
   }
 
@@ -173,7 +182,7 @@ void setup() {
 
   // Initialize SmartMesh IP
   smartmesh_init = false;
-  smartmesh.setup(60000, (uint8_t*)ipv6Addr_manager, 61000, 100, generateData, smartmesh);
+  smartmesh.setup(60000, (uint8_t*)ipv6Addr_manager, 61000, /**/1000/**/, generateData, smartmesh);
   while (!smartmesh_init) smartmesh.loop();
 
   bool sensed = false;
@@ -378,6 +387,8 @@ void loop() {
     for (i = 0xFFFFFFFFFFFFFFFF; (i + 65536) < sleepTime && (digitalRead(LB) || alertSent); i += 65536) {
       if (debug) Serial.println((uint32_t)i);
       sleep(65536);
+      // upkeep = true;
+      // while (upkeep) smartmesh.loop();
     }
     
     if (i + 65536 < sleepTime) {

@@ -257,7 +257,8 @@ def simple_data_Logging(mac, payload):
     ### Test value is formatted (0xBEEF, 0xBEEF)
     ### Sensor data is formatted (Sensor code, value) with Sensor codes: 0 -> CO2, 1 -> PM2.5, 2 -> Airflow
     ### Battery alert is formatted (0x6969, alert) with 0 for low battery, 0x6969 for battery charged
-    if payload[0] == 0xEF or payload[0] == 0x69:
+    ### Upkeep Packet is formatted (0xFFFFFFFFFF)
+    if payload[0] in [0xEF, 0x69, 0xFF]:
         samples = struct.unpack('<HH', bytearray(payload[:-1]))
     # elif payload[0] == 0:
         # samples = struct.unpack('<BHH', bytearray(payload))[:-1]
@@ -266,6 +267,10 @@ def simple_data_Logging(mac, payload):
 
     if payload[0] == 0x69:
         print(f'sensor data received --> {logname}            ALERT: {"LOW BATTERY" if samples[1] == 0 else "Battery Charging"}')
+    elif payload[0] == 0xFF:
+        print(f'sensor data received --> {logname}            UPKEEP: {datetime.datetime.now().strftime("%H:%M:%S")}')
+
+        return
     else:
         print(f'sensor data received --> {logname}            Data: {samples}')
 
