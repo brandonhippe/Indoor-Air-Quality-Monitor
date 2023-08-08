@@ -155,7 +155,7 @@ void setup() {
   Serial.println("Starting");
 
   for (int i = 1; i <= 40; i++) {
-    digitalWrite(i, LOW);
+    digitalWrite(i, (i != 8 && i != 32 && i != CO2_SLEEP_PIN && i != ANEM_SLEEP_PIN));
     pinMode(i, OUTPUT);
   }
 
