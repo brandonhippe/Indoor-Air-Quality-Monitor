@@ -29,10 +29,12 @@ class IAQGraph:
         self.window = tk.Tk()
         self.window.title("Indoor Air Quality")
 
-        self.fig = Figure(figsize=(5, 6), dpi=100)  # Increased the figure size to accommodate padding
+        self.fig = Figure(figsize=(5, 6), facecolor="white")  # Increased the figure size to accommodate padding
         self.ax = {"CO2": self.fig.add_subplot(311), "PM": self.fig.add_subplot(312), "Airflow": self.fig.add_subplot(313)}
         for title in self.ax.keys():
             self.ax[title].set_title(title)
+            self.ax[title].set_facecolor("white")
+            self.ax[title].grid(True)
             # self.ax[title].set_ylabel(PLOT_UNITS[title])
             # self.ax[title].tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)  # Remove x-axis ticks and labels
 
@@ -43,17 +45,18 @@ class IAQGraph:
 
         # Put plot into canvas
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
-        self.canvas.draw()
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
         # Button to trigger plot update
-        example_button = tk.Button(self.window, text="Plot Example", command=self.plotExample)
-        example_button.pack(side=tk.BOTTOM)
+        # example_button = tk.Button(self.window, text="Plot Example", command=self.plotExample)
+        # example_button.pack(side=tk.BOTTOM)
 
         plot_button = tk.Button(self.window, text="Plot Data", command=self.update)
         plot_button.pack(side=tk.BOTTOM)
 
         self.window.state('zoomed')
+
+        self.plotExample()
         
         self.batteryAlerts = set()
 
@@ -89,6 +92,7 @@ class IAQGraph:
             ax.relim()
             ax.autoscale_view()
             ax.grid(True)
+            ax.set_facecolor("white")
 
         self.ax['Airflow'].set_xlabel("Time of Day")
 
@@ -138,6 +142,7 @@ class IAQGraph:
             ax.set_xlim(start_time, end_time)
             ax.autoscale_view()
             ax.grid(True)
+            ax.set_facecolor("white")
 
         self.ax['Airflow'].set_xlabel("Time of Day")
 
