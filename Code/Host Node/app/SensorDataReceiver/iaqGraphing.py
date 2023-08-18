@@ -5,17 +5,15 @@ import matplotlib.dates as mdates
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from datetime import datetime, timedelta
-import matplotlib.animation as animation
-import time
 import matplotlib.pyplot as plt
-import tkinter.simpledialog as simpledialog
-
-
 from matplotlib import style
-print(style.available)
-style.use('seaborn-whitegrid')
 
-TIMESTAMP_FORMAT = "%m/%d %H:%M:%S"
+style.use('fivethirtyeight')
+# style.use('seaborn-v0_8-talk')
+# style.use('seaborn-v0_8-poster')
+# style.use('seaborn-whitegrid')
+
+TIMESTAMP_FORMAT = "%m/%d %I:%M"
 PLOT_UNITS = {"CO2": "PPM", "PM": "µg/m3", "Airflow": "m/s"}
 
 
@@ -90,6 +88,7 @@ class IAQGraph:
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.relim()
             ax.autoscale_view()
+            ax.grid(True)
 
         self.ax['Airflow'].set_xlabel("Time of Day")
 
@@ -138,6 +137,7 @@ class IAQGraph:
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.set_xlim(start_time, end_time)
             ax.autoscale_view()
+            ax.grid(True)
 
         self.ax['Airflow'].set_xlabel("Time of Day")
 
