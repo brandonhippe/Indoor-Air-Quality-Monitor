@@ -86,7 +86,7 @@ class IAQGraph:
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
             self.ax[title].set_ylabel(PLOT_UNITS[title])
-            ax.legend()
+            ax.legend(loc="upper left")
             ax.xaxis.set_major_formatter(mdates.DateFormatter(TIMESTAMP_FORMAT))
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.relim()
@@ -136,7 +136,7 @@ class IAQGraph:
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
             self.ax[title].set_ylabel(PLOT_UNITS[title])
-            ax.legend()
+            ax.legend(loc="upper left")
             ax.xaxis.set_major_formatter(mdates.DateFormatter(TIMESTAMP_FORMAT))
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.set_xlim(start_time, end_time)
