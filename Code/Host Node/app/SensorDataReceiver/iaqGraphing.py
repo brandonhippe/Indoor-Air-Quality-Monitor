@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 from matplotlib import style
 
-style.use('fivethirtyeight')
-# style.use('seaborn-v0_8-talk')
+# style.use('fivethirtyeight')
+style.use('seaborn-v0_8-talk')
 # style.use('seaborn-v0_8-poster')
 # style.use('seaborn-whitegrid')
 
@@ -101,6 +101,8 @@ class IAQGraph:
 
     def update(self):
         end_time = datetime.now()
+        # endDay = input("Enter end day in format mm/dd/yyyy: ")
+        # end_time = datetime.strptime(f"{endDay} 01:30", "%m/%d/%Y %H:%M")
         start_time = end_time - timedelta(days=1)
         # start_time = end_time - timedelta(days=.1) #Time delta changed for Testing CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
@@ -131,7 +133,21 @@ class IAQGraph:
                     samples.append(s.value)
                     times.append(t)
 
-                self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0] if mote.UID == 'None' else mote.UID, color = self.default_colors[i])
+                if len(samples) != 0:
+                    self.ax[type].plot(times, samples, label = mote.Logname.split('.')[0] if mote.UID == 'None' else mote.UID, color = self.default_colors[i])
+
+        # Used to plot outdoor PM2.5 data from PurpleAir
+        # with open("94449 2023-08-19 2023-08-22 30-Minute Average.csv") as f:
+        #     lines = [line.strip('\n') for line in f.readlines()][1:]
+            
+        #     outdoorTimes = []
+        #     outdoorData = []
+        #     for line in lines:
+        #         timeStr, val = line.split(',')
+        #         outdoorTimes.append(datetime.strptime(timeStr, "%Y-%m-%dT%H:%M:%SZ"))
+        #         outdoorData.append(float(val))
+
+        #     self.ax["PM"].plot(outdoorTimes, outdoorData, label = "Outdoors")
 
         for title, ax in zip(self.ax.keys(), self.ax.values()):
             ax.set_title(title)
