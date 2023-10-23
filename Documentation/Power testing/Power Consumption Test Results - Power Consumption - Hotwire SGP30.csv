@@ -1,0 +1,5 @@
+Component,Name,Charge Consumed (On),Period (minimum),Typical Power Consumption (Off),Notes
+Micro Com,MSP430FR2355 + SmartMesh IP,0 C,0 s,2.33285 mW,On characteristics included with other component(s)
+PM2.5 Sensor,Sensirion SPS30,5.04858 C,30 s,0 W,
+CO2 Sensor,Sensirion SGP30,4.27486 C,30 s,0 W,
+Anemometer,ClimateGuard Anemometer,1.67447 C,20 s,0 W,

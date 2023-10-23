@@ -10,6 +10,8 @@ BAT_COULOMBS = BAT_NUM * BAT_MAH * 3600 / 1000 # Converts mAh to Coulombs
 MAX_T = 10 # Hours
 GOAL_DAYS = 365 / 4
 
+CHANGE_CO2 = True
+
 
 def lcm(data):
     val = 1
@@ -89,7 +91,7 @@ def determineSampling(components, days):
         maxPercent = 0
         component = None
         for c in components.keys():
-            if c == "Micro Com":
+            if c == "Micro Com" or (not CHANGE_CO2 and c == "CO2 Sensor"):
                 continue
 
             if components[c]["Percent"] > maxPercent and components[c]["Period"] < MAX_T * 3600:
@@ -167,17 +169,17 @@ def main():
         if c != "Micro Com":
             output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
 
-    if components["Anemometer"]["Name"] != "ClimateGuard Anemometer":
-        output.append("\n\n")
+    # if components["Anemometer"]["Name"] != "ClimateGuard Anemometer":
+    #     output.append("\n\n")
 
-        withAnem = determineSampling(components, GOAL_DAYS)
+    #     withAnem = determineSampling(components, GOAL_DAYS)
 
-        output.append(f"Battery Life with Anemometer: {withAnem:.2f} days")
-        for c in components:
-            output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
+    #     output.append(f"Battery Life with Anemometer: {withAnem:.2f} days")
+    #     for c in components:
+    #         output.append(f"{c}: {components[c]['Name']}\n\tPeriod: {components[c]['Period']} sec\n\tPercent of total power: {components[c]['Percent']:.2%}")
             
-            if c != "Micro Com":
-                output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
+    #         if c != "Micro Com":
+    #             output.append(f"\tPercent of component power consumed in sleep: {(components[c]['Typical Power Consumption (Off)'] / BAT_VOLT) / components[c]['Current']:.2%}")
 
     if input("Print Results (y/n)? ") == 'y':
         for o in output:
