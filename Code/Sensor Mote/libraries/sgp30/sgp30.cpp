@@ -16,10 +16,18 @@ SGP30::SGP30() {
 
 
 boolean SGP30::begin(boolean _debug, int transistor_sleep) {
+	return begin(_debug, transistor_sleep, 0, 0);
+}
+
+
+boolean SGP30::begin(boolean _debug, int transistor_sleep, int co2Baseline, int tvocBaseline) {
 	uint32_t startTime = millis();
 	debug = _debug;
 
 	transistor_pin = transistor_sleep;
+
+	baseline_CO2 = ((co2Baseline & 0xFF) << 8) + ((co2Baseline & 0xFF00) >> 8);
+	baselineTVOC = ((tvocBaseline & 0xFF) << 8) + ((tvocBaseline & 0xFF00) >> 8);
 
 	// Wakeup sensor
 	transistor_pin == 0 ? sgp30_wakeup_I2C() : sgp30_wakeup_transistor();
@@ -34,7 +42,13 @@ boolean SGP30::begin(boolean _debug, int transistor_sleep) {
 	if (sensed == 0) {
 		// Perform calibration
 		// calibration(millis());
+		// if (baseline_CO2 == 0 && baselineTVOC == 0) {
+		// 	scheduledFunc = GETCO2;
+		// } else {
+		// 	scheduledFunc = SET_CALIBRATION;
+		// }
 		scheduledFunc = GETCO2;
+
 		if (debug) Serial.println("SGP30: Finished Initialization");
 		return true;
 	} else {
@@ -202,12 +216,12 @@ void SGP30::setCalibration(uint64_t currTime_ms) {
 	Wire.endTransmission();
 	sleep(20);
 
-	if (debug) {
-		Serial.print("SGP30: Calibration Values: Baseline CO2: ");
-		Serial.print(baseline_CO2);
-		Serial.print(", Baseline TVOC: ");
-		Serial.println(baselineTVOC);
-	}
+	// if (debug) {
+	// 	Serial.print("SGP30: Calibration Values: Baseline CO2: ");
+	// 	Serial.print(baseline_CO2);
+	// 	Serial.print(", Baseline TVOC: ");
+	// 	Serial.println(baselineTVOC);
+	// }
 
 	// Write calibration values
 	if (debug) Serial.println("SGP30: Writing Calibration");
@@ -244,7 +258,22 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		Wire.beginTransmission(ADDR);
 		Wire.write(&iaq_init[0], 2);
 		Wire.endTransmission();
-		sleep(20);
+		delay(20);
+
+		if (baseline_CO2 != 0 && baselineTVOC != 0) {
+			// Write calibration values
+			if (debug) Serial.println("SGP30: Writing Calibration");
+
+			Wire.beginTransmission(ADDR);
+			Wire.write(&set_iaq_baseline[0], 2);
+			Wire.write((uint8_t *) &baselineTVOC, 2);
+			Wire.write(calculate_crc(&baselineTVOC));
+			Wire.write((uint8_t *) &baseline_CO2, 2);
+			Wire.write(calculate_crc(&baseline_CO2));
+			Wire.endTransmission();
+
+			delay(10);
+		}
 	}
 
 	if (debug) Serial.println(checks);
@@ -293,7 +322,7 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 		if (checks < 30) {
 			checks++;
 			scheduledFunc = GETCO2;
-			time_ms = currTime_ms + 1000 + millis() - startTime;
+			time_ms = currTime_ms + 1200 + millis() - startTime;
 
 			return;
 		} else {
@@ -312,7 +341,14 @@ void SGP30::getCO2(uint64_t currTime_ms) {
 			checks = 0;
 			measurement_ready = true;
 			measurement_started = false;
+
+			// if (baseline_CO2 == 0 && baselineTVOC == 0) {
+			// 	scheduledFunc = GETCO2;
+			// } else {
+			// 	scheduledFunc = SET_CALIBRATION;
+			// }
 			scheduledFunc = GETCO2;
+
 			time_ms = lastMeasurement + period_ms;
 		}
 

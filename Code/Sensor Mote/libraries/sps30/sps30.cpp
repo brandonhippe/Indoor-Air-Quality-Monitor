@@ -280,3 +280,7 @@ void SPS30::finalMeasurement(uint64_t currTime_ms) {
 		break;
 	}
 }
+
+void SPS30::setPeriod(uint64_t newPeriod_ms) {
+	period_ms = newPeriod_ms;
+}

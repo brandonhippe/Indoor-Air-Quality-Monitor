@@ -7,7 +7,7 @@
 CG_Anem::CG_Anem() {
     max_clock = 100000;
     period_ms = 0xFFFFFFFFFFFFFFFF;
-    period_ms = 60000;
+    // period_ms = 60000;
     measurement_started = false;
     measurement_ready = false;
     _sensor_address = ANEM_I2C_ADDR;
@@ -19,12 +19,19 @@ bool CG_Anem::begin(int sleepPin, boolean _debug) {
     debug = _debug;
 
     // Wakeup sensor
+    if (debug) Serial.println("CG ANEM: Waking up");
     cg_wakeup();
-    sleep(5);
+    sleep(1000);
 
+    if (debug) Serial.println("CG ANEM: Checking connection");
     Wire.beginTransmission(_sensor_address); // safety check, make sure the sensor is connected
     Wire.write(i2c_reg_WHO_I_AM);
-    if (Wire.endTransmission(true) != 0) {
+    int sensed = Wire.endTransmission();
+
+    if (debug) Serial.println(sensed);
+
+    if (sensed) {
+        if (debug) Serial.println(sensed);
         digitalWrite(sleep_pin, LOW);
         time_ms = 0xFFFFFFFFFFFFFFFF;
         return false;
@@ -245,4 +252,8 @@ bool CG_Anem::resetMinMaxValues() {
             return true;
     }
     return false;
+}
+
+void CG_Anem::setPeriod(uint64_t newPeriod_ms) {
+	period_ms = newPeriod_ms;
 }

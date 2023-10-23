@@ -155,7 +155,7 @@ void setup() {
   Serial.println("Starting");
 
   for (int i = 1; i <= 40; i++) {
-    digitalWrite(i, (i != 8 && i != 32 && i != CO2_SLEEP_PIN && i != ANEM_SLEEP_PIN));
+    digitalWrite(i, (i != 8 && i != 32 && i != 5 && i != 7));
     pinMode(i, OUTPUT);
   }
 
@@ -195,7 +195,8 @@ void setup() {
   }
 
   // Initialize CO2 Sensor
-  sensed = co2.begin(debug, CO2_SLEEP_PIN);
+  sensed = co2.begin(debug, CO2_SLEEP_PIN);                   // Use this for no calibration
+//  sensed = co2.begin(debug, CO2_SLEEP_PIN, 39162, 38524);   // Use this for calibration. Must run sensor for 12+ hours continuously to obtain valid calibration values.
   if (!sensed) {
     if (debug) Serial.println("ERROR: CO2 sensor not connected!");
     while (!powerTest);

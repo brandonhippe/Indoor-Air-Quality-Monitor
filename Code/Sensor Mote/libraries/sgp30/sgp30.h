@@ -26,6 +26,7 @@ class SGP30 {
 		// Public Functions
 		SGP30();
 		boolean begin(boolean _debug, int transistor_sleep);
+		boolean begin(boolean _debug, int transistor_sleep, int co2Baseline, int tvocBaseline);
 		void startNextFunc(uint64_t currTime_ms);
 		void sgp30_wakeup_transistor();
 		void sgp30_sleep_transistor();

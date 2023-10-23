@@ -38,6 +38,7 @@ class SPS30 {
 		SPS30();
 		boolean begin(int measurement, boolean _fp, boolean _debug, int transistor_sleep);
 		void startNextFunc(uint64_t currTime_ms);
+		void setPeriod(uint64_t newPeriod_ms);
 	private:
 		// Private Variables
 		// uint16_t start_measurement, stop_measurement, data_ready, read_measured, start_sleep, wakeup;

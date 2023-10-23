@@ -68,6 +68,7 @@ public:
     void startNextFunc(uint64_t currTime_ms);
     void cg_sleep();
     void cg_wakeup();
+    void setPeriod(uint64_t newPeriod_ms);
 
     CG_Anem();
 
