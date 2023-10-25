@@ -66,10 +66,9 @@ class IAQGraph:
         #self.update()
         #self.window.after(1000, self.update)
         #tk.after_cancel(self.window)
-        for i, mote in enumerate(self.MainMesh.Motes):
-            if 'example' not in mote.Logname:
-                continue
-            
+        motes = sorted([m for m in self.MainMesh.Motes if 'example' in m.Logname], key=lambda m: m.Logname.split('.')[0] if m.UID == 'None' else m.UID)
+
+        for i, mote in enumerate(motes):            
             for type in self.ax.keys():
                 if len(mote.samples[type]) == 0:
                     continue
@@ -108,9 +107,11 @@ class IAQGraph:
 
         for ax in self.ax.values():
             #ax.cla() 
-            ax.clear() 
+            ax.clear()
 
-        for i, mote in enumerate([m for m in self.MainMesh.Motes if 'example' not in m.Logname]):
+        motes = sorted([m for m in self.MainMesh.Motes if 'example' not in m.Logname], key=lambda m: m.Logname.split('.')[0] if m.UID == 'None' else m.UID)
+
+        for i, mote in enumerate(motes):
             if mote.battery == 0 and mote.Logname not in self.batteryAlerts:
                 self.batteryAlerts.add(mote.Logname)
                 self.show_popup(mote)
