@@ -1,16 +1,16 @@
-#include <CGAnem.h>
+#include <cgAnem.h>
 #include <NewWire.h>
 
 
 #define SDA_PIN 10    // Set the SDA pin to 10
 #define SCL_PIN 9     // Set the SCL pin to 9
-#define CG_SLEEP_PIN 8 	// Set Anemometer sleep pin to 8
+#define CG_SLEEP_PIN 7 	// Set Anemometer sleep pin to 7
 
 
 uint64_t time_ms;
 
 
-CGAnem cganem;
+CG_Anem cganem;
 
 
 void setup() {
@@ -46,7 +46,7 @@ void loop() {
   Serial.println("Executing");
   cganem.startNextFunc(millis());
   if (cganem.measurement_ready) {
-    Serial.println(cganem.wind);
+    Serial.println(cganem.airflowRate);
   }
 
   // Sleep until next function
