@@ -64,3 +64,6 @@ css
 *.json
 *.bak
 *.jls
+*.log
+!afexample.log
+!example.log

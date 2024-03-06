@@ -6,8 +6,9 @@ from tkinter import *
 from tkinter import ttk
 import sys
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import tkinter.font as tkFont
+from file_read_backwards import FileReadBackwards
 from SensorSuiteAPI import *
 import time
 import re
@@ -25,27 +26,76 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
     def __init__(self, Directory, Logname):
         self.Logname = Logname
         self.Directory = Directory
-        self.Logfile = open(self.Directory + self.Logname, "r")
+        with open(self.Directory + self.Logname, "r") as self.Logfile:
+            self.MAC = self.Logfile.readline().split()[2]
 
-        self.MAC = self.Logfile.readline().split()[2]
         self.status = 'Disconnected'
         self.UID = None
         self.coord = None
         self.battery = 0x6969
         self.battery_timestamp = None
-        #self.Logfile.close()
 
     # load a single mote from logfile into ram, using motes MAC address:
-    def LoadMote(self):
-        self.Logfile = open(self.Directory + self.Logname, "r")
-        Loglines = self.Logfile.readlines()
-        self.status = Loglines[1].split()[2]
-        self.coord = Loglines[2].split()[2]
-        self.UID = Loglines[3].split()[3]
+    def LoadMote(self, start_time = None, end_time = None):
+        if (end_time is None) ^ (start_time is None):
+            raise ValueError("Start time and End time must either both be a time or both be None")
+        
+        if end_time is None:
+            with open(self.Directory + self.Logname, "r") as self.Logfile:
+                Loglines = self.Logfile.readlines()
+
+            self.status = Loglines[1].split()[2]
+            self.coord = Loglines[2].split()[2]
+            self.UID = Loglines[3].split()[3]
+        else:
+            Loglines = []
+
+            with FileReadBackwards(self.Directory + self.Logname, encoding="utf-8") as self.Logfile:
+                recent_day = None
+                day_before = None
+
+                for line in self.Logfile:
+                    Loglines.append(line)
+
+                    if len(re.findall(r"-- \d{2}/\d{2}/\d{4}", line)) != 0:
+                        t = datetime.strptime(line, "-- %m/%d/%Y")
+
+                        if recent_day is None:
+                            recent_day = t
+                            day_before = recent_day - timedelta(days=1)
+                        else:
+                            break
+
+                        if start_time > recent_day:
+                            Loglines = []
+                            break
+                    elif recent_day is not None:
+                        if len(re.findall(r"-- \d{2}/\d{2}/\d{4}", line)) != 0:
+                            break
+                        else:
+                            t = line.split(",")[0]
+                            t += " " + day_before.strftime("%m/%d/%Y")
+
+                            t = datetime.strptime(t, "%H:%M:%S %m/%d/%Y")
+                            if start_time > t:
+                                Loglines.pop()
+
+                Loglines = Loglines[::-1]
+
+            with open(self.Directory + self.Logname, "r") as self.Logfile:
+                for i in range(4):
+                    line = next(self.Logfile)
+                    if i == 1:
+                        self.status = line.split()[2]
+                    elif i == 2:
+                        self.coord = line.split()[2]
+                    elif i == 3:
+                        self.UID = line.split()[3]
+
         self.CurrentDate = None
         self.dates = []             # arranging all dates string into an array
         self.timesInDate = []       # row = new date, col = timestamps that correspond to the date
-        self.samples = {"CO2": [], "PM": [], "Airflow": []} 
+        self.samples = {"CO2": [], "PM": [], "Airflow": []}
         self.timestamp = 0
         
         for line in Loglines:
@@ -76,8 +126,6 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                     else:
                         self.battery_timestamp = None
 
-        self.Logfile.seek(0)
-        self.Logfile.close()
 
     # return sample that matches time stamp:
     def timeRange(self, From, to):
@@ -159,14 +207,16 @@ class MeshNetwork():    # Mesh Network object structure : Contains multiple Mote
         for file in self.MoteFiles:
             self.moteLastUpdate.append(os.stat(self.Dir + file).st_mtime)
     # Find unique addresses, define mote object with them, and load each one using loadMote():
-    def LoadMesh(self):
+    def LoadMesh(self, example=True, start_time = None, end_time = None):
 
         print ('\nNumber of motes: ' + str(len(self.MACaddresses)))
         for i in range(len(self.MoteFiles)):
             print ('mote ' + str(i) + ' ---> MAC: ' + self.MACaddresses[i])
 
             self.Motes.append(Mote(self.Dir, self.MoteFiles[i])) # define mote object using MAC
-            self.Motes[i].LoadMote()      # load mote into ram
+
+            if ("example" in self.Motes[-1].Logname) ^ (not example):
+                self.Motes[i].LoadMote(start_time, end_time)      # load mote into ram
 
     # Return mote object that matches MAC Adress:
     def MoteMAC(self, MACaddress):

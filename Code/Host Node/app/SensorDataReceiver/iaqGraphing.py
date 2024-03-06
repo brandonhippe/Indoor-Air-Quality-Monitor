@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 
 # style.use('fivethirtyeight')
-style.use('seaborn-v0_8-talk')
+# style.use('seaborn-v0_8-talk')
 # style.use('seaborn-v0_8-poster')
 # style.use('seaborn-whitegrid')
 
@@ -20,11 +20,6 @@ PLOT_UNITS = {"CO2": "PPM", "PM": "µg/m3", "Airflow": "m/s"}
 class IAQGraph:
     def __init__(self):
         self.dir = sys.path[0] + "/DataOrganization/"
-
-        # load in mesh network
-        self.MainMesh = MeshNetwork(self.dir)
-        self.MainMesh.LoadMesh()
-        # initialize GUI
 
         self.window = tk.Tk()
         self.window.title("Indoor Air Quality")
@@ -54,7 +49,8 @@ class IAQGraph:
         plot_button = tk.Button(self.window, text="Plot Data", command=self.update)
         plot_button.pack(side=tk.BOTTOM)
 
-        self.window.state('zoomed')
+        mng = plt.get_current_fig_manager()
+        mng.resize(*mng.window.maxsize())
 
         self.plotExample()
         
@@ -62,10 +58,9 @@ class IAQGraph:
 
 
     def plotExample(self):
-        #self.ax.clear()
-        #self.update()
-        #self.window.after(1000, self.update)
-        #tk.after_cancel(self.window)
+        self.MainMesh = MeshNetwork(self.dir)
+        self.MainMesh.LoadMesh()
+
         motes = sorted([m for m in self.MainMesh.Motes if 'example' in m.Logname], key=lambda m: m.Logname.split('.')[0] if m.UID == 'None' else m.UID)
 
         for i, mote in enumerate(motes):            
@@ -100,9 +95,13 @@ class IAQGraph:
 
     def update(self):
         end_time = datetime.now()
+        start_time = end_time - timedelta(days=1)
+
+        self.MainMesh = MeshNetwork(self.dir)
+        self.MainMesh.LoadMesh(False, start_time, end_time)
+
         # endDay = input("Enter end day in format mm/dd/yyyy: ")
         # end_time = datetime.strptime(f"{endDay} 01:30", "%m/%d/%Y %H:%M")
-        start_time = end_time - timedelta(days=1)
         # start_time = end_time - timedelta(days=.1) #Time delta changed for Testing CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
         for ax in self.ax.values():
@@ -165,8 +164,6 @@ class IAQGraph:
 
         self.canvas.draw()
 
-        self.MainMesh = MeshNetwork(self.dir)
-        self.MainMesh.LoadMesh()
 
 
         self.window.after(10000, self.update)
