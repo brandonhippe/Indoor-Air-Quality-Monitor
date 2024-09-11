@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import annotations
 
 #============================ adjust path =====================================
 
@@ -26,10 +27,13 @@ if not goodToGo:
     sys.exit(1)
 
 #============================ imports =========================================
-
+from SensorSuiteAPI import *
+import rerun as rr
+import argparse
+from time import sleep
+from file_read_backwards import FileReadBackwards
 import struct
 import threading
-from   optparse                        import OptionParser
 
 from   SmartMeshSDK.utils              import AppUtils,                   \
                                               FormatUtils
@@ -65,6 +69,7 @@ UPDATEPERIOD = 500 # in ms
 DEFAULT_HOST = '127.0.0.1'
 DEFAULT_PORT = 9900
 
+mesh = None
 Known_Macs = []
 Data_Loc = sys.path[3] + "/DataOrganization/"
 MAC_root = "00-17-0d-00-00"
@@ -74,6 +79,7 @@ for file in os.listdir(Data_Loc):
         fileName = os.path.join(file)
         Known_Macs.append(MAC_root + "-" + fileName[0:2] + "-" + fileName[2:4] + "-" + fileName[4:6])
 print("Known Motes: " + str(Known_Macs))
+
 #============================ body ============================================
 
 ##
@@ -265,6 +271,7 @@ def simple_data_Logging(mac, payload):
     else:
         samples = struct.unpack('<Bf', bytearray(payload))
 
+    currentDate = datetime.datetime.now().strftime('%m/%d/%Y')
     if payload[0] == 0x69:
         print(f'sensor data received --> {logname}            ALERT: {"LOW BATTERY" if samples[1] == 0 else "Battery Charging"}')
     elif payload[0] == 0xFF:
@@ -275,25 +282,23 @@ def simple_data_Logging(mac, payload):
         print(f'sensor data received --> {logname}            Data: {samples}')
 
     ### ADD NEW DATA TO LOG
-    with open(Data_Loc + logname, "r+") as logFile:
-        UpdateDate(logFile)
-        currentDTandTM = datetime.datetime.now()
-        logFile.write(f"\n{currentDTandTM.strftime('%H:%M:%S')}, {''.join(byteHex(p) for p in payload)}")
+    with FileReadBackwards(Data_Loc + logname, encoding="UTF-8") as logFile:
+        newdate = True
+
+        for lines in logFile:
+            if len(lines.split())>1:
+                if lines.split()[0] == "--":
+                    if lines.split()[1] == currentDate:
+                        newdate = False
+                    break
 
 
-def UpdateDate(logFile):
-    newdate = True
-    currentDate = datetime.datetime.now().strftime('%m/%d/%Y')
+    with open(Data_Loc + logname, "a", encoding="UTF-8") as logFile:
+        if newdate:
+            print (f'new date --> {currentDate}')
+            logFile.write(f'\n-- {currentDate}')
 
-    for lines in logFile.readlines():
-        if len(lines.split())>1:
-            if lines.split()[0] == "--":
-                if lines.split()[1] == currentDate:
-                    newdate = False
-
-    if newdate == True:
-        print (f'new date --> {currentDate}')
-        logFile.write(f'\n-- {currentDate}')
+        logFile.write(f"\n{datetime.datetime.now().strftime('%H:%M:%S')}, {''.join(byteHex(p) for p in payload)}")
 
 
 def CheckMoteRegestry(testMac, logname):
@@ -312,6 +317,7 @@ def CheckMoteRegestry(testMac, logname):
         logFile.close()
         Known_Macs.append(testMac)
 
+
 #============================ main ============================================
 
 def main(connect_params):
@@ -320,20 +326,44 @@ def main(connect_params):
 
 if __name__ == '__main__':
     # Parse the command line
-    parser = OptionParser("usage: %prog [options]", version="%prog 1.0")
-    parser.add_option("--host", dest="host", 
+    parser = argparse.ArgumentParser(
+        description="demonstrates how to integrate python's native `logging` with the Rerun SDK"
+    )
+    parser.add_argument("--host", dest="host", 
                       default=DEFAULT_HOST,
                       help="Mux host to connect to")
-    parser.add_option("-p", "--port", dest="port", 
+    parser.add_argument("-p", "--port", dest="port", 
                       default=DEFAULT_PORT,
                       help="Mux port to connect to")
-    (options, args) = parser.parse_args()
+    parser.add_argument("--dir", dest="dir", 
+                      default=Data_Loc,
+                      help="Directory to store data")
+    parser.add_argument("--update-period", dest="update_period", 
+                      default=10,
+                      help="Update period for the GUI")
+    
+    rr.script_add_args(parser)
+    args = parser.parse_args()
     
     connect_params = {
-        'host': options.host,
-        'port': int(options.port),
+        'host': args.host,
+        'port': int(args.port),
     }
-    main(connect_params)
+    rr.script_setup(args, "Indoor Air Quality", "Indoor Air Quality")
+    mesh = MeshNetwork(args.dir)
+    mesh.LoadMesh(example=True, rerun_log=True)
+    threading.Thread(target=main, args=(connect_params,)).start()
+    mesh.LoadMesh(example=False, rerun_log=True)
+    
+    while True:
+        try:
+            sleep(args.update_period)
+            print("Updating Mesh")
+            mesh.LoadMesh(example=False, end_time=datetime.datetime.now(), rerun_log=True)
+        except KeyboardInterrupt:
+            break
+
+    rr.script_teardown(args)
 
 ##
 # end of SensorDataReceiver

@@ -67,3 +67,6 @@ css
 *.log
 !afexample.log
 !example.log
+
+# VS Code
+.vscode/

@@ -2,6 +2,10 @@
 #    from Tkinter import *
 #except:
 #    from tkinter import ttk
+
+from __future__ import annotations
+import rerun as rr
+import rerun.blueprint as rrb
 from tkinter import *
 from tkinter import ttk
 import sys
@@ -14,11 +18,23 @@ import time
 import re
 import binascii
 import struct
+from collections import defaultdict
+import matplotlib as mpl
+import numpy as np
 # ================================ Classes for reading and golding data logs ==========================================
 
-class sample: # Sample Object structure
-    def __init__(self, timestamp, measurement):
-        self.timestamp = timestamp
+available_sensors = ['CO2', 'PM', 'Airflow']
+
+class Sample: # Sample Object structure
+    def __init__(self, samp_word, curr_date, payload=None):
+        if payload is None:
+            payload = binascii.unhexlify(samp_word[1])
+        
+        measurement = struct.unpack('<Bf', bytearray(payload))
+
+        timedate = curr_date +':'+ samp_word[0][0:-1]     # combine time stamp with current date
+        self.timestamp = DtSeconds(datetime.strptime(timedate, "%m/%d/%Y:%H:%M:%S"))
+        
         self.type = ['CO2', 'PM', 'Airflow'][measurement[0]]
         self.value = measurement[1]
 
@@ -34,22 +50,54 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
         self.coord = None
         self.battery = 0x6969
         self.battery_timestamp = None
+        self.timestamp = 0
+        self.samples = defaultdict(list)
+        self.CurrentDate = None
+        self.dates = []             # arranging all dates string into an array
+        self.timesInDate = []       # row = new date, col = timestamps that correspond to the date
+        self.rr_path = "/example_plots" if 'example' in self.Logname else "/active_motes"
+        self.name = self.Logname.replace('.log', '')
+        self.rr_path += f"/{self.name}"
+        self.changed = False
+        self.active_sensors = set()
+        self.color_arr = [0, 255, 0, 255]
+
 
     # load a single mote from logfile into ram, using motes MAC address:
-    def LoadMote(self, start_time = None, end_time = None):
-        if (end_time is None) ^ (start_time is None):
-            raise ValueError("Start time and End time must either both be a time or both be None")
-        
-        if end_time is None:
-            with open(self.Directory + self.Logname, "r") as self.Logfile:
-                Loglines = self.Logfile.readlines()
+    def LoadMote(self, start_time = None, end_time = datetime.now(), rerun_log = False):
+        Loglines = []
+        with open(self.Directory + self.Logname, "r") as self.Logfile:
+            for i in range(4):
+                line = next(self.Logfile)
+                if i == 1:
+                    self.status = line.split()[2]
+                elif i == 2:
+                    self.coord = line.split()[2]
+                elif i == 3:
+                    self.UID = line.split()[3]
 
-            self.status = Loglines[1].split()[2]
-            self.coord = Loglines[2].split()[2]
-            self.UID = Loglines[3].split()[3]
+            if end_time is None:
+                while True:
+                    try:
+                        line = next(self.Logfile)
+                        Loglines.append(line)
+                    except StopIteration:
+                        break
+
+        if isinstance(start_time, datetime):
+            start_time = DtSeconds(start_time)
+        if isinstance(end_time, datetime):
+            end_time = DtSeconds(end_time)
+
+        p_name = self.name
+        if self.UID is None or self.UID == 'None':
+            self.name = self.Logname.replace('.log', '')
         else:
-            Loglines = []
+            self.name = self.UID
+        if p_name != self.name:
+            self.changed = True
 
+        if end_time is not None:
             with FileReadBackwards(self.Directory + self.Logname, encoding="utf-8") as self.Logfile:
                 recent_day = None
                 day_before = None
@@ -66,8 +114,22 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                         else:
                             break
 
-                        if start_time > recent_day:
-                            Loglines = []
+                        if start_time is not None and start_time > DtSeconds(recent_day):
+                            ix = -2
+                            while len(Loglines) >= 2:
+                                line = Loglines[ix]
+                                try:
+                                    t = line.split(',')[0]
+                                    t += " " + recent_day.strftime("%m/%d/%Y")
+
+                                    t = DtSeconds(datetime.strptime(t, "%H:%M:%S %m/%d/%Y"))
+                                    if start_time < t:
+                                        break
+                                except ValueError:
+                                    break
+
+                                Loglines.pop(ix)
+
                             break
                     elif recent_day is not None:
                         if len(re.findall(r"-- \d{2}/\d{2}/\d{4}", line)) != 0:
@@ -76,27 +138,11 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
                             t = line.split(",")[0]
                             t += " " + day_before.strftime("%m/%d/%Y")
 
-                            t = datetime.strptime(t, "%H:%M:%S %m/%d/%Y")
-                            if start_time > t:
+                            t = DtSeconds(datetime.strptime(t, "%H:%M:%S %m/%d/%Y"))
+                            if start_time is not None and start_time > t:
                                 Loglines.pop()
 
                 Loglines = Loglines[::-1]
-
-            with open(self.Directory + self.Logname, "r") as self.Logfile:
-                for i in range(4):
-                    line = next(self.Logfile)
-                    if i == 1:
-                        self.status = line.split()[2]
-                    elif i == 2:
-                        self.coord = line.split()[2]
-                    elif i == 3:
-                        self.UID = line.split()[3]
-
-        self.CurrentDate = None
-        self.dates = []             # arranging all dates string into an array
-        self.timesInDate = []       # row = new date, col = timestamps that correspond to the date
-        self.samples = {"CO2": [], "PM": [], "Airflow": []}
-        self.timestamp = 0
         
         for line in Loglines:
             word = line.split()
@@ -104,27 +150,48 @@ class Mote(): # Mote Object Structure : Contains Multiple Sample Objects
             if len(word) > 0:
                 if word[0] == "--":                                     # Update Current Date
                     self.CurrentDate = word[1]
-                    self.dates.append(word[1])
-                    self.timesInDate.append([])
+                    if word[1] not in self.dates[-2:]:
+                        self.dates.append(word[1])
+                        self.timesInDate.append([])
                 if word[0] != "~" and word[0] != "--" and word[1][:2] != 'ef' and word[1][:2] != '69':                  # Convert Logfile text into organized sample objects
-                    payload = binascii.unhexlify(word[1])
-                    value = struct.unpack('<Bf', bytearray(payload))
-
-                    timedate = self.CurrentDate +':'+ word[0][0:-1]     # combine time stamp with current date
-                    timestamp = DtSeconds(datetime.strptime(timedate, "%m/%d/%Y:%H:%M:%S"))
-                    self.timestamp = max(timestamp, self.timestamp)
-                    self.timesInDate[-1].append(timestamp)
-                     
-                    s = sample(timestamp, value)
+                    s = Sample(word, self.CurrentDate)
+                    self.timestamp = max(s.timestamp, self.timestamp)
+                    self.timesInDate[-1].append(s.timestamp)
                     self.samples[s.type].append(s)
+                    if rerun_log:
+                        self.rerun_log(s, print_log=start_time is not None)
                 if word[1][:2] == '69':
                     # Battery alert
                     payload = binascii.unhexlify(word[1])
                     self.battery = struct.unpack('<HH', bytearray(payload[:-1]))[1]
                     if self.battery == 0:
-                        self.battery_timestamp = datetime.strptime(self.CurrentDate +':'+ word[0][0:-1], "%m/%d/%Y:%H:%M:%S")
+                        self.battery_timestamp = DtSeconds(datetime.strptime(self.CurrentDate +':'+ word[0][0:-1], "%m/%d/%Y:%H:%M:%S"))
                     else:
                         self.battery_timestamp = None
+
+        for sensor, samples in self.samples.items():
+            if sensor in self.active_sensors and samples[-1].timestamp < datetime.now().timestamp() - 86400:
+                self.active_sensors.remove(sensor)
+                self.changed = True
+            elif sensor not in self.active_sensors and samples[-1].timestamp >= datetime.now().timestamp() - 86400:
+                self.active_sensors.add(sensor)
+                self.changed = True
+
+
+    def rerun_log(self, sample, print_log=False):
+        '''
+        Log a sample to rerun
+        '''
+        rr.set_time_seconds("Sample Time", sample.timestamp)
+        rr.log(
+            re.escape(f"{self.rr_path}/{sample.type}"),
+            rr.Scalar(sample.value),
+            [
+                rr.components.StrokeWidth(5),
+            ],
+        )
+        if print_log:
+            print(f"{self.rr_path}/{sample.type}: {sample.value}")
 
 
     # return sample that matches time stamp:
@@ -207,16 +274,184 @@ class MeshNetwork():    # Mesh Network object structure : Contains multiple Mote
         for file in self.MoteFiles:
             self.moteLastUpdate.append(os.stat(self.Dir + file).st_mtime)
     # Find unique addresses, define mote object with them, and load each one using loadMote():
-    def LoadMesh(self, example=True, start_time = None, end_time = None):
-
-        print ('\nNumber of motes: ' + str(len(self.MACaddresses)))
+    def LoadMesh(self, example=True, start_time = None, end_time = None, rerun_log = False):
+        # print ('\nNumber of motes: ' + str(len(self.MACaddresses)))
+        any_changed = False
         for i in range(len(self.MoteFiles)):
-            print ('mote ' + str(i) + ' ---> MAC: ' + self.MACaddresses[i])
+            if self.MoteFiles[i] in [mote.Logname for mote in self.Motes]:
+                mote = [mote for mote in self.Motes if mote.Logname == self.MoteFiles[i]][0]
+                mote.LoadMote(mote.timestamp, end_time, rerun_log=rerun_log)
+                if mote.changed:
+                    any_changed = True
+
+                continue
 
             self.Motes.append(Mote(self.Dir, self.MoteFiles[i])) # define mote object using MAC
 
             if ("example" in self.Motes[-1].Logname) ^ (not example):
-                self.Motes[i].LoadMote(start_time, end_time)      # load mote into ram
+                print ('mote ' + str(len(self.Motes)) + ' ---> MAC: ' + self.MACaddresses[i])
+                self.Motes[-1].LoadMote(start_time, end_time, rerun_log=rerun_log)      # load mote into ram
+            else:
+                self.Motes.pop()
+
+            any_changed = True
+
+        if rerun_log and any_changed:
+            self.rerun_load_mesh()
+            for mote in self.Motes:
+                mote.changed = False
+
+
+    def rerun_load_mesh(self):
+        mote_sensors = defaultdict(set)
+        active_sensors = set(available_sensors)
+        for mote in self.Motes:
+            if "example" not in mote.Logname and len(mote.active_sensors):
+                mote_sensors[mote.Logname.replace(".log", "")] = mote.active_sensors
+                active_sensors &= mote.active_sensors
+
+        sorted_motes = sorted(self.Motes, key=lambda mote: mote.name)
+
+        colormap = mpl.colormaps['tab10']
+        for ix, mote in enumerate(sorted_motes):
+            color = colormap(ix / len(sorted_motes))
+            color_arr = np.round(np.array(mpl.colors.to_rgba(color)) * 255).astype(int)
+            mote.color = color_arr
+
+        mesh_blueprint = rrb.Blueprint(
+            rrb.Tabs(
+                rrb.Tabs(
+                    name="Active Motes",
+                    contents=[
+                        rrb.Vertical(
+                            name="All Data",
+                            contents=[
+                                rrb.TimeSeriesView(
+                                    name=sensor,
+                                    origin="/active_motes",
+                                    contents=[f"+{mote.rr_path}/{sensor}" for mote in sorted_motes if "example" not in mote.Logname],
+                                    time_ranges=rrb.VisibleTimeRange(
+                                        timeline="Sample Time",
+                                        start=rrb.TimeRangeBoundary.cursor_relative(seconds=-86400),
+                                        end=rrb.TimeRangeBoundary.cursor_relative()
+                                    ),
+                                    visible=sensor in active_sensors,
+                                    overrides={
+                                        f"{mote.rr_path}/{sensor}": [rr.components.Color(mote.color), rr.components.StrokeWidth(5), rr.components.Name(mote.name)]
+                                        for mote in sorted_motes if "example" not in mote.Logname
+                                    },
+                                    plot_legend=1,
+                                )   for sensor in available_sensors
+                            ],
+                        ),
+                        rrb.Tabs(   # By Mote
+                            name="By Mote",
+                            contents=[
+                                rrb.Vertical(
+                                    name=mote.name,
+                                    contents=[
+                                        rrb.TimeSeriesView(
+                                            name=sensor,
+                                            origin="/active_motes",
+                                            contents=f"+{mote.rr_path}/{sensor}",
+                                            time_ranges=rrb.VisibleTimeRange(
+                                                timeline="Sample Time",
+                                                start=rrb.TimeRangeBoundary.cursor_relative(seconds=-86400),
+                                                end=rrb.TimeRangeBoundary.cursor_relative()
+                                            ),
+                                            overrides={
+                                                f"{mote.rr_path}/{sensor}": [rr.components.Color(mote.color), rr.components.StrokeWidth(5), rr.components.Name(mote.name)]
+                                            },
+                                            plot_legend=1,
+                                        )   for sensor in available_sensors if sensor in mote.active_sensors
+                                    ],
+                                )   for mote in sorted_motes if "example" not in mote.Logname and len(mote.active_sensors) > 0
+                            ],
+                        ),
+                        rrb.Tabs(   # By Sensor
+                            name="By Sensor",
+                            contents=[
+                                rrb.TimeSeriesView(
+                                    name=sensor,
+                                    origin="/active_motes",
+                                    contents=[f"{mote.rr_path}/{sensor}" for mote in sorted_motes if "example" not in mote.Logname],
+                                    time_ranges=rrb.VisibleTimeRange(
+                                        timeline="Sample Time",
+                                        start=rrb.TimeRangeBoundary.cursor_relative(seconds=-86400),
+                                        end=rrb.TimeRangeBoundary.cursor_relative()
+                                    ),
+                                    visible=sensor in active_sensors,
+                                    overrides={
+                                        f"{mote.rr_path}/{sensor}": [rr.components.Color(mote.color), rr.components.StrokeWidth(5), rr.components.Name(mote.name)]
+                                        for mote in sorted_motes if "example" not in mote.Logname
+                                    },
+                                    plot_legend=1,
+                                )   for sensor in available_sensors
+                            ],
+                        ),
+                    ],
+                ),
+                rrb.Tabs(
+                    name="Example Plots",
+                    contents=[
+                        rrb.Vertical(
+                            name="All Data",
+                            contents=[
+                                rrb.TimeSeriesView(
+                                    name=sensor,
+                                    origin="/example_plots",
+                                    contents=[f"+{mote.rr_path}/{sensor}" for mote in sorted_motes if "example" in mote.Logname],
+                                    overrides={
+                                        f"{mote.rr_path}/{sensor}": [rr.components.Color(mote.color), rr.components.StrokeWidth(5), rr.components.Name(mote.name)]
+                                        for mote in sorted_motes if "example" in mote.Logname
+                                    },
+                                    plot_legend=1,
+                                )   for sensor in available_sensors
+                            ],
+                        ),
+                        rrb.Tabs(   # By Mote
+                            name="By Mote",
+                            contents=[
+                                rrb.Vertical(
+                                    name=mote.name,
+                                    contents=[
+                                        rrb.TimeSeriesView(
+                                            name=sensor,
+                                            origin="/example_plots",
+                                            contents=f"+{mote.rr_path}/{sensor}",
+                                            visible=sensor in mote.samples.keys(),
+                                            overrides={
+                                                f"{mote.rr_path}/{sensor}": [rr.components.Color(mote.color), rr.components.StrokeWidth(5), rr.components.Name(mote.name)]
+                                            },
+                                            plot_legend=1,
+                                        )   for sensor in available_sensors
+                                    ],
+                                )   for mote in sorted_motes if "example" in mote.Logname
+                            ],
+                        ),
+                        rrb.Tabs(   # By Sensor
+                            name="By Sensor",
+                            contents=[
+                                rrb.TimeSeriesView(
+                                    name=sensor,
+                                    origin="/example_plots",
+                                    contents=[f"{mote.rr_path}/{sensor}" for mote in sorted_motes if "example" in mote.Logname],
+                                    overrides={
+                                        f"{mote.rr_path}/{sensor}": [rr.components.Color(mote.color), rr.components.StrokeWidth(5), rr.components.Name(mote.name)]
+                                        for mote in sorted_motes if "example" in mote.Logname
+                                    },
+                                    plot_legend=1,
+                                )   for sensor in available_sensors
+                            ],
+                        ),
+                    ],
+                ),
+            ),
+            collapse_panels=True,
+        )
+        
+        rr.send_blueprint(mesh_blueprint)
+
 
     # Return mote object that matches MAC Adress:
     def MoteMAC(self, MACaddress):
